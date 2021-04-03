@@ -47,7 +47,7 @@
         android:inputType="textPersonName"
         android:padding="10dp"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,7 @@
         android:padding="10dp"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fullName" />
@@ -90,7 +90,7 @@
         android:padding="10dp"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailAddress" />
@@ -110,7 +110,7 @@
         android:padding="10dp"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
-        android:textColorHint="#FFFFFF"
+        android:textColorHint="#80FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
