@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/food_background"
-    tools:context=".Register">
+    tools:context=".login">
 
     <TextView
         android:id="@+id/appName"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/aclonica"
-        android:text="Create New Account"
+        android:text="Login Account"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appName" />
 
     <EditText
-        android:id="@+id/fullName"
+        android:id="@+id/emailAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -43,8 +43,8 @@
         android:background="@color/black"
         android:ems="10"
         android:fontFamily="@font/aclonica"
-        android:hint="Full Name"
-        android:inputType="textPersonName"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:padding="10dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#80FFFFFF"
@@ -56,96 +56,55 @@
         app:layout_constraintVertical_bias="0.14" />
 
     <EditText
-        android:id="@+id/emailAddress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:fontFamily="@font/aclonica"
-        android:background="@color/black"
-        android:inputType="textEmailAddress"
-        android:hint="Email"
-        android:padding="10dp"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:textColorHint="#80FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullName" />
-
-    <EditText
         android:id="@+id/password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@color/black"
         android:ems="10"
         android:fontFamily="@font/aclonica"
-        android:background="@color/black"
-        android:inputType="textPassword"
         android:hint="Password"
+        android:inputType="textPassword"
         android:padding="10dp"
         android:textColor="#FFFFFF"
-        android:textSize="15sp"
         android:textColorHint="#80FFFFFF"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailAddress" />
-
-    <EditText
-        android:id="@+id/confirmPassword"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:fontFamily="@font/aclonica"
-        android:background="@color/black"
-        android:inputType="textPassword"
-        android:hint="Confirm Password"
-        android:padding="10dp"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:textColorHint="#80FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:textSize="15sp"
-        android:fontFamily="@font/aclonica"
-        android:text="Register"
         android:background="@color/black"
+        android:ems="10"
+        android:fontFamily="@font/aclonica"
+        android:text="Login"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <TextView
-        android:id="@+id/loginHere"
+        android:id="@+id/registerHere"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:gravity="center"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
-        android:text="Already registered? Login here!"
+        android:text="New here? Create Account!"
         android:textColor="#FFEB3B"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
