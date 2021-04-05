@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,7 +37,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         mConfirmPassword = findViewById(R.id.confirmPassword);
         mRegisterBtn = findViewById(R.id.register);
         mLoginHere = findViewById(R.id.loginHere);
-        mProgressBar = findViewById(R.id.progressBar);
+        mProgressBar = findViewById(R.id.registerProgressBar);
         fAuth = FirebaseAuth.getInstance();
 
         //set progress bar to invisible
@@ -46,7 +45,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         //set on click listeners
         mRegisterBtn.setOnClickListener(this);
-
+        mLoginHere.setOnClickListener(this);
         // check if user is already logged in
         //if (fAuth.getCurrentUser() != null){
         //    startActivity(new Intent(getApplicationContext(),Login.class));
@@ -92,11 +91,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        Snackbar.make(v, "User created successfully. Please login!", Snackbar.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(),Login.class));
-                    }else{
-                        Snackbar.make(v, "Error! " + task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                         mProgressBar.setVisibility(View.INVISIBLE);
+                        Snackbar.make(v, "User created successfully. Please login!", Snackbar.LENGTH_LONG).show();
+                        //startActivity(new Intent(getApplicationContext(),Login.class));
+                    }else{
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        Snackbar.make(v, "Error! " + task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                     }
                 }
             });
