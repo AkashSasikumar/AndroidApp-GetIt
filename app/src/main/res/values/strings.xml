@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GetIt!</string>
+    <string name="your_groups">YOUR GROUPS</string>
+    <string name="join_group">JOIN GROUP</string>
+    <string name="group_name">Group Name</string>
+    <string name="group_code">Group Code</string>
+
 </resources>
