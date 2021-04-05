@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "380379060378",
+    "project_id": "getit-42956",
+    "storage_bucket": "getit-42956.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380379060378:android:b83ffc9922ce1144f7a723",
+        "android_client_info": {
+          "package_name": "edu.neu.madcourse.getit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380379060378-j032s1778urgo4mc708gvnf3uvii72uo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOzGh8nkvITwwsIaTVEPtcTFx892P28EE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380379060378-j032s1778urgo4mc708gvnf3uvii72uo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
