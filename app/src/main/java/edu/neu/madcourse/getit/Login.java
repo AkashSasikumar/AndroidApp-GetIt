@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     if (task.isSuccessful()){
                         mProgressBar.setVisibility(View.INVISIBLE);
                         Snackbar.make(v, "User logged in successfully!", Snackbar.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), YourGroupsActivity.class));
+                        startActivity(new Intent(getApplicationContext(),YourGroupsActivity.class));
                     }else{
                         mProgressBar.setVisibility(View.INVISIBLE);
                         Snackbar.make(v, "Error! " + task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
