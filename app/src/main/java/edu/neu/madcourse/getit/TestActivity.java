@@ -22,7 +22,8 @@ public class TestActivity extends AppCompatActivity {
         test_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backendUserService.createUser("new-test-user");
+                backendUserService.createUser("new-test-user-99");
+                backendUserService.getUserByUsername("new-test-user");
             }
         });
 
