@@ -93,7 +93,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     if (task.isSuccessful()){
                         mProgressBar.setVisibility(View.INVISIBLE);
                         Snackbar.make(v, "User created successfully. Please login!", Snackbar.LENGTH_LONG).show();
-                        //startActivity(new Intent(getApplicationContext(),Login.class));
+                        startActivity(new Intent(getApplicationContext(),Login.class));
                     }else{
                         mProgressBar.setVisibility(View.INVISIBLE);
                         Snackbar.make(v, "Error! " + task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
