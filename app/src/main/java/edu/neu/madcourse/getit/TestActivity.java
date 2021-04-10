@@ -32,7 +32,10 @@ public class TestActivity extends AppCompatActivity {
 //                userService.createUser("new-test-user-102");
 //                userService.getUserByUsername("new-test-user-99");
 //                userService.addUserToGroup("new-test-user", "test_group-19191");
-                itemService.createItem("test_item_001", "test_group", "test_user");
+//                itemService.createItem("test_item_001", "test_group", "test_user");
+//                groupService.getGroupByGroupName("test_group");
+//                itemService.getItemByItemId("SivO8kGztXXGpHQxQQ6U");
+//                groupService.addItemTo_ToBePurchasedCategory("bSxorAkxFHnQQqdZag6A", "SivO8kGztXXGpHQxQQ6U");
             }
         });
 

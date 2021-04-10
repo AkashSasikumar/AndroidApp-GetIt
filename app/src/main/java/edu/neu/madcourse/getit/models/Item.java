@@ -10,6 +10,9 @@ public class Item {
     private Timestamp date_added;
     private Timestamp date_purchase;
 
+    public Item() {
+    }
+
     public Item(String item_name, String group_name, String user_to_purchase, String user_to_request, Timestamp date_added, Timestamp date_purchase) {
         this.item_name = item_name;
         this.group_name = group_name;

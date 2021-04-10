@@ -4,20 +4,28 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neu.madcourse.getit.models.Group;
+import edu.neu.madcourse.getit.models.Item;
+
 public class ItemService {
 
     private static final String CREATE_ITEM_STATUS = "CREATE_ITEM_STATUS";
-    private static final String GET_ITEM_BY_GROUP_AND_USER_NAME = "GET_ITEM_BY_GROUP_AND_USER_NAME";
+    private static final String GET_ITEM_BY_ITEM_ID = "GET_ITEM_BY_ITEM_ID";
 
     FirebaseFirestore db;
     CollectionReference users;
@@ -56,5 +64,24 @@ public class ItemService {
                         Log.d(CREATE_ITEM_STATUS, "Failed");
                     }
                 });
+    }
+
+    public void getItemByItemId(String itemId) {
+        items.document(itemId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+
+                if(documentSnapshot != null) {
+                    Item item = (Item) documentSnapshot.toObject(Item.class);
+                    Log.d(GET_ITEM_BY_ITEM_ID, "Item name: " + item.getItem_name());
+                    Log.d(GET_ITEM_BY_ITEM_ID, "Item group name: " + item.getGroup_name());
+                    Log.d(GET_ITEM_BY_ITEM_ID, "Item purchase date: " + item.getDate_purchase());
+                    Log.d(GET_ITEM_BY_ITEM_ID, "Item added date: " + item.getDate_added());
+                } else {
+                    Log.d(GET_ITEM_BY_ITEM_ID, "Error getting document: ", task.getException() );
+                }
+            }
+        });
     }
 }

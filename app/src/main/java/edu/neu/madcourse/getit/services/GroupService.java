@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -25,6 +26,8 @@ public class GroupService {
 
     private static final String CREATE_GROUP_STATUS = "CREATE_GROUP_STATUS";
     private static final String GET_GROUP_BY_GROUP_NAME = "GET_GROUP_BY_GROUP_NAME";
+    private static final String ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY = "ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY";
+    private static final String ADD_ITEMID_TO_PURCHASED_CATEGORY = "ADD_ITEMID_TO_PURCHASED_CATEGORY";
 
     FirebaseFirestore db;
     CollectionReference users;
@@ -77,6 +80,8 @@ public class GroupService {
                         Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
                         Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
                         Log.d(GET_GROUP_BY_GROUP_NAME, "Users  ----:" + group.getUsers());
+                        group.setGroupId(document.getId());
+                        Log.d(GET_GROUP_BY_GROUP_NAME, "groupid  ----:" + group.getGroupId());
                     }
                 } else {
                     Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
@@ -86,23 +91,37 @@ public class GroupService {
     }
 
 
-    public void addUserToGroup(String groupName, String userName) {
+    public void addUserToGroup(String groupId, String userName) {
 
     }
 
-    public void addItemTo_ToBePurchasedCategory(String groupName, String itemId) {
+    public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
+        try {
+            groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));
+            Log.d(ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY, "Success");
+            return true;
+        } catch (Error e) {
+            Log.d(ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY, "Failed");
+            return false;
+        }
+    }
+
+    public void removeItemFrom_ToBePurchasedCategory(String groupId, String itemId) {
 
     }
 
-    public void removeItemFrom_ToBePurchasedCategory(String groupName, String itemId) {
-
+    public boolean addItemTo_AlreadyPurchasedCategory(String groupId, String itemId) {
+        try {
+            groups.document(groupId).update("items_purchased", FieldValue.arrayUnion(itemId));
+            Log.d(ADD_ITEMID_TO_PURCHASED_CATEGORY, "Success");
+            return true;
+        } catch (Error e) {
+            Log.d(ADD_ITEMID_TO_PURCHASED_CATEGORY, "Failed");
+            return false;
+        }
     }
 
-    public void addItemTo_AlreadyPurchasedCategory(String groupName, String itemId) {
-
-    }
-
-    public void removeItemFrom_AlreadyPurchasedCategory(String groupName, String itemId) {
+    public void removeItemFrom_AlreadyPurchasedCategory(String groupId, String itemId) {
 
     }
 }
