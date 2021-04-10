@@ -4,15 +4,17 @@ import java.util.List;
 
 public class Group {
     private String group_name;
-    private List<String> items;
+    private List<String> items_to_purchase;
+    private List<String> items_purchased;
     private List<String> users;
 
     public Group() {
     }
 
-    public Group(String group_name, List<String> items, List<String> users) {
+    public Group(String group_name, List<String> items_to_purchase, List<String> items_purchased, List<String> users) {
         this.group_name = group_name;
-        this.items = items;
+        this.items_to_purchase = items_to_purchase;
+        this.items_purchased = items_purchased;
         this.users = users;
     }
 
@@ -24,12 +26,20 @@ public class Group {
         this.group_name = group_name;
     }
 
-    public List<String> getItems() {
-        return items;
+    public List<String> getItems_to_purchase() {
+        return items_to_purchase;
     }
 
-    public void setItems(List<String> items) {
-        this.items = items;
+    public void setItems_to_purchase(List<String> items_to_purchase) {
+        this.items_to_purchase = items_to_purchase;
+    }
+
+    public List<String> getItems_purchased() {
+        return items_purchased;
+    }
+
+    public void setItems_purchased(List<String> items_purchased) {
+        this.items_purchased = items_purchased;
     }
 
     public List<String> getUsers() {
