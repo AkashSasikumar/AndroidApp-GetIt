@@ -83,8 +83,26 @@ public class GroupService {
                 }
             }
         });
-
     }
 
 
+    public void addUserToGroup(String groupName, String userName) {
+
+    }
+
+    public void addItemTo_ToBePurchasedCategory(String groupName, String itemId) {
+
+    }
+
+    public void removeItemFrom_ToBePurchasedCategory(String groupName, String itemId) {
+
+    }
+
+    public void addItemTo_AlreadyPurchasedCategory(String groupName, String itemId) {
+
+    }
+
+    public void removeItemFrom_AlreadyPurchasedCategory(String groupName, String itemId) {
+
+    }
 }
