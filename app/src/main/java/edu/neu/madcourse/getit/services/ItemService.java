@@ -22,7 +22,7 @@ import java.util.Map;
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 
-public class ItemService {
+public class    ItemService {
 
     private static final String CREATE_ITEM_STATUS = "CREATE_ITEM_STATUS";
     private static final String GET_ITEM_BY_ITEM_ID = "GET_ITEM_BY_ITEM_ID";
@@ -39,6 +39,7 @@ public class ItemService {
         items = db.collection("items");
     }
 
+    //TODO: Make the method to return boolean
     public void createItem(String itemName, String groupName, String userName) {
         String newItemsDocId = items.document().getId();
 
@@ -66,6 +67,8 @@ public class ItemService {
                 });
     }
 
+
+    //TODO: Make method to return object
     public void getItemByItemId(String itemId) {
         items.document(itemId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

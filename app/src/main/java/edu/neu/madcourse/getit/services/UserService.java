@@ -40,6 +40,7 @@ public class UserService {
         items = db.collection("items");
     }
 
+    //TODO: Return boolean indicating createUser successful.
     public void createUser(String userName){
 
         Map<String, Object> user = new HashMap<>();
@@ -62,6 +63,7 @@ public class UserService {
                 });
     }
 
+    //TODO: Return User object once method execution successfull.
     public User getUserByUsername(String userName) {
         Query query = users.whereEqualTo("user_name", userName);
 
@@ -88,6 +90,7 @@ public class UserService {
         return null;
     }
 
+    //TODO: Return boolean indicating method successful
     public void addUserToGroup(String userName, String groupName) {
         Query query = users.whereEqualTo("user_name", userName);
 
@@ -102,6 +105,11 @@ public class UserService {
 
                         Log.d(GET_USER_BY_USER_NAME, "groups list ----:" + userModel.getGroups());
                         users.document(document.getId()).update("groups", FieldValue.arrayUnion(groupName));
+
+                        //TODO: Add userName to Group's "Users" field.
+                        // To do this, firstly, the method getGroupByName should be made to return the group. The group object returned
+                        // will have both group name and groupId. Use the groupId to reach the correct doc and user FieldValue.arrayUnion(userName)
+                        // For example of FieldValue.arrayUnion, check addItemTo_ToBePurchasedCategory in GroupService
                     }
                 } else {
                     Log.d(GET_USER_BY_USER_NAME, "Error getting document: ", task.getException());
@@ -109,5 +117,7 @@ public class UserService {
             }
         });
     }
+
+    //TODO: Implement removeUserFromGroup method
 
 }

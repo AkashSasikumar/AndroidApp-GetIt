@@ -28,6 +28,8 @@ public class GroupService {
     private static final String GET_GROUP_BY_GROUP_NAME = "GET_GROUP_BY_GROUP_NAME";
     private static final String ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY = "ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY";
     private static final String ADD_ITEMID_TO_PURCHASED_CATEGORY = "ADD_ITEMID_TO_PURCHASED_CATEGORY";
+    private static final String REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_TO_PURCHASED_CATEGORY";
+    private static final String REMOVE_ITEMID_FROM_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_PURCHASED_CATEGORY";
 
     FirebaseFirestore db;
     CollectionReference users;
@@ -63,6 +65,8 @@ public class GroupService {
                 });
     }
 
+
+    //TODO: Make this method return Group object.
     public void getGroupByGroupName(String groupName) {
         Query query = groups.whereEqualTo("group_name", groupName);
 
@@ -91,10 +95,6 @@ public class GroupService {
     }
 
 
-    public void addUserToGroup(String groupId, String userName) {
-
-    }
-
     public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
         try {
             groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));
@@ -106,8 +106,15 @@ public class GroupService {
         }
     }
 
-    public void removeItemFrom_ToBePurchasedCategory(String groupId, String itemId) {
-
+    public boolean removeItemFrom_ToBePurchasedCategory(String groupId, String itemId) {
+        try {
+            groups.document(groupId).update("items_to_purchase", FieldValue.arrayRemove(itemId));
+            Log.d(REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY, "Success");
+            return true;
+        } catch (Error e) {
+            Log.d(REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY, "Failed");
+            return false;
+        }
     }
 
     public boolean addItemTo_AlreadyPurchasedCategory(String groupId, String itemId) {
@@ -121,7 +128,14 @@ public class GroupService {
         }
     }
 
-    public void removeItemFrom_AlreadyPurchasedCategory(String groupId, String itemId) {
-
+    public boolean removeItemFrom_AlreadyPurchasedCategory(String groupId, String itemId) {
+        try {
+            groups.document(groupId).update("items_purchased", FieldValue.arrayRemove(itemId));
+            Log.d(REMOVE_ITEMID_FROM_PURCHASED_CATEGORY, "Success");
+            return true;
+        } catch (Error e) {
+            Log.d(REMOVE_ITEMID_FROM_PURCHASED_CATEGORY, "Failed");
+            return false;
+        }
     }
 }
