@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.getit">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,20 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_grocery_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GetIt">
-        <activity android:name=".Login"
+        <activity android:name=".GroupItems"></activity>
+        <activity
+            android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Register"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".MainActivity">
-        </activity>
-        <activity android:name=".YourGroupsActivity">
-        </activity>
+        <activity
+            android:name=".Register"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".YourGroupsActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
