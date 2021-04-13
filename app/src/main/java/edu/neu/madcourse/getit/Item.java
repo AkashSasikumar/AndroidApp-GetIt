@@ -9,16 +9,26 @@ public class Item {
     private String mDesc;
     private String mPreferredStore;
     private String mQuantity;
+    private String mPostedOn;
     private User mUserPosted;
     private User mUserGettingIt;
     private int mImage;
 
-    public Item(String name, String desc, String preferredStore, String quantity,
+    public String getPostedOn() {
+        return mPostedOn;
+    }
+
+    public void setPostedOn(String mPostedOn) {
+        this.mPostedOn = mPostedOn;
+    }
+
+    public Item(String name, String desc, String preferredStore, String quantity, String postedOn,
                 User userPosted, User userGettingIt, int itemImage){
         mName = name;
         mDesc = desc;
         mPreferredStore = preferredStore;
         mQuantity = quantity;
+        mPostedOn = postedOn;
         mUserPosted = userPosted;
         mUserGettingIt = userGettingIt;
         mImage = itemImage;

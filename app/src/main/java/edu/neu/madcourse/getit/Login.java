@@ -2,11 +2,14 @@ package edu.neu.madcourse.getit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -25,6 +28,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     Button mLoginBtn;
     TextView mRegisterHere;
     ProgressBar mProgressBar;
+    ConstraintLayout mLoginLayout;
     FirebaseAuth fAuth;
 
     @Override
@@ -37,6 +41,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         mLoginBtn = findViewById(R.id.login);
         mRegisterHere = findViewById(R.id.registerHere);
         mProgressBar = findViewById(R.id.loginProgressBar);
+        mLoginLayout = findViewById(R.id.login_layout);
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -46,7 +51,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         // set on click listeners
         mRegisterHere.setOnClickListener(this);
         mLoginBtn.setOnClickListener(this);
-
+        mLoginLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // hide keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return false;
+            }
+        });
 
     }
 
@@ -55,6 +68,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         if(v.getId() == R.id.registerHere){
             startActivity(new Intent(getApplicationContext(),Register.class));
         }else if (v.getId() == R.id.login){
+
+            // hide keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
             String email = mEmail.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
 

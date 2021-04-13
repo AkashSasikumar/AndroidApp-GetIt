@@ -1,5 +1,6 @@
 package edu.neu.madcourse.getit;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
 
     private ArrayList<Item> mItemList;
     private OnItemClickListener mListener;
+    private String mGreyColor = "#BDBDBD";
 
     public void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
@@ -31,6 +33,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         public TextView mName, mQuantity, mStore, mPostedBy;
         public Button mGetIt;
 
+
         public ItemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
@@ -39,6 +42,8 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
             mQuantity = itemView.findViewById(R.id.item_quantity);
             mStore = itemView.findViewById(R.id.item_store);
             mPostedBy = itemView.findViewById(R.id.item_posted_by);
+            mGetIt = itemView.findViewById(R.id.button_get_it);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -73,6 +78,11 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         holder.mQuantity.setText("Quantity: " + currentItem.getQuantity());
         holder.mPostedBy.setText("Posted by: " + currentItem.getUserPosted().getFirstName());
         holder.mImageView.setImageResource(R.drawable.apples);
+
+        if (currentItem.getUserGettingIt() != null){
+            holder.mGetIt.setBackgroundColor(Color.parseColor(mGreyColor));
+            holder.mGetIt.setText(currentItem.getUserGettingIt().getFirstName() + " is already getting it!");
+        }
     }
 
     @Override
