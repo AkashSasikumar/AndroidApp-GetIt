@@ -24,7 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/apples"
-            android:background="@drawable/rounde_outline" />
+            android:background="@drawable/rounded_outline" />
 
         <TextView
             android:id="@+id/item_name"

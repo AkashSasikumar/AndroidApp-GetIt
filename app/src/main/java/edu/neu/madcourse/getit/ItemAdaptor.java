@@ -14,15 +14,24 @@ import java.util.ArrayList;
 
 public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder> {
 
-    private ArrayList<Item> mItemList;
+    public interface OnItemClickListener{
 
+        void onItemClick(int position);
+    }
+
+    private ArrayList<Item> mItemList;
+    private OnItemClickListener mListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
     public static class ItemViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView mImageView;
         public TextView mName, mQuantity, mStore, mPostedBy;
         public Button mGetIt;
 
-        public ItemViewHolder(@NonNull View itemView) {
+        public ItemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
             mImageView = itemView.findViewById(R.id.item_image);
@@ -30,6 +39,17 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
             mQuantity = itemView.findViewById(R.id.item_quantity);
             mStore = itemView.findViewById(R.id.item_store);
             mPostedBy = itemView.findViewById(R.id.item_posted_by);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -40,7 +60,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
-        ItemViewHolder viewHolder = new ItemViewHolder(v);
+        ItemViewHolder viewHolder = new ItemViewHolder(v, mListener);
         return viewHolder;
     }
 
