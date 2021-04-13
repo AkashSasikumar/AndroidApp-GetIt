@@ -22,7 +22,7 @@ import java.util.Map;
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 
-public class    ItemService {
+public class ItemService {
 
     private static final String CREATE_ITEM_STATUS = "CREATE_ITEM_STATUS";
     private static final String GET_ITEM_BY_ITEM_ID = "GET_ITEM_BY_ITEM_ID";
@@ -31,6 +31,8 @@ public class    ItemService {
     CollectionReference users;
     CollectionReference groups;
     CollectionReference items;
+    private boolean createItemSuccessFlag;
+    private Item item;
 
     public ItemService() {
         db = FirebaseFirestore.getInstance();
@@ -40,9 +42,8 @@ public class    ItemService {
     }
 
     //TODO: Make the method to return boolean
-    public void createItem(String itemName, String groupName, String userName) {
+    public boolean createItem(String itemName, String groupName, String userName) {
         String newItemsDocId = items.document().getId();
-
         Map<String, Object> newItem = new HashMap<>();
         newItem.put("item_name", itemName);
         newItem.put("user_to_request", userName);
@@ -51,38 +52,59 @@ public class    ItemService {
         newItem.put("date_added", Timestamp.now());
         newItem.put("date_purchased", null);
 
+        createItemSuccessFlag = false;
+        ServiceTaskHandler.performTask(() -> createItemAsyncTask(newItemsDocId, newItem));
+
+        return createItemSuccessFlag;
+    }
+
+    private void createItemAsyncTask(String newItemsDocId, Map<String, Object> newItem) {
         items.document(newItemsDocId)
                 .set(newItem)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(CREATE_ITEM_STATUS, "Success");
+                        createItemSuccessFlag = true;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(CREATE_ITEM_STATUS, "Failed");
+                        createItemSuccessFlag = false;
                     }
                 });
     }
 
 
     //TODO: Make method to return object
-    public void getItemByItemId(String itemId) {
+    public Item getItemByItemId(String itemId) {
+        ServiceTaskHandler.performTask(() -> getItemByItemIdAsyncTask(itemId));
+
+        if(item == null) {
+            // handle this null return in a better way...in case task was not successful
+        }
+
+        Log.d(GET_ITEM_BY_ITEM_ID, "Item name: " + item.getItem_name());
+        Log.d(GET_ITEM_BY_ITEM_ID, "Item group name: " + item.getGroup_name());
+        Log.d(GET_ITEM_BY_ITEM_ID, "Item purchase date: " + item.getDate_purchase());
+        Log.d(GET_ITEM_BY_ITEM_ID, "Item added date: " + item.getDate_added());
+
+        return item;
+    }
+
+    private void getItemByItemIdAsyncTask(String itemId) {
         items.document(itemId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot documentSnapshot = task.getResult();
 
                 if(documentSnapshot != null) {
-                    Item item = (Item) documentSnapshot.toObject(Item.class);
-                    Log.d(GET_ITEM_BY_ITEM_ID, "Item name: " + item.getItem_name());
-                    Log.d(GET_ITEM_BY_ITEM_ID, "Item group name: " + item.getGroup_name());
-                    Log.d(GET_ITEM_BY_ITEM_ID, "Item purchase date: " + item.getDate_purchase());
-                    Log.d(GET_ITEM_BY_ITEM_ID, "Item added date: " + item.getDate_added());
+                    item = (Item) documentSnapshot.toObject(Item.class);
                 } else {
                     Log.d(GET_ITEM_BY_ITEM_ID, "Error getting document: ", task.getException() );
+                    item = null;
                 }
             }
         });

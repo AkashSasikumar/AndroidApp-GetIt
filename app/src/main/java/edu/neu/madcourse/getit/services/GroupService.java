@@ -18,6 +18,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.UserModel;
@@ -31,10 +34,12 @@ public class GroupService {
     private static final String REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_TO_PURCHASED_CATEGORY";
     private static final String REMOVE_ITEMID_FROM_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_PURCHASED_CATEGORY";
 
+    Group group;
     FirebaseFirestore db;
     CollectionReference users;
     CollectionReference groups;
     CollectionReference items;
+    private boolean createGroupSuccessFlag;
 
     public GroupService() {
         db = FirebaseFirestore.getInstance();
@@ -43,57 +48,75 @@ public class GroupService {
         items = db.collection("items");
     }
 
-    public void createGroup(String groupName) {
+    public boolean createGroup(String groupName) {
         Map<String, Object> newGroup = new HashMap<>();
         newGroup.put("group_name", groupName);
         newGroup.put("items_to_purchase", Arrays.asList());
         newGroup.put("items_purchased", Arrays.asList());
         newGroup.put("users", Arrays.asList());
+
+        createGroupSuccessFlag = false;
+        ServiceTaskHandler.performTask(() -> createGroupAsyncTask(newGroup));
+
+        return createGroupSuccessFlag;
+    }
+
+    private void createGroupAsyncTask(Map<String, Object> newGroup) {
         groups.document()
                 .set(newGroup)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(CREATE_GROUP_STATUS, "Success");
+                        createGroupSuccessFlag = true;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(CREATE_GROUP_STATUS, "Failed");
+                        createGroupSuccessFlag = false;
                     }
                 });
     }
 
 
     //TODO: Make this method return Group object.
-    public void getGroupByGroupName(String groupName) {
+    public Group getGroupByGroupName(String groupName) {
         Query query = groups.whereEqualTo("group_name", groupName);
+        ServiceTaskHandler.performTask(() -> getGroupAsyncTask(query));
 
+        if(group == null) {
+            // handle this null return in a better way...in case task was not successful
+        }
+
+        Log.d(GET_GROUP_BY_GROUP_NAME, "user details----------------------");
+        Log.d(GET_GROUP_BY_GROUP_NAME, "user_name----:" + group.getGroup_name());
+        Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
+        Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
+        Log.d(GET_GROUP_BY_GROUP_NAME, "Users  ----:" + group.getUsers());
+        Log.d(GET_GROUP_BY_GROUP_NAME, "groupid  ----:" + group.getGroupId());
+
+        return group;
+    }
+
+    private void getGroupAsyncTask(Query query) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
-
-                        Group group = (Group) document.toObject(Group.class);
-
-                        Log.d(GET_GROUP_BY_GROUP_NAME, "user details----------------------");
-                        Log.d(GET_GROUP_BY_GROUP_NAME, "user_name----:" + group.getGroup_name());
-                        Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
-                        Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
-                        Log.d(GET_GROUP_BY_GROUP_NAME, "Users  ----:" + group.getUsers());
+                        group = (Group) document.toObject(Group.class);
                         group.setGroupId(document.getId());
-                        Log.d(GET_GROUP_BY_GROUP_NAME, "groupid  ----:" + group.getGroupId());
                     }
                 } else {
                     Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
+                    group = null;
                 }
             }
         });
     }
-
 
     public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
         try {
