@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.UserModel;
@@ -37,6 +38,7 @@ public class UserService {
     private boolean createUserSuccessFlag;
     private UserModel user;
     private boolean addUserToGroupSuccessFlag;
+    private CountDownLatch latch;
 
     public UserService() {
         db = FirebaseFirestore.getInstance();
@@ -80,8 +82,22 @@ public class UserService {
 
     //TODO: Return User object once method execution successfull.
     public UserModel getUserByUsername(String userName) {
-        ServiceTaskHandler.performTask(() -> getUserByUsernameAsyncTask(userName));
+//        ServiceTaskHandler.performTask(() -> getUserByUsernameAsyncTask(userName));
 
+        System.out.println("getting user for: " + userName);
+        try {
+            latch = new CountDownLatch(1);
+            getUserByUsernameAsyncTask(userName);
+
+            System.out.println("awaiting for latch");
+            latch.await();
+//            return user;
+        } catch (Exception e) {
+            Log.e("ERROR: ", e.toString());
+        }
+
+
+        System.out.println("returning");
         if(user == null) {
             // handle this null return in a better way...in case task was not successful
         }
@@ -108,6 +124,9 @@ public class UserService {
                     Log.d(GET_USER_BY_USER_NAME, "Error getting document: ", task.getException());
                     user = null;
                 }
+
+                System.out.println("updating latch");
+                latch.countDown();
             }
         });
     }

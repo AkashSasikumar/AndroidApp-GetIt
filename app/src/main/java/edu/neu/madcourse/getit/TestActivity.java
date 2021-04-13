@@ -30,7 +30,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                userService.createUser("new-test-user-102");
-//                userService.getUserByUsername("new-test-user-99");
+                userService.getUserByUsername("new-test-user");
 //                userService.addUserToGroup("new-test-user", "test_group-19191");
 //                itemService.createItem("test_item_001", "test_group", "test_user");
 //                groupService.getGroupByGroupName("test_group");
