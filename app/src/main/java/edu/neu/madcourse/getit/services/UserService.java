@@ -156,11 +156,11 @@ public class UserService {
                         // To do this, firstly, the method getGroupByName should be made to return the group. The group object returned
                         // will have both group name and groupId. Use the groupId to reach the correct doc and user FieldValue.arrayUnion(userName)
                         // For example of FieldValue.arrayUnion, check addItemTo_ToBePurchasedCategory in GroupService
-                        Group group = groupService.getGroupByGroupName(groupName);
-                        groups.document(group.getGroupId())
-                                .update("users", FieldValue.arrayUnion(user.getUser_name()));
-
-                        addUserToGroupSuccessFlag = true;
+//                        Group group = groupService.getGroupByGroupName(groupName);
+//                        groups.document(group.getGroupId())
+//                                .update("users", FieldValue.arrayUnion(user.getUser_name()));
+//
+//                        addUserToGroupSuccessFlag = true;
                     }
                 } else {
                     Log.d(GET_USER_BY_USER_NAME, "Error getting document: ", task.getException());

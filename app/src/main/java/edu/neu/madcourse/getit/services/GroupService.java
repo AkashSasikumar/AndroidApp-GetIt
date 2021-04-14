@@ -1,5 +1,6 @@
 package edu.neu.madcourse.getit.services;
 
+import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import edu.neu.madcourse.getit.handlers.MainThreadHandler;
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.UserModel;
 
@@ -82,25 +84,8 @@ public class GroupService {
 
 
     //TODO: Make this method return Group object.
-    public Group getGroupByGroupName(String groupName) {
+    public void getGroupByGroupName(String groupName, MainThreadHandler mainThreadHandler) {
         Query query = groups.whereEqualTo("group_name", groupName);
-        ServiceTaskHandler.performTask(() -> getGroupAsyncTask(query));
-
-        if(group == null) {
-            // handle this null return in a better way...in case task was not successful
-        }
-
-        Log.d(GET_GROUP_BY_GROUP_NAME, "user details----------------------");
-        Log.d(GET_GROUP_BY_GROUP_NAME, "user_name----:" + group.getGroup_name());
-        Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
-        Log.d(GET_GROUP_BY_GROUP_NAME, "Items in group----:" + group.getItems_purchased());
-        Log.d(GET_GROUP_BY_GROUP_NAME, "Users  ----:" + group.getUsers());
-        Log.d(GET_GROUP_BY_GROUP_NAME, "groupid  ----:" + group.getGroupId());
-
-        return group;
-    }
-
-    private void getGroupAsyncTask(Query query) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -109,6 +94,9 @@ public class GroupService {
                         Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
                         group = (Group) document.toObject(Group.class);
                         group.setGroupId(document.getId());
+                        Message group_message = Message.obtain();
+                        group_message.obj = group;
+                        mainThreadHandler.handleMessage(group_message);
                     }
                 } else {
                     Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
@@ -116,6 +104,10 @@ public class GroupService {
                 }
             }
         });
+    }
+
+    private void getGroupAsyncTask(Query query) {
+
     }
 
     public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
