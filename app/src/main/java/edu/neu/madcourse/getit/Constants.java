@@ -1,21 +1,5 @@
 package edu.neu.madcourse.getit;
 
-/*
- * Copyright 2017 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
@@ -53,11 +37,14 @@ final class Constants {
 
     static {
         // Stop n Shop store in Tremont Street
-//        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Tremont Street", new LatLng(42.333238, -71.1044184));
-        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Tremont Street", new LatLng(42.333, -71.104));
+        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Tremont Street", new LatLng(42.333238, -71.1044184));
+//        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Tremont Street", new LatLng(42.333, -71.104));
 
         // Stop n Shop store in Jamaica Street
-        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Jamaica Street", new LatLng(42.324, -71.103));
-//        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Jamaica Street", new LatLng(42.32402,-71.10321));
+//        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Jamaica Street", new LatLng(42.324, -71.103));
+        STOP_N_SHOP_LANDMARKS.put("Stop n Shop, Jamaica Street", new LatLng(42.32402, -71.10321));
+
+        STOP_N_SHOP_LANDMARKS.put("SFO", new LatLng(37.621313, -122.378955));
+        STOP_N_SHOP_LANDMARKS.put("GOOGLE", new LatLng(37.422611, -122.0840577));
     }
 }

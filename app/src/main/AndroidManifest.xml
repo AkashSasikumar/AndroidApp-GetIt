@@ -16,7 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_grocery_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GetIt">
-        <activity android:name=".TestLocationActivity"></activity>
         <activity android:name=".GroupItems" />
         <activity android:name=".MainActivity1"/>
         <activity
@@ -31,9 +30,8 @@
         <activity
             android:name=".Register"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".YourGroupsActivity" />
-        <receiver android:name=".GeofenceBroadcastReceiver"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
