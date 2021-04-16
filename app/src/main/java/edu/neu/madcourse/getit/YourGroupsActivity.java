@@ -1,15 +1,24 @@
 package edu.neu.madcourse.getit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -18,11 +27,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class YourGroupsActivity extends AppCompatActivity implements View.OnClickListener {
+public class YourGroupsActivity extends AppCompatActivity implements View.OnClickListener, LocationListener {
 
     EditText mGroupName, mGroupCode;
     Button join_group_btn;
     List<GroupView> groups;
+    private TextView locatorTextView;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +57,17 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         groupsRV.setAdapter(groupsRVAdapter);
         groupsRV.setLayoutManager(new LinearLayoutManager(this));
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locatorTextView = (TextView) findViewById(R.id.textView_locator);
+
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    getResources().getInteger(R.integer.location_request_code));
+        } else {
+            initializeLocationUpdates();
+        }
     }
 
 
@@ -66,5 +88,42 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             startActivity(new Intent(getApplicationContext(),GroupItems.class));
 
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initializeLocationUpdates();
+            } else {
+                locatorTextView.setText(getString(R.string.NoLocationAccess));
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        locatorTextView.setText(getString(R.string.LatitudeAndLongitude, String.valueOf(location.getLatitude()),
+                String.valueOf(location.getLongitude())));
+        locationManager.removeUpdates(this);
+    }
+
+    private void initializeLocationUpdates() {
+        try {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            String enabledProvider = locationManager.getBestProvider(criteria, true);
+            if (enabledProvider != null) {
+                locationManager.requestLocationUpdates(enabledProvider,getResources().getInteger(R.integer.location_update_min_time),
+                        getResources().getInteger(R.integer.location_update_min_dist), this);
+            }
+        } catch (SecurityException ignored) {}
     }
 }

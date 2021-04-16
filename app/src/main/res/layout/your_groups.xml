@@ -115,4 +115,15 @@
         app:layout_constraintVertical_bias="0.9"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <TextView
+        android:id="@+id/textView_locator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:freezesText="true"
+        app:layout_constraintTop_toBottomOf="@+id/join_group_btn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
