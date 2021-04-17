@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -21,15 +21,20 @@ public class GroupItems extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ItemAdaptor mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private AlertDialog.Builder itemDetailsBuilder;
-    private AlertDialog itemDetailsPopup;
+    private AlertDialog mItemDetailsDialog;
+    private View mItemDetailsView;
+    private AlertDialog mItemInputDialog;
+    private View mItemInputView;
+
 
     // dialog views
     private ImageView mdImage;
     private TextView mdName, mdNote, mdQuantity, mdPreferredStore, mdPostedBy, mdPostedOn;
     private Button mdButtonGetIt;
-    private String mGreyColor = "#BDBDBD";
+    private final int GREY_COLOR = Color.parseColor("#BDBDBD");
+    private final int GREEN_COLOR = Color.parseColor("#689F38");
 
+    private FloatingActionButton mAddItems;
     ArrayList<Item> mItemList = new ArrayList<>();
 
 
@@ -38,25 +43,47 @@ public class GroupItems extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_items);
 
-
         // ToDo: add items
-         mItemList = populateItems();
+        mItemList = populateItems();
+        mAddItems = findViewById(R.id.add_items);
+        mAddItems.setOnClickListener(v->addItems());
 
-         mRecyclerView = findViewById(R.id.recycler_items);
+        mRecyclerView = findViewById(R.id.recycler_items);
          mRecyclerView.setHasFixedSize(true);
          mLayoutManager = new LinearLayoutManager(this);
          mAdapter = new ItemAdaptor(mItemList);
 
          mRecyclerView.setLayoutManager(mLayoutManager);
          mRecyclerView.setAdapter(mAdapter);
+         createItemDetailsDialog();
+         createItemInputDialog();
+
          mAdapter.setOnItemClickListener(new ItemAdaptor.OnItemClickListener() {
              @Override
              public void onItemClick(int position) {
                 mItemList.get(position);
                 //Snackbar.make(mRecyclerView, "Item Clicked", Snackbar.LENGTH_LONG).show();
-                popupItemDetails(position);
+                displayItemDetails(position);
              }
          });
+    }
+
+    private void createItemInputDialog() {
+        AlertDialog.Builder itemDetailsBuilder = new AlertDialog.Builder(this);
+        mItemInputView = getLayoutInflater().inflate(R.layout.item_details_popup, null);
+        itemDetailsBuilder.setView(mItemInputView);
+        mItemInputDialog = itemDetailsBuilder.create();
+    }
+
+    private void addItems() {
+        Item addedItem = new Item( "Apples_new" , "Gala Apples", "Stop & Shop", "2 lb", "10/12/21 at 10:15 p.m",
+                new User("Akash", "Shashikumar", "akash@gmail.com"),
+                null,
+                R.drawable.apples);
+
+        mItemList.add(0, addedItem);
+        mAdapter.notifyDataSetChanged();
+        mItemInputDialog.show();
     }
 
     ArrayList<Item> populateItems(){
@@ -76,28 +103,18 @@ public class GroupItems extends AppCompatActivity {
         return items;
     }
 
-    private void popupItemDetails(int position){
-        itemDetailsBuilder = new AlertDialog.Builder(this);
-        View itemDetails = getLayoutInflater().inflate(R.layout.item_details_popup, null);
-
-        setPopupFields(position, itemDetails);
-
-        itemDetailsBuilder.setView(itemDetails);
-        itemDetailsPopup = itemDetailsBuilder.create();
-        itemDetailsPopup.show();
-    }
-
-    private void setPopupFields(int position, View itemDetails){
+    private void displayItemDetails(int position){
         // set fields
         Item currentItem = mItemList.get(position);
-        mdImage = (ImageView) itemDetails.findViewById(R.id.item_image);
-        mdName = (TextView) itemDetails.findViewById(R.id.item_name);
-        mdNote = (TextView) itemDetails.findViewById(R.id.item_note);
-        mdQuantity = (TextView) itemDetails.findViewById(R.id.item_quantity);
-        mdPreferredStore =(TextView)  itemDetails.findViewById(R.id.item_store);
-        mdPostedBy =(TextView)  itemDetails.findViewById(R.id.item_posted_by);
-        mdPostedOn = (TextView) itemDetails.findViewById(R.id.item_posted_on);
-        mdButtonGetIt = (Button) itemDetails.findViewById(R.id.button_get_it);
+
+        mdImage = (ImageView) mItemDetailsView.findViewById(R.id.item_image);
+        mdName = (TextView) mItemDetailsView.findViewById(R.id.item_name);
+        mdNote = (TextView) mItemDetailsView.findViewById(R.id.item_note);
+        mdQuantity = (TextView) mItemDetailsView.findViewById(R.id.item_quantity);
+        mdPreferredStore =(TextView)  mItemDetailsView.findViewById(R.id.item_store);
+        mdPostedBy =(TextView)  mItemDetailsView.findViewById(R.id.item_posted_by);
+        mdPostedOn = (TextView) mItemDetailsView.findViewById(R.id.item_posted_on);
+        mdButtonGetIt = (Button) mItemDetailsView.findViewById(R.id.button_get_it);
 
         mdImage.setImageResource(currentItem.getImage());
         mdName.setText(currentItem.getName());
@@ -110,7 +127,18 @@ public class GroupItems extends AppCompatActivity {
         if (currentItem.getUserGettingIt() != null){
             //ToDo: change color of button
             mdButtonGetIt.setText(currentItem.getUserGettingIt().getFirstName() + " is already getting it!");
-            mdButtonGetIt.setBackgroundColor(Color.parseColor(mGreyColor));
+            mdButtonGetIt.setBackgroundColor(GREY_COLOR);
+        }else{
+            mdButtonGetIt.setText("I'll get it!");
+            mdButtonGetIt.setBackgroundColor(GREEN_COLOR);
         }
+        mItemDetailsDialog.show();
+    }
+
+    private void createItemDetailsDialog(){
+        AlertDialog.Builder itemDetailsBuilder = new AlertDialog.Builder(this);
+        mItemDetailsView = getLayoutInflater().inflate(R.layout.item_details_popup, null);
+        itemDetailsBuilder.setView(mItemDetailsView);
+        mItemDetailsDialog = itemDetailsBuilder.create();
     }
 }
