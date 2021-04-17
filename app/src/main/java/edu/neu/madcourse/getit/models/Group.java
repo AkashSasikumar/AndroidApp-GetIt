@@ -59,4 +59,9 @@ public class Group {
     public void setUsers(List<String> users) {
         this.users = users;
     }
+
+    @Override
+    public String toString() {
+        return "group id: " + getGroupId() + "\nname: " + getGroup_name() + "\nusers: " + getUsers().toString();
+    }
 }

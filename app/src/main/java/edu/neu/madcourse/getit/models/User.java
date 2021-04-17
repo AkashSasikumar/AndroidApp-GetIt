@@ -2,16 +2,16 @@ package edu.neu.madcourse.getit.models;
 
 import java.util.List;
 
-public class UserModel {
+public class User {
 
     private String user_name;
     private int score;
     private List<String> groups;
 
-    public UserModel() {
+    public User() {
     }
 
-    public UserModel(String user_name, int score, List<String> groups) {
+    public User(String user_name, int score, List<String> groups) {
         this.user_name = user_name;
         this.score = score;
         this.groups = groups;
@@ -39,5 +39,10 @@ public class UserModel {
 
     public void setGroups(List<String> groups) {
         this.groups = groups;
+    }
+
+    @Override
+    public String toString() {
+        return "User: " + getUser_name() + "\nscore: " + getScore() + "\ngroups: " + getGroups().toString();
     }
 }

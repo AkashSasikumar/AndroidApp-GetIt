@@ -3,24 +3,29 @@ package edu.neu.madcourse.getit;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import edu.neu.madcourse.getit.handlers.MainThreadHandler;
+import java.util.Random;
+
+import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
+import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
+import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
+import edu.neu.madcourse.getit.models.Group;
+import edu.neu.madcourse.getit.models.Item;
+import edu.neu.madcourse.getit.models.User;
 import edu.neu.madcourse.getit.services.GroupService;
 import edu.neu.madcourse.getit.services.ItemService;
 import edu.neu.madcourse.getit.services.UserService;
-import edu.neu.madcourse.getit.utils.GroupServiceThread;
 
 public class TestActivity extends AppCompatActivity {
-    Button test_button;
+    Button test_button_1;
+    Button test_button_2;
     UserService userService;
     GroupService groupService;
     ItemService itemService;
-    TextView textView;
-    MainThreadHandler mainThreadHandler;
+    TextView textView3, textView4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,29 +35,105 @@ public class TestActivity extends AppCompatActivity {
         groupService = new GroupService();
         itemService = new ItemService();
 
-        textView = findViewById(R.id.textView3);
-        test_button = findViewById(R.id.test_button);
+        textView3 = findViewById(R.id.textView3);
+        textView4 = findViewById(R.id.textView4);
+        test_button_1 = findViewById(R.id.test_button_1);
+        test_button_2 = findViewById(R.id.test_button_2);
 
-        mainThreadHandler = new MainThreadHandler(textView);
-
-        GroupServiceThread groupServiceThread = new GroupServiceThread(mainThreadHandler, groupService);
-        groupServiceThread.setName("group-service-thread");
-        groupServiceThread.start();
-
-        test_button.setOnClickListener(new View.OnClickListener() {
+        test_button_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                userService.createUser("new-test-user-102");
-                Message group_name_message = Message.obtain();
-                group_name_message.obj = "test_group";
-                groupServiceThread.getGroupServiceHandler().sendMessage(group_name_message);
-//                userService.addUserToGroup("new-test-user", "test_group-19191");
-//                itemService.createItem("test_item_001", "test_group", "test_user");
-//                groupService.getGroupByGroupName("test_group");
-//                itemService.getItemByItemId("SivO8kGztXXGpHQxQQ6U");
-//                groupService.addItemTo_ToBePurchasedCategory("bSxorAkxFHnQQqdZag6A", "SivO8kGztXXGpHQxQQ6U");
+//                testCreateUser("new-test-user-102", textView3);
+
+                // created multiple users in firebase manually to test...
+//                int rand = new Random().nextInt(5);
+//                textView3.setText("calling for user: " + rand);
+//                testGetUserByUserName("new-test-user-" + rand, textView3);
+
+                testAddUserToGroup("new-test-user-102", "test_group_1", textView3);
+
+//                testCreateItem("test_item_1", "test_group", "test_user", textView3);
+//                testGetItemByItemId("uVG78vhrpLhIcQRBdKhu", textView3);
+
+//                testCreateGroup("test_group_1", textView3);
+                testGetGroupByGroupName("test_group_1", textView3);
             }
         });
 
+        test_button_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                testCreateUser("new-test-user-102", textView4);
+
+                int rand = new Random().nextInt(5);
+                textView4.setText("calling for user: " + rand);
+                testGetUserByUserName("new-test-user-" + rand, textView4);
+            }
+        });
+    }
+
+    private void testCreateUser(String userName, TextView textView) {
+        userService.createUser(userName, new UserServiceCallbacks.CreateUserTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess) {
+                textView.setText("Created user: " + userName + " with result: " + isSuccess);
+            }
+        });
+    }
+
+    private void testGetUserByUserName(String userName, TextView textView) {
+        userService.getUserByUsername(userName,
+                (UserServiceCallbacks.GetUserByUserNameTaskCallback) user -> {
+            String msg = user.toString();
+            textView.setText(msg);
+        });
+    }
+
+    private void testAddUserToGroup(String userName, String groupName, TextView textView) {
+        userService.addUserToGroup(userName, groupName, new UserServiceCallbacks.AddUserToGroupTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess) {
+                textView.setText("Added user: " + userName + " to group: " + groupName + " result: " + isSuccess);
+            }
+        });
+    }
+
+    private void testCreateItem(String itemName, String groupName, String userName, TextView textView) {
+        itemService.createItem(itemName, groupName, userName, new ItemServiceCallbacks.CreateItemTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess) {
+                textView.setText("Item: " + itemName + " created under group: " + groupName
+                        + " with result: " + isSuccess);
+            }
+        });
+    }
+
+    private void testGetItemByItemId(String itemId, TextView textView) {
+        itemService.getItemByItemId(itemId, new ItemServiceCallbacks.GetItemByItemIdTaskCallback() {
+            @Override
+            public void onComplete(Item item) {
+                String msg = item.toString();
+                textView.setText(msg);
+            }
+        });
+    }
+
+    private void testCreateGroup(String groupName, TextView textView) {
+        groupService.createGroup(groupName, new GroupServiceCallbacks.CreateGroupTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess) {
+                textView.setText("Create group: " + groupName + " with result: " + isSuccess);
+            }
+        });
+    }
+
+    private void testGetGroupByGroupName(String groupName, TextView textView) {
+        groupService.getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
+            @Override
+            public void onComplete(Group group) {
+                String msg = group.toString();
+                textView.setText(msg);
+            }
+        });
     }
 }

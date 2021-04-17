@@ -1,6 +1,5 @@
 package edu.neu.madcourse.getit.services;
 
-import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,13 +18,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-import edu.neu.madcourse.getit.handlers.MainThreadHandler;
+import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
-import edu.neu.madcourse.getit.models.UserModel;
 
 public class GroupService {
 
@@ -36,12 +31,10 @@ public class GroupService {
     private static final String REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_TO_PURCHASED_CATEGORY";
     private static final String REMOVE_ITEMID_FROM_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_PURCHASED_CATEGORY";
 
-    Group group;
     FirebaseFirestore db;
     CollectionReference users;
     CollectionReference groups;
     CollectionReference items;
-    private boolean createGroupSuccessFlag;
 
     public GroupService() {
         db = FirebaseFirestore.getInstance();
@@ -50,64 +43,51 @@ public class GroupService {
         items = db.collection("items");
     }
 
-    public boolean createGroup(String groupName) {
+    public void createGroup(String groupName, GroupServiceCallbacks.CreateGroupTaskCallback callback) {
         Map<String, Object> newGroup = new HashMap<>();
         newGroup.put("group_name", groupName);
         newGroup.put("items_to_purchase", Arrays.asList());
         newGroup.put("items_purchased", Arrays.asList());
         newGroup.put("users", Arrays.asList());
 
-        createGroupSuccessFlag = false;
-        ServiceTaskHandler.performTask(() -> createGroupAsyncTask(newGroup));
-
-        return createGroupSuccessFlag;
-    }
-
-    private void createGroupAsyncTask(Map<String, Object> newGroup) {
         groups.document()
                 .set(newGroup)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(CREATE_GROUP_STATUS, "Success");
-                        createGroupSuccessFlag = true;
+                        callback.onComplete(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(CREATE_GROUP_STATUS, "Failed");
-                        createGroupSuccessFlag = false;
+                        callback.onComplete(false);
                     }
                 });
     }
 
-
-    //TODO: Make this method return Group object.
-    public void getGroupByGroupName(String groupName, MainThreadHandler mainThreadHandler) {
+    public void getGroupByGroupName(String groupName,
+                                    GroupServiceCallbacks.GetGroupByGroupNameTaskCallback callback) {
         Query query = groups.whereEqualTo("group_name", groupName);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Group group = null;
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
                         group = (Group) document.toObject(Group.class);
                         group.setGroupId(document.getId());
-                        Message group_message = Message.obtain();
-                        group_message.obj = group;
-                        mainThreadHandler.handleMessage(group_message);
                     }
                 } else {
                     Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
-                    group = null;
                 }
+
+                callback.onComplete(group);
             }
         });
-    }
-
-    private void getGroupAsyncTask(Query query) {
-
     }
 
     public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {

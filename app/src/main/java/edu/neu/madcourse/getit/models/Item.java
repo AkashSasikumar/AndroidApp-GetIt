@@ -69,4 +69,10 @@ public class Item {
     public void setDate_purchase(Timestamp date_purchase) {
         this.date_purchase = date_purchase;
     }
+
+    @Override
+    public String toString() {
+        return "item: " + getItem_name() + "\ngroup: " + getGroup_name()
+                + "\nuser: " + getUser_to_request() + "\nadded on: " + getDate_added();
+    }
 }
