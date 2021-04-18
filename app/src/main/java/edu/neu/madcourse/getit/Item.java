@@ -1,5 +1,6 @@
 package edu.neu.madcourse.getit;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.widget.ImageButton;
 
