@@ -108,6 +108,7 @@
         android:maxLines="4"
         android:text="Please get red delicious apples from Stop And Shop. The normal price should be around $5."
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:gravity="left"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/item_image"

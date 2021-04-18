@@ -5,14 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -37,6 +43,7 @@ public class GroupItems extends AppCompatActivity {
     private FloatingActionButton mAddItems;
     ArrayList<Item> mItemList = new ArrayList<>();
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +55,7 @@ public class GroupItems extends AppCompatActivity {
         mAddItems = findViewById(R.id.add_items);
         mAddItems.setOnClickListener(v->addItems());
 
-        mRecyclerView = findViewById(R.id.recycler_items);
+         mRecyclerView = findViewById(R.id.recycler_items);
          mRecyclerView.setHasFixedSize(true);
          mLayoutManager = new LinearLayoutManager(this);
          mAdapter = new ItemAdaptor(mItemList);
@@ -75,12 +82,52 @@ public class GroupItems extends AppCompatActivity {
         mItemInputDialog = itemDetailsBuilder.create();
     }
 
+    private boolean hasCamera(){
+        PackageManager pm = this.getPackageManager();
+        boolean hasCamera = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+        if(hasCamera){
+            Snackbar.make(mRecyclerView, "Device has camera", Snackbar.LENGTH_LONG).show();
+            return true;
+        }
+        else {
+            Snackbar.make(mRecyclerView, "Device does not have camera", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    private void takePicture(){
+        if (hasCamera()){
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            } catch (ActivityNotFoundException e) {
+                // display error state to the user
+            }
+        }
+        else{
+            Snackbar.make(mRecyclerView, "Device does not have camera", Snackbar.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ImageView imageView = (ImageView) mItemInputView.findViewById(R.id.item_image);
+            imageView.setImageBitmap(imageBitmap);
+        }
+    }
+
     private void addItems() {
+
         Item addedItem = new Item( "Apples_new" , "Gala Apples", "Stop & Shop", "2 lb", "10/12/21 at 10:15 p.m",
                 new User("Akash", "Shashikumar", "akash@gmail.com"),
                 null,
                 R.drawable.apples);
-
+        takePicture();
         mItemList.add(0, addedItem);
         mAdapter.notifyDataSetChanged();
         mItemInputDialog.show();

@@ -3,6 +3,8 @@
     package="edu.neu.madcourse.getit">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
