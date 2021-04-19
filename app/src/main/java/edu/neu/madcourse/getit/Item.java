@@ -2,45 +2,69 @@ package edu.neu.madcourse.getit;
 
 import android.graphics.Bitmap;
 import android.media.Image;
-import android.widget.ImageButton;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Item {
 
     private String mName;
-    private String mDesc;
-    private String mPreferredStore;
     private String mQuantity;
-    private String mPostedOn;
+    private String mPreferredStore;
+    private String mPreferredBrand;
+    // private String mPostedOn;
+
+    private LocalDateTime mPostedDateTime;
     private User mUserPosted;
     private User mUserGettingIt;
-    private int mImage;
+    private String mInstructions;
+    // private int mImage;
+    private Bitmap mImageBitmap;
 
-    public String getPostedOn() {
-        return mPostedOn;
+    public Item(){
+
     }
 
-    public void setPostedOn(String mPostedOn) {
-        this.mPostedOn = mPostedOn;
-    }
-
-    public Item(String name, String desc, String preferredStore, String quantity, String postedOn,
-                User userPosted, User userGettingIt, int itemImage){
+    public Item(String name, String quantity, String preferredStore, String preferredBrand, LocalDateTime postedDateTime,
+                User userPosted, User userGettingIt, Bitmap itemImageBitmap, String instructions){
         mName = name;
-        mDesc = desc;
+        mInstructions = instructions;
         mPreferredStore = preferredStore;
+        mPreferredBrand = preferredBrand;
         mQuantity = quantity;
-        mPostedOn = postedOn;
+        mPostedDateTime = postedDateTime;
         mUserPosted = userPosted;
         mUserGettingIt = userGettingIt;
-        mImage = itemImage;
+        mImageBitmap = itemImageBitmap;
     }
 
-    public int getImage() {
-        return mImage;
+    public Bitmap getImageBitmap() {
+        return mImageBitmap;
     }
 
-    public void setImage(int mImage) {
-        this.mImage = mImage;
+    public void setImageBitmap(Bitmap mImageBitmap) {
+        this.mImageBitmap = mImageBitmap;
+    }
+
+    public String getPreferredBrand() {
+        return mPreferredBrand;
+    }
+
+    public void setPreferredBrand(String mPreferredBrand) {
+        this.mPreferredBrand = mPreferredBrand;
+    }
+    public LocalDateTime getPostedDateTime() {
+        return mPostedDateTime;
+    }
+
+    public String getPostedDateTimeAsString() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss");
+        return dtf.format(mPostedDateTime);
+    }
+
+
+    public void setPostedDateTime(LocalDateTime mPostedDateTime) {
+        this.mPostedDateTime = mPostedDateTime;
     }
 
     public String getName() {
@@ -51,12 +75,12 @@ public class Item {
         this.mName = mName;
     }
 
-    public String getDesc() {
-        return mDesc;
+    public String getInstructions() {
+        return mInstructions;
     }
 
-    public void setDesc(String mDesc) {
-        this.mDesc = mDesc;
+    public void setInstructions(String mDesc) {
+        this.mInstructions = mDesc;
     }
 
     public String getPreferredStore() {

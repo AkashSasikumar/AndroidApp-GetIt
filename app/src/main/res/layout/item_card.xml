@@ -16,18 +16,18 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/item_image"
+            android:id="@+id/item_image_card"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="10dp"
+            android:background="@drawable/rounded_outline"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/apples"
-            android:background="@drawable/rounded_outline" />
+            tools:src="@drawable/apples" />
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/item_name_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -35,52 +35,52 @@
             android:text="Apples"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
-            app:layout_constraintTop_toTopOf="@id/item_image" />
+            app:layout_constraintStart_toEndOf="@+id/item_image_card"
+            app:layout_constraintTop_toTopOf="@id/item_image_card" />
 
         <TextView
-            android:id="@+id/item_quantity"
+            android:id="@+id/item_quantity_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/aclonica"
             android:text="Quantity: 2 lb"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintBottom_toTopOf="@+id/item_store"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
-            app:layout_constraintTop_toBottomOf="@+id/item_name" />
+            app:layout_constraintBottom_toTopOf="@+id/item_store_card"
+            app:layout_constraintStart_toEndOf="@+id/item_image_card"
+            app:layout_constraintTop_toBottomOf="@+id/item_name_card" />
 
         <TextView
-            android:id="@+id/item_store"
+            android:id="@+id/item_store_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/aclonica"
             android:text="Prefered Store: Target"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintBottom_toTopOf="@+id/item_posted_by"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
-            app:layout_constraintTop_toBottomOf="@+id/item_quantity" />
+            app:layout_constraintBottom_toTopOf="@+id/item_posted_by_card"
+            app:layout_constraintStart_toEndOf="@+id/item_image_card"
+            app:layout_constraintTop_toBottomOf="@+id/item_quantity_card" />
 
         <TextView
-            android:id="@+id/item_posted_by"
+            android:id="@+id/item_posted_by_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/aclonica"
             android:text="Posted by: Akash"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintBottom_toBottomOf="@+id/item_image"
-            app:layout_constraintStart_toEndOf="@+id/item_image"
-            app:layout_constraintTop_toBottomOf="@+id/item_store" />
+            app:layout_constraintBottom_toTopOf="@+id/get_item_card"
+            app:layout_constraintStart_toEndOf="@+id/item_image_card"
+            app:layout_constraintTop_toBottomOf="@+id/item_store_card" />
 
         <Button
-            android:id="@+id/button_get_it"
+            android:id="@+id/get_item_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="2dp"
+            android:layout_marginRight="10dp"
             android:backgroundTint="#689F38"
             android:fontFamily="@font/aclonica"
             android:text="I'll get it!"
@@ -89,7 +89,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_image" />
+            app:layout_constraintTop_toBottomOf="@+id/item_image_card" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,12 +37,12 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         public ItemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
-            mImageView = itemView.findViewById(R.id.item_image);
-            mName = itemView.findViewById(R.id.item_name);
-            mQuantity = itemView.findViewById(R.id.item_quantity);
-            mStore = itemView.findViewById(R.id.item_store);
-            mPostedBy = itemView.findViewById(R.id.item_posted_by);
-            mGetIt = itemView.findViewById(R.id.button_get_it);
+            mImageView = itemView.findViewById(R.id.item_image_card);
+            mName = itemView.findViewById(R.id.item_name_card);
+            mQuantity = itemView.findViewById(R.id.item_quantity_card);
+            mStore = itemView.findViewById(R.id.item_store_card);
+            mPostedBy = itemView.findViewById(R.id.item_posted_by_card);
+            mGetIt = itemView.findViewById(R.id.get_item_card);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,7 +77,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         holder.mStore.setText("Preferred store: " + currentItem.getPreferredStore());
         holder.mQuantity.setText("Quantity: " + currentItem.getQuantity());
         holder.mPostedBy.setText("Posted by: " + currentItem.getUserPosted().getFirstName());
-        holder.mImageView.setImageResource(R.drawable.apples);
+        holder.mImageView.setImageBitmap(currentItem.getImageBitmap());
 
         if (currentItem.getUserGettingIt() != null){
             holder.mGetIt.setBackgroundColor(Color.parseColor(mGreyColor));

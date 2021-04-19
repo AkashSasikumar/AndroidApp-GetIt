@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/relative_layout_image"
+        android:id="@+id/constraint_layout_image"
         android:layout_width="fill_parent"
         android:layout_height="250dp"
         android:layout_marginStart="8dp"
@@ -36,7 +36,7 @@
             android:layout_marginStart="80dp"
             android:layout_marginEnd="80dp"
             android:background="#BF616161"
-            android:text="Add Image"
+            android:text="Take Image"
             app:layout_constraintBottom_toTopOf="@+id/upload_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -66,52 +66,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/aclonica"
-        android:text="Apples"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="Item name:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relative_layout_image" />
+        app:layout_constraintTop_toTopOf="@+id/item_name_edit"
+        app:layout_constraintBottom_toBottomOf="@id/item_name_edit"
+        app:layout_constraintEnd_toStartOf="@id/item_name_edit"/>
 
     <TextView
         android:id="@+id/item_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/aclonica"
-        android:text="Quantity: 2 lb"
+        android:text="Quantity:"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_name" />
+        app:layout_constraintTop_toTopOf="@+id/item_quantity_edit"
+        app:layout_constraintBottom_toBottomOf="@id/item_quantity_edit"/>
 
     <TextView
         android:id="@+id/item_store"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/aclonica"
-        android:text="Prefered Store: Target"
+        android:text="Preferred Store:"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_quantity" />
-
-    <TextView
-        android:id="@+id/item_posted_by"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/aclonica"
-        android:text="Posted by: Akash (akash011995@gmail.com)"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_store" />
+        app:layout_constraintTop_toTopOf="@+id/item_store_edit"
+        app:layout_constraintBottom_toBottomOf="@id/item_store_edit"/>
 
     <Button
-        android:id="@+id/button_get_it"
+        android:id="@+id/post_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -127,36 +118,112 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_note" />
+        app:layout_constraintTop_toBottomOf="@+id/item_instructions_edit" />
 
     <TextView
-        android:id="@+id/item_posted_on"
+        android:id="@+id/instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/aclonica"
-        android:text="Posted on: 10/12/21 at 10:15 p.m"
+        android:text="Additional Instructions:"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_posted_by" />
+        app:layout_constraintTop_toBottomOf="@+id/item_brand_edit" />
 
     <TextView
-        android:id="@+id/item_note"
+        android:id="@+id/item_brand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:fontFamily="@font/aclonica"
+        android:text="Prefered Brand:"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_brand_edit"
+        app:layout_constraintBottom_toBottomOf="@id/item_brand_edit"/>
+
+    <EditText
+        android:id="@+id/item_instructions_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/edit_text_border"
         android:gravity="left"
         android:inputType="textMultiLine"
         android:lines="4"
+        android:maxLength="140"
         android:maxLines="4"
-        android:text="Please get red delicious apples from Stop And Shop. The normal price should be around $5."
+        android:padding="8dp"
+        android:fontFamily="@font/aclonica"
+        android:hint="Please get red delicious apples. The price should be around $5."
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_posted_on" />
+        app:layout_constraintTop_toBottomOf="@id/instructions" />
+
+    <EditText
+        android:id="@+id/item_name_edit"
+        android:hint="Apples"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:maxLines="1"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintTop_toBottomOf="@+id/constraint_layout_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_name"
+        />
+
+    <EditText
+        android:id="@+id/item_quantity_edit"
+        android:hint="2.5 lb"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:maxLines="1"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_quantity"
+        app:layout_constraintTop_toBottomOf="@id/item_name_edit" />
+
+    <EditText
+        android:id="@+id/item_store_edit"
+        android:text="Any"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:maxLines="1"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_store"
+        app:layout_constraintTop_toBottomOf="@+id/item_quantity_edit" />
+
+    <EditText
+        android:id="@+id/item_brand_edit"
+        android:text="Any"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:maxLines="1"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_brand"
+        app:layout_constraintTop_toBottomOf="@+id/item_store_edit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
