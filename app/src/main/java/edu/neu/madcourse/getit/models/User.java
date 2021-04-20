@@ -6,7 +6,7 @@ import java.util.List;
 
 public class User {
 
-
+    private String user_id;
     private String user_email, user_full_name;
     private long user_score;
     private List<String> user_groups;
@@ -73,8 +73,16 @@ public class User {
         this.user_items_getting = user_items_getting;
     }
 
-//    @Override
-//    public String toString() {
-//        return "User: " + getFullName() + "\nscore: " + getScore() + "\ngroups: " + getGroups().toString();
-//    }
+    public String getUserId() {
+        return user_id;
+    }
+
+    public void setUserId(String user_id) {
+        this.user_id = user_id;
+    }
+
+    @Override
+    public String toString() {
+        return "user: " + getFullName() + "\nemail: " + getUserEmail() + "\nscore: " + getScore();
+    }
 }

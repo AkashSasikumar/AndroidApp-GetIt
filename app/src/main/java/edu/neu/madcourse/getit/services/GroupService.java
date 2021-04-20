@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
+import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
 
 public class GroupService {
@@ -30,6 +31,7 @@ public class GroupService {
     private static final String ADD_ITEMID_TO_PURCHASED_CATEGORY = "ADD_ITEMID_TO_PURCHASED_CATEGORY";
     private static final String REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_TO_PURCHASED_CATEGORY";
     private static final String REMOVE_ITEMID_FROM_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_PURCHASED_CATEGORY";
+    private static final String ADD_USER_TO_GROUP = "ADD_USER_TO_GROUP";
 
     FirebaseFirestore db;
     CollectionReference users;
@@ -90,6 +92,24 @@ public class GroupService {
         });
     }
 
+
+    public void addUserToGroup(String userID, String groupName,
+                                  GroupServiceCallbacks.AddUserToGroupTaskCallback callback){
+        getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
+            @Override
+            public void onComplete(Group group) {
+                try{
+                    groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
+                    Log.d(ADD_USER_TO_GROUP, "Success");
+                    callback.onComplete(true);
+                }catch (Error e){
+                    Log.d(ADD_USER_TO_GROUP, "Success");
+                    callback.onComplete(false);
+                }
+            }
+        });
+    }
+
     public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
         try {
             groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));
@@ -133,4 +153,5 @@ public class GroupService {
             return false;
         }
     }
+
 }

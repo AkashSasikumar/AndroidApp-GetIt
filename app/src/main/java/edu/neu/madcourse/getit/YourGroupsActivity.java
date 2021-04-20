@@ -17,16 +17,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.User;
+import edu.neu.madcourse.getit.services.GroupService;
 import edu.neu.madcourse.getit.services.UserService;
 
 public class YourGroupsActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText mGroupName, mGroupCode;
     Button join_group_btn;
+    Button create_group_btn;
     List<GroupView> groups;
     UserService userService;
+    GroupService groupService;
     private FirebaseAuth fAuth;
     private String userID;
 
@@ -40,10 +44,13 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mGroupName = findViewById(R.id.group_name_field);
         mGroupCode = findViewById(R.id.group_code_field);
         join_group_btn = findViewById(R.id.join_group_btn);
+        create_group_btn = findViewById(R.id.create_group_btn);
         join_group_btn.setOnClickListener(this);
+        create_group_btn.setOnClickListener(this);
         final RecyclerView groupsRV = findViewById(R.id.recyclerView);
         groups = new ArrayList<>();
         userService = new UserService();
+        groupService = new GroupService();
         fAuth = FirebaseAuth.getInstance();
         userID = fAuth.getCurrentUser().getUid();
 
@@ -79,9 +86,12 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+
+        String groupCode = mGroupCode.getText().toString().trim();
+        String groupName = mGroupName.getText().toString().trim();
+
         if (v.getId() == R.id.join_group_btn) {
-            String groupCode = mGroupCode.getText().toString().trim();
-            String groupName = mGroupName.getText().toString().trim();
+
             if (TextUtils.isEmpty(groupName) && TextUtils.isEmpty(groupCode)) {
                 mGroupName.setError("At least one of Group Name, Group Code fields is required");
             } else {
@@ -95,6 +105,28 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             intent.putExtra(INTENT_GROUP_NAME, "Test1");
             startActivity(intent);
 
+        }
+        else if(v.getId() == R.id.create_group_btn){
+            if (TextUtils.isEmpty(groupName)) {
+                mGroupName.setError("Group Name is required to create a Group!");
+                return;
+            }
+            groupService.createGroup(groupName, new GroupServiceCallbacks.CreateGroupTaskCallback() {
+                @Override
+                public void onComplete(boolean isSuccess) {
+                    if (isSuccess){
+                        // add current user to the created group
+                        groupService.addUserToGroup(userID, groupName, new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
+                            @Override
+                            public void onComplete(boolean isSuccess) {
+                                if (isSuccess){
+                                    Snackbar.make(v, "Group " + groupName + " created successfully!", Snackbar.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 }

@@ -32,6 +32,7 @@ public class UserService {
     private static final String CREATE_USER_STATUS = "CREATE_USER_STATUS";
     private static final String GET_USER_BY_USER_NAME = "GET_USER_BY_USER_NAME";
 
+
     FirebaseFirestore db;
     CollectionReference users;
     CollectionReference groups;
@@ -92,6 +93,7 @@ public class UserService {
                         user.setGroups((ArrayList<String>) user_map.get("user_groups"));
                         user.setUserItemsGetting((ArrayList<String>) user_map.get("user_items_getting"));
                         user.setUserItemsPosted((ArrayList<String>) user_map.get("user_items_posted"));
+                        user.setUserId(userID);
                     }
                 }else{
                     Log.d(GET_USER_BY_USER_NAME, "Error getting document: ", task.getException());
@@ -99,27 +101,11 @@ public class UserService {
                 callback.onComplete(user);
             }
         });
-
-//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                User user = null;
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-//                        Log.d(GET_USER_BY_USER_NAME, document.getId() + " => " + document.getData());
-//                        user = (User) document.toObject(User.class);
-//                    }
-//                } else {
-//                    Log.d(GET_USER_BY_USER_NAME, "Error getting document: ", task.getException());
-//                }
-//
-//                callback.onComplete(user);
-//            }
-//        });
     }
 
-    public void addUserToGroup(String userName, String groupName,
-                               UserServiceCallbacks.AddUserToGroupTaskCallback callback) {
+
+//    public void addUserToGroup_old(String userName, String groupName,
+//                               UserServiceCallbacks.AddUserToGroupTaskCallback callback) {
 //        Query query = users.whereEqualTo("user_name", userName);
 //        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
@@ -154,7 +140,7 @@ public class UserService {
 //                }
 //            }
 //        });
-    }
+//    }
 
     //TODO: Implement removeUserFromGroup method
 
