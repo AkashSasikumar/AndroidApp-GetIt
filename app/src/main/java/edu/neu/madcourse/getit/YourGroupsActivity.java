@@ -46,7 +46,6 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         groupsRV.setAdapter(groupsRVAdapter);
         groupsRV.setLayoutManager(new LinearLayoutManager(this));
 
-
     }
 
 
@@ -62,6 +61,9 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             }
 
             // add the user to the group and update the recycler view to reflect the new group
+
+            // ToDo: remove test code
+            startActivity(new Intent(getApplicationContext(),GroupItems.class));
 
         }
     }

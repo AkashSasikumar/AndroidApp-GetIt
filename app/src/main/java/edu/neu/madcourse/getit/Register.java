@@ -2,11 +2,14 @@ package edu.neu.madcourse.getit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -24,6 +27,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     Button mRegisterBtn;
     TextView mLoginHere;
     ProgressBar mProgressBar;
+    ConstraintLayout mRegisterLayout;
     FirebaseAuth fAuth;
 
     @Override
@@ -38,6 +42,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         mRegisterBtn = findViewById(R.id.register);
         mLoginHere = findViewById(R.id.loginHere);
         mProgressBar = findViewById(R.id.registerProgressBar);
+        mRegisterLayout = findViewById(R.id.register_layout);
         fAuth = FirebaseAuth.getInstance();
 
         //set progress bar to invisible
@@ -46,6 +51,16 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         //set on click listeners
         mRegisterBtn.setOnClickListener(this);
         mLoginHere.setOnClickListener(this);
+        mRegisterLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // hide keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return false;
+            }
+        });
+
         // check if user is already logged in
         //if (fAuth.getCurrentUser() != null){
         //    startActivity(new Intent(getApplicationContext(),Login.class));
@@ -102,4 +117,5 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             });
         }
     }
+
 }
