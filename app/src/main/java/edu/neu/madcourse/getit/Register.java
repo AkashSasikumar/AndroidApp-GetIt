@@ -31,8 +31,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     TextView mLoginHere;
     ProgressBar mProgressBar;
     ConstraintLayout mRegisterLayout;
+    String mUserID;
     FirebaseAuth fAuth;
     UserService userService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +82,15 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         if (v.getId() == R.id.loginHere){
             startActivity(new Intent(getApplicationContext(),Login.class));
         } else if (v.getId() == R.id.register){
+            String fullName = mFullName.getText().toString().trim();
             String email = mEmail.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
             String confirmPassword = mConfirmPassword.getText().toString().trim();
+
+            if(TextUtils.isEmpty(fullName)){
+                mEmail.setError("Full Name is required");
+                return;
+            }
 
             if(TextUtils.isEmpty(email)){
                 mEmail.setError("Email is required");
@@ -111,11 +119,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        mProgressBar.setVisibility(View.INVISIBLE);
-                        userService.createUser(email, new UserServiceCallbacks.CreateUserTaskCallback() {
+                        mUserID = fAuth.getCurrentUser().getUid();
+                        userService.createUser(mUserID, email, fullName, new UserServiceCallbacks.CreateUserTaskCallback() {
                             @Override
                             public void onComplete(boolean isSuccess) {
                                 if(isSuccess) {
+                                    mProgressBar.setVisibility(View.INVISIBLE);
                                     Snackbar.make(v, "User created successfully. Please login!", Snackbar.LENGTH_LONG).show();
                                     startActivity(new Intent(getApplicationContext(),Login.class));
                                 } else {

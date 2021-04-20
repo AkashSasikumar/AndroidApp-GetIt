@@ -73,12 +73,12 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void testCreateUser(String userName, TextView textView) {
-        userService.createUser(userName, new UserServiceCallbacks.CreateUserTaskCallback() {
-            @Override
-            public void onComplete(boolean isSuccess) {
-                textView.setText("Created user: " + userName + " with result: " + isSuccess);
-            }
-        });
+//        userService.createUser(userName, new UserServiceCallbacks.CreateUserTaskCallback() {
+//            @Override
+//            public void onComplete(boolean isSuccess) {
+//                textView.setText("Created user: " + userName + " with result: " + isSuccess);
+//            }
+//        });
     }
 
     private void testGetUserByUserName(String userName, TextView textView) {

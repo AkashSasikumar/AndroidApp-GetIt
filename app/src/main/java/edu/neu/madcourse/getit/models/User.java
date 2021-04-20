@@ -1,48 +1,80 @@
 package edu.neu.madcourse.getit.models;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class User {
 
-    private String user_name;
-    private int score;
-    private List<String> groups;
+
+    private String user_email, user_full_name;
+    private long user_score;
+    private List<String> user_groups;
+    private List<String> user_items_posted;
+    private List<String> user_items_getting;
 
     public User() {
     }
 
-    public User(String user_name, int score, List<String> groups) {
-        this.user_name = user_name;
-        this.score = score;
-        this.groups = groups;
+    public User(String user_email, String user_name, int user_score, List<String> user_groups, List<String> user_items_posted, List<String> user_items_getting ) {
+        this.user_email = user_email;
+        this.user_full_name = user_name;
+        this.user_score = user_score;
+        this.user_groups = user_groups;
+        this.user_items_posted =user_items_posted;
+        this.user_items_getting= user_items_getting;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getFullName() {
+        return user_full_name;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setFullName(String user_full_name) {
+        this.user_full_name = user_full_name;
     }
 
-    public int getScore() {
-        return score;
+    public long getScore() {
+        return user_score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setScore(long user_score) {
+        this.user_score = user_score;
     }
 
     public List<String> getGroups() {
-        return groups;
+        return user_groups;
     }
 
-    public void setGroups(List<String> groups) {
-        this.groups = groups;
+    public void setGroups(List<String> user_groups) {
+        this.user_groups = user_groups;
     }
 
-    @Override
-    public String toString() {
-        return "User: " + getUser_name() + "\nscore: " + getScore() + "\ngroups: " + getGroups().toString();
+    public String getUserEmail() {
+        return user_email;
     }
+
+    public void setUserEmail(String user_email) {
+        this.user_email = user_email;
+    }
+
+    public List<String> getUserItemsPosted() {
+        return user_items_posted;
+    }
+
+    public void setUserItemsPosted(List<String> user_items_posted) {
+        this.user_items_posted = user_items_posted;
+    }
+
+    public List<String> getUserItemsGetting() {
+        return user_items_getting;
+    }
+
+    public void setUserItemsGetting(List<String> user_items_getting) {
+        this.user_items_getting = user_items_getting;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "User: " + getFullName() + "\nscore: " + getScore() + "\ngroups: " + getGroups().toString();
+//    }
 }

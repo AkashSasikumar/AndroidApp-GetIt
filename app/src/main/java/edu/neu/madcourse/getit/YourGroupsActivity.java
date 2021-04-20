@@ -14,9 +14,7 @@ import android.widget.EditText;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
@@ -30,6 +28,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     List<GroupView> groups;
     UserService userService;
     private FirebaseAuth fAuth;
+    private String userID;
 
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
 
@@ -46,9 +45,10 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         groups = new ArrayList<>();
         userService = new UserService();
         fAuth = FirebaseAuth.getInstance();
+        userID = fAuth.getCurrentUser().getUid();
 
-        String email = fAuth.getCurrentUser().getEmail();
-        userService.getUserByUsername(email, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+        // get the user info from firebase
+        userService.getUserByUsername(userID, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
             @Override
             public void onComplete(User user) {
                 List<String> groupNames = user.getGroups();
