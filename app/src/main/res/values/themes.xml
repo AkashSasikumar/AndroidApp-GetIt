@@ -18,6 +18,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:titleTextStyle">@style/myTheme.ActionBar.Text</item>
     </style>
 
+    <style name="myTheme.ActionBar.Text" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/black</item>
+        <item name="titleTextColor">@color/black</item>>
+    </style>
 </resources>
