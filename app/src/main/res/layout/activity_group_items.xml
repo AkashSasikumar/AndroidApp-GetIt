@@ -11,9 +11,6 @@
     tools:context=".GroupItems"
     android:theme="@style/AppTheme.NoActionBar">
 
-<!--    <include layout="@layout/item_toolbar"-->
-<!--        android:id="@+id/item_sort_toolbar"/>-->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_items"
         android:layout_width="wrap_content"

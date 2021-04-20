@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 
 public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder> {
@@ -18,6 +20,8 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
     public interface OnItemClickListener{
 
         void onItemClick(int position);
+
+        void onGetButtonClick(int position);
     }
 
     private ArrayList<Item> mItemList;
@@ -27,6 +31,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
     public void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
     }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView mImageView;
@@ -51,6 +56,18 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION){
                             listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
+
+            mGetIt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onGetButtonClick(position);
                         }
                     }
                 }

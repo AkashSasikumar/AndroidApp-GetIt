@@ -45,6 +45,7 @@ public class GroupItems extends AppCompatActivity {
     private final int GREEN_COLOR = Color.parseColor("#689F38");
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int GET_FROM_GALLERY = 3;
+    private static final String INTENT_GROUP_NAME = "GROUP_NAME";
 
     private ArrayList<Item> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -77,15 +78,19 @@ public class GroupItems extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_items);
 
+        setToolbarTitle();
         fAuth = FirebaseAuth.getInstance();
         mLoggedInUser = getLoggedInUser();
-        // mToolbar = findViewById(R.id.item_toolbar);
-        //setSupportActionBar(mToolbar);
         // ToDo: add real logic inside populate items
-        mItemList = populateItems();
+        mItemList = new ArrayList<>(); //populateItems();
         setupRecyclerView();
         createItemDetailsDialog();
         createItemInputDialog();
+    }
+
+    private void setToolbarTitle(){
+        String title = getIntent().getStringExtra(INTENT_GROUP_NAME);
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -147,8 +152,13 @@ public class GroupItems extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new ItemAdaptor.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                mItemList.get(position);
+                // mItemList.get(position);
                 displayItemDetails(position);
+            }
+
+            @Override
+            public void onGetButtonClick(int position) {
+               getItem(position);
             }
         });
     }
@@ -169,14 +179,21 @@ public class GroupItems extends AppCompatActivity {
         mdPostedBy =(TextView)  mItemDetailsView.findViewById(R.id.item_posted_by_display);
         mdPostedOn = (TextView) mItemDetailsView.findViewById(R.id.item_posted_on_display);
         mdButtonGetIt = (Button) mItemDetailsView.findViewById(R.id.get_item_display);
-
-        // set listeners
-        mdButtonGetIt.setOnClickListener(v->getItem());
+//        // set listeners
+//        mdButtonGetIt.setOnClickListener(v->getItem());
     }
 
-    private void getItem() {
+    private void getItem(int position) {
         //ToDo: get selected item and add current user
         // update view should show you are getting it
+        Item currentItem = mItemList.get(position);
+        currentItem.setUserGettingIt(mLoggedInUser);
+        mItemList.remove(position);
+        mItemList.add(position, currentItem);
+        mdButtonGetIt.setText(currentItem.getUserGettingIt().getFirstName() + " is already getting it!");
+        mdButtonGetIt.setBackgroundColor(GREY_COLOR);
+        mdButtonGetIt.setClickable(false);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void displayItemDetails(int position){

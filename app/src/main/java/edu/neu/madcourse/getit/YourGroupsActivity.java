@@ -24,10 +24,13 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     Button join_group_btn;
     List<GroupView> groups;
 
+    private static final String INTENT_GROUP_NAME = "GROUP_NAME";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.your_groups);
+        getSupportActionBar().setTitle("Your Groups");
         mGroupName = findViewById(R.id.group_name_field);
         mGroupCode = findViewById(R.id.group_code_field);
         join_group_btn = findViewById(R.id.join_group_btn);
@@ -63,7 +66,9 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             // add the user to the group and update the recycler view to reflect the new group
 
             // ToDo: remove test code
-            startActivity(new Intent(getApplicationContext(),GroupItems.class));
+            Intent intent = new Intent(getApplicationContext(), GroupItems.class);
+            intent.putExtra(INTENT_GROUP_NAME, "Test Name");
+            startActivity(intent);
 
         }
     }
