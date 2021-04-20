@@ -1,7 +1,9 @@
 package edu.neu.madcourse.getit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +36,8 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class GroupItems extends AppCompatActivity {
 
@@ -44,6 +50,7 @@ public class GroupItems extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ItemAdaptor mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    //private Toolbar mToolbar;
     private FloatingActionButton mAddItems;
     private FirebaseAuth fAuth;
     private User mLoggedInUser;
@@ -65,13 +72,47 @@ public class GroupItems extends AppCompatActivity {
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sort_menu, menu);
+        //MenuItem sortByName = menu.findItem(R.id.sort_by_name);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.sort_by_item_name:
+                Collections.sort(mItemList, Item.itemNameComparator);
+                break;
+            case R.id.sort_by_date_earliest:
+                Collections.sort(mItemList, Item.itemDateOldestComparator);
+                break;
+            case R.id.sort_by_date_latest:
+                Collections.sort(mItemList, Item.itemDateRecentComparator);
+                break;
+            case R.id.sort_by_user_posted:
+                Collections.sort(mItemList, Item.itemUserPostedComparator);
+                break;
+            case R.id.sort_by_user_getting:
+                Collections.sort(mItemList, Item.itemUserGettingComparator);
+                break;
+
+        }
+        mAdapter.notifyDataSetChanged();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_items);
 
         fAuth = FirebaseAuth.getInstance();
         mLoggedInUser = getLoggedInUser();
-
+        // mToolbar = findViewById(R.id.item_toolbar);
+        //setSupportActionBar(mToolbar);
         // ToDo: add real logic inside populate items
         mItemList = populateItems();
         setupRecyclerView();
@@ -326,7 +367,6 @@ public class GroupItems extends AppCompatActivity {
         ArrayList<Item> items = new ArrayList<>();
         BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.image_placeholder);
         Bitmap itemImage = drawable.getBitmap();
-
         for (int i = 1; i <= 10; ++i){
             User userGettingIt = null;
             if(i % 2 == 0){
@@ -339,6 +379,4 @@ public class GroupItems extends AppCompatActivity {
         }
         return items;
     }
-
-
 }

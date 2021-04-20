@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +8,11 @@
     android:background="@drawable/grocery_doodle"
     android:backgroundTint="#DDFFFFFF"
     android:backgroundTintMode="src_over"
-    tools:context=".GroupItems">
+    tools:context=".GroupItems"
+    android:theme="@style/AppTheme.NoActionBar">
+
+<!--    <include layout="@layout/item_toolbar"-->
+<!--        android:id="@+id/item_sort_toolbar"/>-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_items"
@@ -30,6 +35,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
