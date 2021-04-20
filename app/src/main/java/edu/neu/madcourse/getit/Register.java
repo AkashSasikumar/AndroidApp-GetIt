@@ -21,6 +21,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
+import edu.neu.madcourse.getit.services.UserService;
+
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
     EditText mFullName, mEmail, mPassword, mConfirmPassword;
@@ -29,6 +32,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     ProgressBar mProgressBar;
     ConstraintLayout mRegisterLayout;
     FirebaseAuth fAuth;
+    UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         mProgressBar = findViewById(R.id.registerProgressBar);
         mRegisterLayout = findViewById(R.id.register_layout);
         fAuth = FirebaseAuth.getInstance();
+        userService = new UserService();
 
         //set progress bar to invisible
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -107,8 +112,19 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        Snackbar.make(v, "User created successfully. Please login!", Snackbar.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(),Login.class));
+                        userService.createUser(email, new UserServiceCallbacks.CreateUserTaskCallback() {
+                            @Override
+                            public void onComplete(boolean isSuccess) {
+                                if(isSuccess) {
+                                    Snackbar.make(v, "User created successfully. Please login!", Snackbar.LENGTH_LONG).show();
+                                    startActivity(new Intent(getApplicationContext(),Login.class));
+                                } else {
+                                    // TODO: remove this user from fAuth as well
+                                    mProgressBar.setVisibility(View.INVISIBLE);
+                                    Snackbar.make(v, "Error! " + task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }else{
                         mProgressBar.setVisibility(View.INVISIBLE);
                         Snackbar.make(v, "Error! " + task.getException().getMessage(), Snackbar.LENGTH_LONG).show();

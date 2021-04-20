@@ -38,6 +38,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+
+import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
+import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
+import edu.neu.madcourse.getit.models.Group;
+import edu.neu.madcourse.getit.services.GroupService;
+import edu.neu.madcourse.getit.services.ItemService;
 
 public class GroupItems extends AppCompatActivity {
 
@@ -55,6 +62,9 @@ public class GroupItems extends AppCompatActivity {
     private FloatingActionButton mAddItems;
     private FirebaseAuth fAuth;
     private User mLoggedInUser;
+    private String groupName;
+    private GroupService groupService;
+    private ItemService itemService;
 
     // Display item details dialog
     private AlertDialog mItemDetailsDialog;
@@ -81,16 +91,21 @@ public class GroupItems extends AppCompatActivity {
         setToolbarTitle();
         fAuth = FirebaseAuth.getInstance();
         mLoggedInUser = getLoggedInUser();
+        groupService = new GroupService();
+        itemService = new ItemService();
+        mItemList = new ArrayList<>();
+
         // ToDo: add real logic inside populate items
-        mItemList = new ArrayList<>(); //populateItems();
+        populateItems();
+
         setupRecyclerView();
         createItemDetailsDialog();
         createItemInputDialog();
     }
 
     private void setToolbarTitle(){
-        String title = getIntent().getStringExtra(INTENT_GROUP_NAME);
-        getSupportActionBar().setTitle(title);
+        groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
+        getSupportActionBar().setTitle(groupName);
     }
 
     @Override
@@ -387,20 +402,44 @@ public class GroupItems extends AppCompatActivity {
                 GET_FROM_GALLERY);
     }
 
-    private ArrayList<Item> populateItems(){
-        ArrayList<Item> items = new ArrayList<>();
-        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.image_placeholder);
-        Bitmap itemImage = drawable.getBitmap();
-        for (int i = 1; i <= 10; ++i){
-            User userGettingIt = null;
-            if(i % 2 == 0){
-                userGettingIt = new User("Ashwin", "Sir", "ashwin@gmail.com");
-            }
+    private void populateItems(){
+//        ArrayList<Item> items = new ArrayList<>();
+//        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.image_placeholder);
+//        Bitmap itemImage = drawable.getBitmap();
+//        for (int i = 1; i <= 10; ++i){
+//            User userGettingIt = null;
+//            if(i % 2 == 0){
+//                userGettingIt = new User("Ashwin", "Sir", "ashwin@gmail.com");
+//            }
+//
+//            items.add(new Item( "Apples" + i, "2 lb", "Walmart", "Great Value", LocalDateTime.now(),
+//                    mLoggedInUser, userGettingIt, itemImage,
+//                    "Please get red delicious apples. Price should be around 5$."));
+//        }
+//        return items;
 
-            items.add(new Item( "Apples" + i, "2 lb", "Walmart", "Great Value", LocalDateTime.now(),
-                    mLoggedInUser, userGettingIt, itemImage,
-                    "Please get red delicious apples. Price should be around 5$."));
-        }
-        return items;
+        groupService.getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
+            @Override
+            public void onComplete(Group group) {
+                List<String> itemIds = group.getItems_purchased();
+                itemIds.addAll(group.getItems_to_purchase());
+
+                for(String itemId: itemIds) {
+                    itemService.getItemByItemId(itemId, new ItemServiceCallbacks.GetItemByItemIdTaskCallback() {
+                        @Override
+                        public void onComplete(edu.neu.madcourse.getit.models.Item item) {
+                            Item itemm = new Item();
+                            itemm.setName(item.getItem_name());
+                            itemm.setUserGettingIt(new User("test1", "test2", item.getUser_to_purchase()));
+                            itemm.setUserPosted(new User("test3", "test4", item.getUser_to_request()));
+//                            itemm.setPostedDateTime(LocalDateTime.parse());
+
+                            mItemList.add(itemm);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        });
     }
 }

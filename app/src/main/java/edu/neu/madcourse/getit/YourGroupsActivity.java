@@ -12,17 +12,24 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
+import edu.neu.madcourse.getit.models.User;
+import edu.neu.madcourse.getit.services.UserService;
+
 public class YourGroupsActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText mGroupName, mGroupCode;
     Button join_group_btn;
     List<GroupView> groups;
+    UserService userService;
+    private FirebaseAuth fAuth;
 
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
 
@@ -37,17 +44,35 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         join_group_btn.setOnClickListener(this);
         final RecyclerView groupsRV = findViewById(R.id.recyclerView);
         groups = new ArrayList<>();
+        userService = new UserService();
+        fAuth = FirebaseAuth.getInstance();
+
+        String email = fAuth.getCurrentUser().getEmail();
+        userService.getUserByUsername(email, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+            @Override
+            public void onComplete(User user) {
+                List<String> groupNames = user.getGroups();
+                for (int i = 0; i < groupNames.size(); i++) {
+                    GroupView g = new GroupView("GroupCode" + i, "GroupName" + groupNames.get(i));
+                    groups.add(g);
+                }
+                final GroupsRVAdapter groupsRVAdapter = new GroupsRVAdapter(groups, YourGroupsActivity.this);
+
+                groupsRV.setAdapter(groupsRVAdapter);
+                groupsRV.setLayoutManager(new LinearLayoutManager(YourGroupsActivity.this));
+            }
+        });
 
         // hardcoding the groups.
         //TODO: get the groups from the firebase
-        for (int i = 0; i < 15; i++) {
-            GroupView g = new GroupView("GroupCode" + i, "GroupName" + i);
-            groups.add(g);
-        }
-        final GroupsRVAdapter groupsRVAdapter = new GroupsRVAdapter(groups, this);
-
-        groupsRV.setAdapter(groupsRVAdapter);
-        groupsRV.setLayoutManager(new LinearLayoutManager(this));
+//        for (int i = 0; i < 15; i++) {
+//            GroupView g = new GroupView("GroupCode" + i, "GroupName" + i);
+//            groups.add(g);
+//        }
+//        final GroupsRVAdapter groupsRVAdapter = new GroupsRVAdapter(groups, this);
+//
+//        groupsRV.setAdapter(groupsRVAdapter);
+//        groupsRV.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -67,7 +92,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
             // ToDo: remove test code
             Intent intent = new Intent(getApplicationContext(), GroupItems.class);
-            intent.putExtra(INTENT_GROUP_NAME, "Test Name");
+            intent.putExtra(INTENT_GROUP_NAME, "Test1");
             startActivity(intent);
 
         }
