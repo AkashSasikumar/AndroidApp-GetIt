@@ -20,4 +20,5 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <!-- Style to replace actionbar overflow icon. set item 'android:actionOverflowButtonStyle' in AppTheme -->
 </resources>

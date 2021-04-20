@@ -71,6 +71,23 @@ public class GroupItems extends AppCompatActivity {
     private Button mAddImage, mUploadImage, mPostItem;
 
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group_items);
+
+        fAuth = FirebaseAuth.getInstance();
+        mLoggedInUser = getLoggedInUser();
+        // mToolbar = findViewById(R.id.item_toolbar);
+        //setSupportActionBar(mToolbar);
+        // ToDo: add real logic inside populate items
+        mItemList = populateItems();
+        setupRecyclerView();
+        createItemDetailsDialog();
+        createItemInputDialog();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sort_menu, menu);
@@ -98,26 +115,16 @@ public class GroupItems extends AppCompatActivity {
             case R.id.sort_by_user_getting:
                 Collections.sort(mItemList, Item.itemUserGettingComparator);
                 break;
-
+            case R.id.add_member:
+                addMemberToGroup();
+                break;
         }
         mAdapter.notifyDataSetChanged();
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_items);
-
-        fAuth = FirebaseAuth.getInstance();
-        mLoggedInUser = getLoggedInUser();
-        // mToolbar = findViewById(R.id.item_toolbar);
-        //setSupportActionBar(mToolbar);
-        // ToDo: add real logic inside populate items
-        mItemList = populateItems();
-        setupRecyclerView();
-        createItemDetailsDialog();
-        createItemInputDialog();
+    private void addMemberToGroup(){
+        Snackbar.make(mRecyclerView, "User added!", Snackbar.LENGTH_LONG).show();
     }
 
     private User getLoggedInUser(){
