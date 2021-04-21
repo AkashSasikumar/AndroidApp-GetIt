@@ -12,9 +12,4 @@ public class UserServiceCallbacks {
         void onComplete(User user);
     }
 
-    public interface AddUserToGroupTaskCallback {
-        void onComplete(boolean isSuccess);
-    }
-
-
 }

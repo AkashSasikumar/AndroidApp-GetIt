@@ -50,7 +50,7 @@ public class TestActivity extends AppCompatActivity {
 //                textView3.setText("calling for user: " + rand);
 //                testGetUserByUserName("new-test-user-" + rand, textView3);
 
-                testAddUserToGroup("new-test-user-102", "test_group_1", textView3);
+//                testAddUserToGroup("new-test-user-102", "test_group_1", textView3);
 
 //                testCreateItem("test_item_1", "test_group", "test_user", textView3);
 //                testGetItemByItemId("uVG78vhrpLhIcQRBdKhu", textView3);
@@ -89,14 +89,14 @@ public class TestActivity extends AppCompatActivity {
         });
     }
 
-    private void testAddUserToGroup(String userName, String groupName, TextView textView) {
-        userService.addUserToGroup(userName, groupName, new UserServiceCallbacks.AddUserToGroupTaskCallback() {
-            @Override
-            public void onComplete(boolean isSuccess) {
-                textView.setText("Added user: " + userName + " to group: " + groupName + " result: " + isSuccess);
-            }
-        });
-    }
+//    private void testAddUserToGroup(String userName, String groupName, TextView textView) {
+//        userService.addUserToGroup(userName, groupName, new UserServiceCallbacks.AddUserToGroupTaskCallback() {
+//            @Override
+//            public void onComplete(boolean isSuccess) {
+//                textView.setText("Added user: " + userName + " to group: " + groupName + " result: " + isSuccess);
+//            }
+//        });
+//    }
 
 //    private void testCreateItem(String itemName, String groupName, String userName, TextView textView) {
 //        itemService.createItem(itemName, groupName, userName, new ItemServiceCallbacks.CreateItemTaskCallback() {

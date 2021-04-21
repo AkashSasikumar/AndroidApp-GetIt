@@ -11,4 +11,12 @@ public class GroupServiceCallbacks {
     public interface GetGroupByGroupNameTaskCallback {
         void onComplete(Group group);
     }
+
+    public interface AddUserToGroupTaskCallback {
+        void onComplete(boolean isSuccess);
+    }
+
+    public interface GetGroupNameFromGroupIDCallback{
+        void onComplete(String groupName);
+    }
 }
