@@ -13,11 +13,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
 import edu.neu.madcourse.getit.models.Item;
+import edu.neu.madcourse.getit.models.User;
 
 public class ItemService {
 
@@ -36,16 +38,18 @@ public class ItemService {
         items = db.collection("items");
     }
 
-    public void createItem(String itemName, String groupName, String userName,
-                           ItemServiceCallbacks.CreateItemTaskCallback callback) {
+    public void createItem(Item item, ItemServiceCallbacks.CreateItemTaskCallback callback) {
         String newItemsDocId = items.document().getId();
         Map<String, Object> newItem = new HashMap<>();
-        newItem.put("item_name", itemName);
-        newItem.put("user_to_request", userName);
-        newItem.put("user_to_purchase", "");
-        newItem.put("group_name", groupName);
-        newItem.put("date_added", Timestamp.now());
-        newItem.put("date_purchased", null);
+        newItem.put("mName", item.getName());
+        newItem.put("mInstructions", item.getInstructions());
+        newItem.put("mPreferredStore", item.getPreferredStore());
+        newItem.put("mPreferredBrand", item.getPreferredBrand());
+        newItem.put("mQuantity", item.getQuantity());
+        newItem.put("mPostedDateTime", item.getPostedDateTime());
+        newItem.put("mUserPosted", item.getUserPosted());
+        newItem.put("mUserGettingIt", item.getUserGettingIt());
+        newItem.put("mImageBitmap", item.getImageBitmap());
 
         items.document(newItemsDocId)
                 .set(newItem)
@@ -63,6 +67,13 @@ public class ItemService {
                         callback.onComplete(false);
                     }
                 });
+    }
+
+    private Map<String, String> getUserData(User user) {
+        Map<String, String> map = new HashMap<>();
+        map.put("user_email", user.getUserEmail());
+        map.put("user_full_name", user.getFullName());
+        return map;
     }
 
     public void getItemByItemId(String itemId, ItemServiceCallbacks.GetItemByItemIdTaskCallback callback) {

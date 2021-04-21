@@ -98,15 +98,15 @@ public class TestActivity extends AppCompatActivity {
         });
     }
 
-    private void testCreateItem(String itemName, String groupName, String userName, TextView textView) {
-        itemService.createItem(itemName, groupName, userName, new ItemServiceCallbacks.CreateItemTaskCallback() {
-            @Override
-            public void onComplete(boolean isSuccess) {
-                textView.setText("Item: " + itemName + " created under group: " + groupName
-                        + " with result: " + isSuccess);
-            }
-        });
-    }
+//    private void testCreateItem(String itemName, String groupName, String userName, TextView textView) {
+//        itemService.createItem(itemName, groupName, userName, new ItemServiceCallbacks.CreateItemTaskCallback() {
+//            @Override
+//            public void onComplete(boolean isSuccess) {
+//                textView.setText("Item: " + itemName + " created under group: " + groupName
+//                        + " with result: " + isSuccess);
+//            }
+//        });
+//    }
 
     private void testGetItemByItemId(String itemId, TextView textView) {
         itemService.getItemByItemId(itemId, new ItemServiceCallbacks.GetItemByItemIdTaskCallback() {

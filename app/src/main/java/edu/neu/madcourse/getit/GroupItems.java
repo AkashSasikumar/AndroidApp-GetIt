@@ -43,6 +43,8 @@ import java.util.List;
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
+import edu.neu.madcourse.getit.models.Item;
+import edu.neu.madcourse.getit.models.User;
 import edu.neu.madcourse.getit.services.GroupService;
 import edu.neu.madcourse.getit.services.ItemService;
 
@@ -149,7 +151,7 @@ public class GroupItems extends AppCompatActivity {
 
     private User getLoggedInUser(){
         FirebaseUser firebaseUser = fAuth.getCurrentUser();
-        return new User("Test", "User", firebaseUser.getEmail());
+        return new User(firebaseUser.getEmail(), "Test User");
     }
 
     private void setupRecyclerView(){
@@ -205,7 +207,7 @@ public class GroupItems extends AppCompatActivity {
         currentItem.setUserGettingIt(mLoggedInUser);
         mItemList.remove(position);
         mItemList.add(position, currentItem);
-        mdButtonGetIt.setText(currentItem.getUserGettingIt().getFirstName() + " is already getting it!");
+        mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
         mdButtonGetIt.setBackgroundColor(GREY_COLOR);
         mdButtonGetIt.setClickable(false);
         mAdapter.notifyDataSetChanged();
@@ -221,11 +223,11 @@ public class GroupItems extends AppCompatActivity {
         mdQuantity.setText(currentItem.getQuantity());
         mdPreferredStore.setText(currentItem.getPreferredStore());
         mdPreferredBrand.setText(currentItem.getPreferredBrand());
-        mdPostedBy.setText(currentItem.getUserPosted().getFirstName() + " (" + currentItem.getUserPosted().getEmail() + ")" );
+        mdPostedBy.setText(currentItem.getUserPosted().getFullName() + " (" + currentItem.getUserPosted().getUserEmail() + ")" );
         mdPostedOn.setText(currentItem.getPostedDateTimeAsString());
 
         if (currentItem.getUserGettingIt() != null){
-            mdButtonGetIt.setText(currentItem.getUserGettingIt().getFirstName() + " is already getting it!");
+            mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
             mdButtonGetIt.setBackgroundColor(GREY_COLOR);
         }else{
             mdButtonGetIt.setText("I'll get it!");
@@ -427,14 +429,8 @@ public class GroupItems extends AppCompatActivity {
                 for(String itemId: itemIds) {
                     itemService.getItemByItemId(itemId, new ItemServiceCallbacks.GetItemByItemIdTaskCallback() {
                         @Override
-                        public void onComplete(edu.neu.madcourse.getit.models.Item item) {
-                            Item itemm = new Item();
-                            itemm.setName(item.getItem_name());
-                            itemm.setUserGettingIt(new User("test1", "test2", item.getUser_to_purchase()));
-                            itemm.setUserPosted(new User("test3", "test4", item.getUser_to_request()));
-//                            itemm.setPostedDateTime(LocalDateTime.parse());
-
-                            mItemList.add(itemm);
+                        public void onComplete(Item item) {
+                            mItemList.add(item);
                             mAdapter.notifyDataSetChanged();
                         }
                     });

@@ -15,6 +15,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import edu.neu.madcourse.getit.models.Item;
+
 public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder> {
 
     public interface OnItemClickListener{
@@ -93,12 +95,12 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         holder.mName.setText(currentItem.getName());
         holder.mStore.setText("Preferred store: " + currentItem.getPreferredStore());
         holder.mQuantity.setText("Quantity: " + currentItem.getQuantity());
-        holder.mPostedBy.setText("Posted by: " + currentItem.getUserPosted().getFirstName());
+        holder.mPostedBy.setText("Posted by: " + currentItem.getUserPosted().getFullName());
         holder.mImageView.setImageBitmap(currentItem.getImageBitmap());
 
         if (currentItem.getUserGettingIt() != null){
             holder.mGetIt.setBackgroundColor(Color.parseColor(mGreyColor));
-            holder.mGetIt.setText(currentItem.getUserGettingIt().getFirstName() + " is already getting it!");
+            holder.mGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
         }
     }
 

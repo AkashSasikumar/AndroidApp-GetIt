@@ -16,6 +16,24 @@ public class User {
     public User() {
     }
 
+    public User(String user_email) {
+        this.user_email = user_email;
+        this.user_full_name = "";
+        this.user_score = 0;
+        this.user_groups = Collections.emptyList();
+        this.user_items_posted = Collections.emptyList();
+        this.user_items_getting = Collections.emptyList();
+    }
+
+    public User(String user_email, String user_full_name) {
+        this.user_email = user_email;
+        this.user_full_name = user_full_name;
+        this.user_score = 0;
+        this.user_groups = Collections.emptyList();
+        this.user_items_posted = Collections.emptyList();
+        this.user_items_getting = Collections.emptyList();
+    }
+
     public User(String user_email, String user_name, int user_score, List<String> user_groups, List<String> user_items_posted, List<String> user_items_getting ) {
         this.user_email = user_email;
         this.user_full_name = user_name;

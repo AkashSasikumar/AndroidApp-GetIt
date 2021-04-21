@@ -1,78 +1,167 @@
 package edu.neu.madcourse.getit.models;
 
-import com.google.firebase.Timestamp;
+import android.graphics.Bitmap;
+import android.media.Image;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class Item {
-    private String item_name;
-    private String group_name;
-    private String user_to_purchase;
-    private String user_to_request;
-    private Timestamp date_added;
-    private Timestamp date_purchase;
 
-    public Item() {
+    private String mName;
+    private String mQuantity;
+    private String mPreferredStore;
+    private String mPreferredBrand;
+    // private String mPostedOn;
+
+    private LocalDateTime mPostedDateTime;
+    private User mUserPosted;
+    private User mUserGettingIt;
+    private String mInstructions;
+    // private int mImage;
+    private Bitmap mImageBitmap;
+
+    public Item(){
+
     }
 
-    public Item(String item_name, String group_name, String user_to_purchase, String user_to_request, Timestamp date_added, Timestamp date_purchase) {
-        this.item_name = item_name;
-        this.group_name = group_name;
-        this.user_to_purchase = user_to_purchase;
-        this.user_to_request = user_to_request;
-        this.date_added = date_added;
-        this.date_purchase = date_purchase;
+    public Item(String name, String quantity, String preferredStore, String preferredBrand, LocalDateTime postedDateTime,
+                User userPosted, User userGettingIt, Bitmap itemImageBitmap, String instructions){
+        mName = name;
+        mInstructions = instructions;
+        mPreferredStore = preferredStore;
+        mPreferredBrand = preferredBrand;
+        mQuantity = quantity;
+        mPostedDateTime = postedDateTime;
+        mUserPosted = userPosted;
+        mUserGettingIt = userGettingIt;
+        mImageBitmap = itemImageBitmap;
     }
 
-    public String getItem_name() {
-        return item_name;
+    public Bitmap getImageBitmap() {
+        return mImageBitmap;
     }
 
-    public void setItem_name(String item_name) {
-        this.item_name = item_name;
+    public void setImageBitmap(Bitmap mImageBitmap) {
+        this.mImageBitmap = mImageBitmap;
     }
 
-    public String getGroup_name() {
-        return group_name;
+    public String getPreferredBrand() {
+        return mPreferredBrand;
     }
 
-    public void setGroup_name(String group_name) {
-        this.group_name = group_name;
+    public void setPreferredBrand(String mPreferredBrand) {
+        this.mPreferredBrand = mPreferredBrand;
+    }
+    public LocalDateTime getPostedDateTime() {
+        return mPostedDateTime;
     }
 
-    public String getUser_to_purchase() {
-        return user_to_purchase;
+    public String getPostedDateTimeAsString() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss");
+        return dtf.format(mPostedDateTime);
     }
 
-    public void setUser_to_purchase(String user_to_purchase) {
-        this.user_to_purchase = user_to_purchase;
+
+    public void setPostedDateTime(LocalDateTime mPostedDateTime) {
+        this.mPostedDateTime = mPostedDateTime;
     }
 
-    public String getUser_to_request() {
-        return user_to_request;
+    public String getName() {
+        return mName;
     }
 
-    public void setUser_to_request(String user_to_request) {
-        this.user_to_request = user_to_request;
+    public void setName(String mName) {
+        this.mName = mName;
     }
 
-    public Timestamp getDate_added() {
-        return date_added;
+    public String getInstructions() {
+        return mInstructions;
     }
 
-    public void setDate_added(Timestamp date_added) {
-        this.date_added = date_added;
+    public void setInstructions(String mDesc) {
+        this.mInstructions = mDesc;
     }
 
-    public Timestamp getDate_purchase() {
-        return date_purchase;
+    public String getPreferredStore() {
+        return mPreferredStore;
     }
 
-    public void setDate_purchase(Timestamp date_purchase) {
-        this.date_purchase = date_purchase;
+    public void setPreferredStore(String mPreferredStore) {
+        this.mPreferredStore = mPreferredStore;
     }
 
-    @Override
-    public String toString() {
-        return "item: " + getItem_name() + "\ngroup: " + getGroup_name()
-                + "\nuser: " + getUser_to_request() + "\nadded on: " + getDate_added();
+    public String getQuantity() {
+        return mQuantity;
     }
+
+    public void setQuantity(String mQuantity) {
+        this.mQuantity = mQuantity;
+    }
+
+    public User getUserPosted() {
+        return mUserPosted;
+    }
+
+    public void setUserPosted(User mUserPosted) {
+        this.mUserPosted = mUserPosted;
+    }
+
+    public User getUserGettingIt() {
+        return mUserGettingIt;
+    }
+
+    public void setUserGettingIt(User mUserGettingIt) {
+        this.mUserGettingIt = mUserGettingIt;
+    }
+
+
+    public static Comparator<Item> itemDateRecentComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            return o2.getPostedDateTime().compareTo(o1.getPostedDateTime());
+        }
+    };
+
+    public static Comparator<Item> itemDateOldestComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            return o1.getPostedDateTime().compareTo(o2.getPostedDateTime());
+        }
+    };
+
+    public static Comparator<Item> itemUserPostedComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            return o1.getUserPosted().getFullName().compareTo(o2.getUserPosted().getFullName());
+        }
+    };
+
+    public static Comparator<Item> itemUserGettingComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            User o1_user = o1.getUserGettingIt();
+            User o2_user = o2.getUserGettingIt();
+            if (o1_user == null && o2_user == null){
+                return 0;
+            }
+            else if (o1_user == null){
+                return -1;
+            }
+            else if(o2_user == null){
+                return 1;
+            }
+            else{
+                return o1_user.getFullName().compareTo(o2_user.getFullName());
+            }
+        }
+    };
+
+    public static Comparator<Item> itemNameComparator = new Comparator<Item>() {
+        @Override
+        public int compare(Item o1, Item o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
 }
