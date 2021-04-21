@@ -35,11 +35,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
@@ -280,7 +283,7 @@ public class GroupItems extends AppCompatActivity {
         String instructions = mInputInstructions.getText().toString().trim();
         BitmapDrawable drawable = (BitmapDrawable) mInputItemImage.getDrawable();
         Bitmap itemImage = drawable.getBitmap();
-        String dateTime = Timestamp.now().toString();
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
 
         // Validate input fields
         if(TextUtils.isEmpty(itemName)){
@@ -293,7 +296,7 @@ public class GroupItems extends AppCompatActivity {
             return;
         }
 
-        Item item = new Item(itemName, itemQuantity, preferredStore, preferredBrand, dateTime,
+        Item item = new Item(itemName, itemQuantity, preferredStore, preferredBrand, currentDate,
                 mLoggedInUser, null, itemImage , instructions);
 //        mItemList.add(0, item);
 //        mItemInputDialog.hide();
