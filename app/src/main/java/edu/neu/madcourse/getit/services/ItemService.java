@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,16 +42,16 @@ public class ItemService {
     public void createItem(Item item, ItemServiceCallbacks.CreateItemTaskCallback callback) {
         String newItemsDocId = items.document().getId();
         Map<String, Object> newItem = new HashMap<>();
-        newItem.put("mName", item.getName());
-        newItem.put("mInstructions", item.getInstructions());
-        newItem.put("mPreferredStore", item.getPreferredStore());
-        newItem.put("mPreferredBrand", item.getPreferredBrand());
-        newItem.put("mQuantity", item.getQuantity());
-        newItem.put("mPostedDateTime", item.getPostedDateTime());
-        newItem.put("mUserPosted", item.getUserPosted());
-        newItem.put("mUserGettingIt", item.getUserGettingIt());
+        newItem.put("name", item.getName());
+        newItem.put("instructions", item.getInstructions());
+        newItem.put("preferredStore", item.getPreferredStore());
+        newItem.put("preferredBrand", item.getPreferredBrand());
+        newItem.put("quantity", item.getQuantity());
+        newItem.put("postedDateTime", item.getPostedDateTime());
+        newItem.put("userPosted", item.getUserPosted());
+        newItem.put("userGettingIt", item.getUserGettingIt());
 //        newItem.put("mImageBitmap", item.getImageBitmap());
-        newItem.put("mImageBitmap", null);
+        newItem.put("imageBitmap", null);
 
         items.document(newItemsDocId)
                 .set(newItem)
@@ -70,21 +71,27 @@ public class ItemService {
                 });
     }
 
-    private Map<String, String> getUserData(User user) {
-        Map<String, String> map = new HashMap<>();
-        map.put("user_email", user.getUserEmail());
-        map.put("user_full_name", user.getFullName());
-        return map;
-    }
-
     public void getItemByItemId(String itemId, ItemServiceCallbacks.GetItemByItemIdTaskCallback callback) {
         items.document(itemId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot documentSnapshot = task.getResult();
-                Item item = null;
+                Item item = new Item();
                 if(documentSnapshot != null) {
-                    item = (Item) documentSnapshot.toObject(Item.class);
+                    Map<String, Object> item_map = documentSnapshot.getData();
+                    item.setName(item_map.get("name").toString());
+                    item.setQuantity(item_map.get("quantity").toString());
+                    item.setInstructions(item_map.get("instructions").toString());
+                    item.setPreferredBrand(item_map.get("preferredBrand").toString());
+                    item.setPreferredStore(item_map.get("preferredStore").toString());
+                    if(item_map.get("userPosted") != null) {
+                        item.setUserPosted(new User((HashMap) item_map.get("userPosted")));
+                    }
+                    if(item_map.get("userGettingIt") != null) {
+                        item.setUserPosted(new User((HashMap) item_map.get("userGettingIt")));
+                    }
+                    item.setPostedDateTime(item_map.get("postedDateTime").toString());
+                    // TODO: set item image bitmap as well
                 } else {
                     Log.d(GET_ITEM_BY_ITEM_ID, "Error getting document: ", task.getException() );
                 }

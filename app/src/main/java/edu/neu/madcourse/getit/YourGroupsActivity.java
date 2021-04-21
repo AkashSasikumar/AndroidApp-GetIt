@@ -117,7 +117,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
             // ToDo: remove test code
             Intent intent = new Intent(getApplicationContext(), GroupItems.class);
-            intent.putExtra(INTENT_GROUP_NAME, "testgroup2");
+            intent.putExtra(INTENT_GROUP_NAME, "test-group-1");
             startActivity(intent);
 
         }

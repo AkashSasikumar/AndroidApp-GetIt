@@ -3,6 +3,7 @@ package edu.neu.madcourse.getit.models;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class User {
 
@@ -32,6 +33,13 @@ public class User {
         this.user_groups = Collections.emptyList();
         this.user_items_posted = Collections.emptyList();
         this.user_items_getting = Collections.emptyList();
+    }
+
+    public User(Map<String, Object> userMap) {
+        if(userMap != null) {
+            this.user_email = userMap.get("userEmail").toString();
+            this.user_full_name = userMap.get("fullName").toString();
+        }
     }
 
     public User(String user_email, String user_name, int user_score, List<String> user_groups, List<String> user_items_posted, List<String> user_items_getting ) {

@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -224,7 +225,7 @@ public class GroupItems extends AppCompatActivity {
         mdPreferredStore.setText(currentItem.getPreferredStore());
         mdPreferredBrand.setText(currentItem.getPreferredBrand());
         mdPostedBy.setText(currentItem.getUserPosted().getFullName() + " (" + currentItem.getUserPosted().getUserEmail() + ")" );
-        mdPostedOn.setText(currentItem.getPostedDateTimeAsString());
+        mdPostedOn.setText(currentItem.getPostedDateTime());
 
         if (currentItem.getUserGettingIt() != null){
             mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
@@ -279,7 +280,7 @@ public class GroupItems extends AppCompatActivity {
         String instructions = mInputInstructions.getText().toString().trim();
         BitmapDrawable drawable = (BitmapDrawable) mInputItemImage.getDrawable();
         Bitmap itemImage = drawable.getBitmap();
-        LocalDateTime dateTime = LocalDateTime.now();
+        String dateTime = Timestamp.now().toString();
 
         // Validate input fields
         if(TextUtils.isEmpty(itemName)){
@@ -450,7 +451,6 @@ public class GroupItems extends AppCompatActivity {
             @Override
             public void onComplete(Group group) {
                 List<String> itemIds = group.getItems();
-
                 for(String itemId: itemIds) {
                     itemService.getItemByItemId(itemId, new ItemServiceCallbacks.GetItemByItemIdTaskCallback() {
                         @Override

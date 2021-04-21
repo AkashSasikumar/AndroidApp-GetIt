@@ -1,7 +1,6 @@
 package edu.neu.madcourse.getit.models;
 
 import android.graphics.Bitmap;
-import android.media.Image;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,36 +8,36 @@ import java.util.Comparator;
 
 public class Item {
 
-    private String mName;
-    private String mQuantity;
-    private String mPreferredStore;
-    private String mPreferredBrand;
+    private String name;
+    private String quantity;
+    private String preferredStore;
+    private String preferredBrand;
     // private String mPostedOn;
 
-    private LocalDateTime mPostedDateTime;
-    private User mUserPosted;
-    private User mUserGettingIt;
-    private String mInstructions;
+    private String postedDateTime;
+    private User userPosted;
+    private User userGettingIt;
+    private String instructions;
     // private int mImage;
 //    private Bitmap mImageBitmap;
-    private String mImageBitmap;
+    private String imageBitmap;
 
     public Item(){
 
     }
 
-    public Item(String name, String quantity, String preferredStore, String preferredBrand, LocalDateTime postedDateTime,
+    public Item(String name, String quantity, String preferredStore, String preferredBrand, String postedDateTime,
                 User userPosted, User userGettingIt, Bitmap itemImageBitmap, String instructions){
-        mName = name;
-        mInstructions = instructions;
-        mPreferredStore = preferredStore;
-        mPreferredBrand = preferredBrand;
-        mQuantity = quantity;
-        mPostedDateTime = postedDateTime;
-        mUserPosted = userPosted;
-        mUserGettingIt = userGettingIt;
+        this.name = name;
+        this.instructions = instructions;
+        this.preferredStore = preferredStore;
+        this.preferredBrand = preferredBrand;
+        this.quantity = quantity;
+        this.postedDateTime = postedDateTime;
+        this.userPosted = userPosted;
+        this.userGettingIt = userGettingIt;
 //        mImageBitmap = itemImageBitmap;
-        mImageBitmap = itemImageBitmap.toString();
+        imageBitmap = itemImageBitmap.toString();
     }
 
     public Bitmap getImageBitmap() {
@@ -47,76 +46,70 @@ public class Item {
     }
 
     public void setImageBitmap(Bitmap mImageBitmap) {
-        this.mImageBitmap = mImageBitmap.toString();
+        this.imageBitmap = mImageBitmap.toString();
     }
 
     public String getPreferredBrand() {
-        return mPreferredBrand;
+        return preferredBrand;
     }
 
     public void setPreferredBrand(String mPreferredBrand) {
-        this.mPreferredBrand = mPreferredBrand;
+        this.preferredBrand = mPreferredBrand;
     }
-    public LocalDateTime getPostedDateTime() {
-        return mPostedDateTime;
-    }
-
-    public String getPostedDateTimeAsString() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss");
-        return dtf.format(mPostedDateTime);
+    public String getPostedDateTime() {
+        return postedDateTime;
     }
 
-
-    public void setPostedDateTime(LocalDateTime mPostedDateTime) {
-        this.mPostedDateTime = mPostedDateTime;
+    public void setPostedDateTime(String mPostedDateTime) {
+        this.postedDateTime = mPostedDateTime;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
     public void setName(String mName) {
-        this.mName = mName;
+        this.name = mName;
     }
 
     public String getInstructions() {
-        return mInstructions;
+        return instructions;
     }
 
     public void setInstructions(String mDesc) {
-        this.mInstructions = mDesc;
+        this.instructions = mDesc;
     }
 
     public String getPreferredStore() {
-        return mPreferredStore;
+        return preferredStore;
     }
 
     public void setPreferredStore(String mPreferredStore) {
-        this.mPreferredStore = mPreferredStore;
+        this.preferredStore = mPreferredStore;
     }
 
     public String getQuantity() {
-        return mQuantity;
+        return quantity;
     }
 
     public void setQuantity(String mQuantity) {
-        this.mQuantity = mQuantity;
+        this.quantity = mQuantity;
     }
 
     public User getUserPosted() {
-        return mUserPosted;
+        return userPosted;
     }
 
     public void setUserPosted(User mUserPosted) {
-        this.mUserPosted = mUserPosted;
+        this.userPosted = mUserPosted;
     }
 
     public User getUserGettingIt() {
-        return mUserGettingIt;
+        return userGettingIt;
     }
 
     public void setUserGettingIt(User mUserGettingIt) {
-        this.mUserGettingIt = mUserGettingIt;
+        this.userGettingIt = mUserGettingIt;
     }
 
 
@@ -167,4 +160,8 @@ public class Item {
             return o1.getName().compareTo(o2.getName());
         }
     };
+
+    public String toString() {
+        return "name: " + getName() + ", posted by: " + getUserPosted();
+    }
 }
