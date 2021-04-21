@@ -118,14 +118,14 @@ public class TestActivity extends AppCompatActivity {
         });
     }
 
-    private void testCreateGroup(String groupName, TextView textView) {
-        groupService.createGroup(groupName, new GroupServiceCallbacks.CreateGroupTaskCallback() {
-            @Override
-            public void onComplete(boolean isSuccess) {
-                textView.setText("Create group: " + groupName + " with result: " + isSuccess);
-            }
-        });
-    }
+//    private void testCreateGroup(String groupName, TextView textView) {
+//        groupService.createGroup(groupName, new GroupServiceCallbacks.CreateGroupTaskCallback() {
+//            @Override
+//            public void onComplete(boolean isSuccess) {
+//                textView.setText("Create group: " + groupName + " with result: " + isSuccess);
+//            }
+//        });
+//    }
 
     private void testGetGroupByGroupName(String groupName, TextView textView) {
         groupService.getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {

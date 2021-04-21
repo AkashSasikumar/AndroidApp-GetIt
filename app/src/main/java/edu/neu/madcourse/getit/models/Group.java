@@ -3,19 +3,23 @@ package edu.neu.madcourse.getit.models;
 import java.util.List;
 
 public class Group {
+
+
     private String groupId;
     private String group_name;
     private List<String> items;
+    private long group_code;
     private List<String> users;
 
     public Group() {
     }
 
-    public Group(String groupId, String group_name, List<String> items, List<String> users) {
+    public Group(String groupId, long group_code, String group_name,List<String> items, List<String> users) {
         this.groupId = groupId;
         this.group_name = group_name;
         this.items = items;
         this.users = users;
+        this.group_code = group_code;
     }
 
     public String getGroupId() {
@@ -34,6 +38,14 @@ public class Group {
         this.group_name = group_name;
     }
 
+    public long getGroup_code() {
+        return group_code;
+    }
+
+    public void setGroup_code(long group_code) {
+        this.group_code = group_code;
+    }
+
     public List<String> getItems() {
         return items;
     }
@@ -49,6 +61,7 @@ public class Group {
     public void setUsers(List<String> users) {
         this.users = users;
     }
+
 
     @Override
     public String toString() {

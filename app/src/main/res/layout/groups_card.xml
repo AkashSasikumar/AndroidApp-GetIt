@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
+    android:layout_marginBottom="0dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     app:cardCornerRadius="5dp">
 
     <RelativeLayout
@@ -17,9 +20,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="@string/group_code"
+            android:hint="Group Code"
             android:textColor="@android:color/black"
             android:textSize="25sp"
             android:textStyle="bold"
@@ -32,7 +35,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="@string/group_name"
+            android:hint="@string/group_name"
             android:textColor="@android:color/black"
             android:textSize="25sp"
             android:textStyle="bold"

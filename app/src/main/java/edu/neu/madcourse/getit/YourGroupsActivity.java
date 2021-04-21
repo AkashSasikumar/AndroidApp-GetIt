@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
+import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.User;
 import edu.neu.madcourse.getit.services.GroupService;
 import edu.neu.madcourse.getit.services.UserService;
@@ -72,8 +74,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
                     groupService.getGroupNameByGroupID(groupNames.get(i), new GroupServiceCallbacks.GetGroupNameFromGroupIDCallback() {
                         @Override
-                        public void onComplete(String groupName) {
-                            GroupView g = new GroupView("CODE", groupName);
+                        public void onComplete(Group group) {
+                            GroupView g = new GroupView(Long.toString(group.getGroup_code()), group.getGroup_name());
                             groups.add(g);
                             mGroupAdapter.notifyDataSetChanged();
                         }
@@ -81,17 +83,6 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
-
-        // hardcoding the groups.
-        //TODO: get the groups from the firebase
-//        for (int i = 0; i < 15; i++) {
-//            GroupView g = new GroupView("GroupCode" + i, "GroupName" + i);
-//            groups.add(g);
-//        }
-//        final GroupsRVAdapter groupsRVAdapter = new GroupsRVAdapter(groups, this);
-//
-//        groupsRV.setAdapter(groupsRVAdapter);
-//        groupsRV.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -104,12 +95,24 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
         if (v.getId() == R.id.join_group_btn) {
 
-            if (TextUtils.isEmpty(groupName) && TextUtils.isEmpty(groupCode)) {
-                mGroupName.setError("At least one of Group Name, Group Code fields is required");
-            } else {
-                Snackbar.make(v, "Joined the " + groupName + " group successfully", Snackbar.LENGTH_LONG).show();
+            if (TextUtils.isEmpty(groupCode)) {
+                mGroupCode.setError("Group Code is required to join a group!");
+                return;
             }
 
+            groupService.addUserToGroupByGroupCode(userID, groupCode, new GroupServiceCallbacks.AddUserByGroupCodeTaskCallback() {
+                @Override
+                public void onComplete(Group group) {
+                    if ( group!= null){
+                        groups.add(new GroupView( Long.toString(group.getGroup_code()) , group.getGroup_name()));
+                        mGroupAdapter.notifyDataSetChanged();
+                        Snackbar.make(v, "Joined group " + group.getGroup_name() + " successfully", Snackbar.LENGTH_LONG).show();
+                    }else{
+                        Snackbar.make(v, "Sorry, group with the given code does not exist!", Snackbar.LENGTH_LONG).show();
+                    }
+
+                }
+            });
             // add the user to the group and update the recycler view to reflect the new group
 
             // ToDo: remove test code
@@ -125,19 +128,21 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             }
             groupService.createGroup(groupName, new GroupServiceCallbacks.CreateGroupTaskCallback() {
                 @Override
-                public void onComplete(boolean isSuccess) {
-                    if (isSuccess){
+                public void onComplete(Group group) {
+                    if (group != null){
                         // add current user to the created group
                         groupService.addUserToGroup(userID, groupName, new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
                             @Override
                             public void onComplete(boolean isSuccess) {
                                 if (isSuccess){
-                                    groups.add(new GroupView("CODE", groupName));
+                                    groups.add(new GroupView( Long.toString(group.getGroup_code()), groupName));
                                     mGroupAdapter.notifyDataSetChanged();
                                     Snackbar.make(v, "Group " + groupName + " created successfully!", Snackbar.LENGTH_LONG).show();
                                 }
                             }
                         });
+                    }else{
+                        Snackbar.make(v, "Sorry, could not create a group!", Snackbar.LENGTH_LONG).show();
                     }
                 }
             });

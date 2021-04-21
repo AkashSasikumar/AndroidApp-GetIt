@@ -34,41 +34,68 @@ public class GroupService {
     private static final String REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_TO_PURCHASED_CATEGORY";
     private static final String REMOVE_ITEMID_FROM_PURCHASED_CATEGORY = "REMOVE_ITEMID_FROM_PURCHASED_CATEGORY";
     private static final String ADD_USER_TO_GROUP = "ADD_USER_TO_GROUP";
+    private static final String GET_GROUP_CODE = "GET_GROUP_CODE";
 
     FirebaseFirestore db;
     CollectionReference users;
     CollectionReference groups;
     CollectionReference items;
+    CollectionReference count;
+    static final String COUNT_KEY = "u7xsFdFxCFgfNXNvbq4E";
 
     public GroupService() {
         db = FirebaseFirestore.getInstance();
         users = db.collection("users");
         groups = db.collection("groups");
         items = db.collection("items");
+        count = db.collection("count");
     }
 
     public void createGroup(String groupName, GroupServiceCallbacks.CreateGroupTaskCallback callback) {
-        Map<String, Object> newGroup = new HashMap<>();
-        newGroup.put("group_name", groupName);
-        newGroup.put("items", Collections.emptyList());
-        newGroup.put("users", Collections.emptyList());
 
-        groups.document()
-                .set(newGroup)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(CREATE_GROUP_STATUS, "Success");
-                        callback.onComplete(true);
+        // get the next group code
+        count.document(COUNT_KEY).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                long groupCode = 0;
+                if (task.isSuccessful()){
+                    DocumentSnapshot countRef = task.getResult();
+                    if(countRef.exists()){
+                        groupCode = (long) countRef.getData().get("next_group_code");
+                        // update the next_group_code even if group creation fails
+                        count.document(COUNT_KEY).update("next_group_code", groupCode + 1);
+
+                        Group group = new Group("DUMMY", groupCode, groupName, Arrays.asList(), Arrays.asList());
+                        Map<String, Object> newGroup = new HashMap<>();
+                        newGroup.put("group_name", groupName);
+                        newGroup.put("items", Arrays.asList());
+                        newGroup.put("users", Arrays.asList());
+                        newGroup.put("group_code", groupCode);
+
+                        groups.document()
+                                .set(newGroup)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(CREATE_GROUP_STATUS, "Success");
+                                        callback.onComplete(group);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(CREATE_GROUP_STATUS, "Failed");
+                                        callback.onComplete(null);
+                                    }
+                                });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(CREATE_GROUP_STATUS, "Failed");
-                        callback.onComplete(false);
-                    }
-                });
+                }else{
+                    Log.d(GET_GROUP_CODE, "Could not generate group code");
+                }
+            }
+        });
+
+
     }
 
     public void getGroupByGroupName(String groupName,
@@ -100,8 +127,9 @@ public class GroupService {
                 if (task.isSuccessful()){
                     DocumentSnapshot groupRef = task.getResult();
                     if(groupRef.exists()){
-                        String groupName = (String) groupRef.getData().get("group_name");
-                        callback.onComplete(groupName);
+                        Group group = groupRef.toObject(Group.class);
+                        //String groupName = (String) groupRef.getData().get("group_name");
+                        callback.onComplete(group);
                     }
                 }else{
                     Log.d(GET_GROUP_BY_GROUP_NAME, "Failed to get group name from group id");
@@ -126,29 +154,74 @@ public class GroupService {
 
                     callback.onComplete(true);
                 }catch (Error e){
-                    Log.d(ADD_USER_TO_GROUP, "Success");
+                    Log.d(ADD_USER_TO_GROUP, "Error");
                     callback.onComplete(false);
                 }
             }
         });
     }
 
+    public void addUserToGroupByGroupCode(String userID, String groupCode,
+                                          GroupServiceCallbacks.AddUserByGroupCodeTaskCallback callback){
+        long group_code = 0;
+
+        try{
+            group_code = Long.parseLong(groupCode);
+        }catch (Exception e){
+            Log.d(ADD_USER_TO_GROUP, "Error");
+            callback.onComplete(null);
+            return;
+        }
+
+        Query query = groups.whereEqualTo("group_code", group_code);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Group group = null;
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
+                        group = (Group) document.toObject(Group.class);
+                        group.setGroupId(document.getId());
+
+                        try{
+                            // add user to group
+                            groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
+                            Log.d(ADD_USER_TO_GROUP, "Success");
+
+                            // add group id to user's group list
+                            users.document(userID).update("user_groups", FieldValue.arrayUnion(group.getGroupId()));
+
+                            callback.onComplete(group);
+                        }catch (Error e){
+                            Log.d(ADD_USER_TO_GROUP, "Error");
+                            callback.onComplete(null);
+                        }
+                    }
+                } else {
+                    Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting group from ode: ", task.getException());
+                    callback.onComplete(null);
+                }
+            }
+        });
+    }
+
+
     public void addItemToGroup(String itemId, String groupName,
-                               GroupServiceCallbacks.AddItemToGroupTaskCallback callback){
+                               GroupServiceCallbacks.AddItemToGroupTaskCallback callback) {
         getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
             @Override
             public void onComplete(Group group) {
-                try{
+                try {
                     // add item to group
                     groups.document(group.getGroupId()).update("items", FieldValue.arrayUnion(itemId));
                     callback.onComplete(true);
-                }catch (Error e){
+                } catch (Error e) {
                     callback.onComplete(false);
                 }
             }
         });
     }
-
 //    public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
 //        try {
 //            groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));

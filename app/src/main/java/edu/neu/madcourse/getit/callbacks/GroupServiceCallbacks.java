@@ -5,7 +5,7 @@ import edu.neu.madcourse.getit.models.Group;
 public class GroupServiceCallbacks {
 
     public interface CreateGroupTaskCallback {
-        void onComplete(boolean isSuccess);
+        void onComplete(Group group);
     }
 
     public interface GetGroupByGroupNameTaskCallback {
@@ -20,7 +20,11 @@ public class GroupServiceCallbacks {
         void onComplete(boolean isSuccess);
     }
 
+    public interface AddUserByGroupCodeTaskCallback {
+        void onComplete(Group group);
+    }
+
     public interface GetGroupNameFromGroupIDCallback{
-        void onComplete(String groupName);
+        void onComplete(Group group);
     }
 }
