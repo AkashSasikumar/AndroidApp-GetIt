@@ -38,9 +38,8 @@ public class GroupsRVAdapter extends RecyclerView.Adapter<GroupsRVAdapter.GroupV
 
     private Context context;
 
-    public GroupsRVAdapter(List<GroupView> groups, Context context) {
+    public GroupsRVAdapter(List<GroupView> groups) {
         this.groups = groups;
-        this.context = context;
     }
 
     @Override

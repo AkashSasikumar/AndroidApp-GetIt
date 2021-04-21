@@ -15,4 +15,8 @@ public class GroupServiceCallbacks {
     public interface AddUserToGroupTaskCallback {
         void onComplete(boolean isSuccess);
     }
+
+    public interface GetGroupNameFromGroupIDCallback{
+        void onComplete(String groupName);
+    }
 }

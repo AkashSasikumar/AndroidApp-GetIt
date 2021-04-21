@@ -31,6 +31,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     List<GroupView> groups;
     UserService userService;
     GroupService groupService;
+    GroupsRVAdapter mGroupAdapter;
+    RecyclerView groupsRV;
     private FirebaseAuth fAuth;
     private String userID;
 
@@ -47,8 +49,15 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         create_group_btn = findViewById(R.id.create_group_btn);
         join_group_btn.setOnClickListener(this);
         create_group_btn.setOnClickListener(this);
-        final RecyclerView groupsRV = findViewById(R.id.recyclerView);
+
+        // recycler view
+        groupsRV = findViewById(R.id.recyclerView);
+        groupsRV.setHasFixedSize(true);
         groups = new ArrayList<>();
+        mGroupAdapter = new GroupsRVAdapter(groups);
+        groupsRV.setAdapter(mGroupAdapter);
+        groupsRV.setLayoutManager(new LinearLayoutManager(YourGroupsActivity.this));
+
         userService = new UserService();
         groupService = new GroupService();
         fAuth = FirebaseAuth.getInstance();
@@ -60,13 +69,16 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             public void onComplete(User user) {
                 List<String> groupNames = user.getGroups();
                 for (int i = 0; i < groupNames.size(); i++) {
-                    GroupView g = new GroupView("GroupCode" + i, "GroupName" + groupNames.get(i));
-                    groups.add(g);
-                }
-                final GroupsRVAdapter groupsRVAdapter = new GroupsRVAdapter(groups, YourGroupsActivity.this);
 
-                groupsRV.setAdapter(groupsRVAdapter);
-                groupsRV.setLayoutManager(new LinearLayoutManager(YourGroupsActivity.this));
+                    groupService.getGroupNameByGroupID(groupNames.get(i), new GroupServiceCallbacks.GetGroupNameFromGroupIDCallback() {
+                        @Override
+                        public void onComplete(String groupName) {
+                            GroupView g = new GroupView("CODE", groupName);
+                            groups.add(g);
+                            mGroupAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
             }
         });
 
@@ -120,6 +132,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                             @Override
                             public void onComplete(boolean isSuccess) {
                                 if (isSuccess){
+                                    groups.add(new GroupView("CODE", groupName));
+                                    mGroupAdapter.notifyDataSetChanged();
                                     Snackbar.make(v, "Group " + groupName + " created successfully!", Snackbar.LENGTH_LONG).show();
                                 }
                             }

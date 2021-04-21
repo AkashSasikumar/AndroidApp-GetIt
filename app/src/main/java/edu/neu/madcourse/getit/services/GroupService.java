@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -92,6 +93,23 @@ public class GroupService {
         });
     }
 
+    public void getGroupNameByGroupID(String groupID, GroupServiceCallbacks.GetGroupNameFromGroupIDCallback callback){
+        groups.document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot groupRef = task.getResult();
+                    if(groupRef.exists()){
+                        String groupName = (String) groupRef.getData().get("group_name");
+                        callback.onComplete(groupName);
+                    }
+                }else{
+                    Log.d(GET_GROUP_BY_GROUP_NAME, "Failed to get group name from group id");
+                    callback.onComplete(null);
+                }
+            }
+        });
+    }
 
     public void addUserToGroup(String userID, String groupName,
                                   GroupServiceCallbacks.AddUserToGroupTaskCallback callback){
@@ -99,8 +117,13 @@ public class GroupService {
             @Override
             public void onComplete(Group group) {
                 try{
+                    // add user to group
                     groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
                     Log.d(ADD_USER_TO_GROUP, "Success");
+
+                    // add group id to user's group list
+                    users.document(userID).update("user_groups", FieldValue.arrayUnion(group.getGroupId()));
+
                     callback.onComplete(true);
                 }catch (Error e){
                     Log.d(ADD_USER_TO_GROUP, "Success");
