@@ -49,7 +49,8 @@ public class ItemService {
         newItem.put("mPostedDateTime", item.getPostedDateTime());
         newItem.put("mUserPosted", item.getUserPosted());
         newItem.put("mUserGettingIt", item.getUserGettingIt());
-        newItem.put("mImageBitmap", item.getImageBitmap());
+//        newItem.put("mImageBitmap", item.getImageBitmap());
+        newItem.put("mImageBitmap", null);
 
         items.document(newItemsDocId)
                 .set(newItem)
@@ -57,14 +58,14 @@ public class ItemService {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(CREATE_ITEM_STATUS, "Success");
-                        callback.onComplete(true);
+                        callback.onComplete(true, newItemsDocId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(CREATE_ITEM_STATUS, "Failed");
-                        callback.onComplete(false);
+                        callback.onComplete(false, newItemsDocId);
                     }
                 });
     }

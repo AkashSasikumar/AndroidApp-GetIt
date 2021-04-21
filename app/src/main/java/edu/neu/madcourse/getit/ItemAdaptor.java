@@ -95,7 +95,9 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         holder.mName.setText(currentItem.getName());
         holder.mStore.setText("Preferred store: " + currentItem.getPreferredStore());
         holder.mQuantity.setText("Quantity: " + currentItem.getQuantity());
-        holder.mPostedBy.setText("Posted by: " + currentItem.getUserPosted().getFullName());
+        if(currentItem.getUserPosted() != null) {
+            holder.mPostedBy.setText("Posted by: " + currentItem.getUserPosted().getFullName());
+        }
         holder.mImageView.setImageBitmap(currentItem.getImageBitmap());
 
         if (currentItem.getUserGettingIt() != null){

@@ -294,12 +294,38 @@ public class GroupItems extends AppCompatActivity {
 
         Item item = new Item(itemName, itemQuantity, preferredStore, preferredBrand, dateTime,
                 mLoggedInUser, null, itemImage , instructions);
-        mItemList.add(0, item);
-        mItemInputDialog.hide();
-        mAdapter.notifyDataSetChanged();
-        // ToDo: clear input fields
-        Snackbar.make(mRecyclerView, "Your item has been posted!", Snackbar.LENGTH_LONG).show();
-        return;
+//        mItemList.add(0, item);
+//        mItemInputDialog.hide();
+//        mAdapter.notifyDataSetChanged();
+
+        // Add to database first and then show success
+        itemService.createItem(item, new ItemServiceCallbacks.CreateItemTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess, String itemId) {
+                if(isSuccess) {
+                    // Add this item to group: TODO: send groupId instead of groupName
+                    groupService.addItemToGroup(itemId, groupName, new GroupServiceCallbacks.AddItemToGroupTaskCallback() {
+                        @Override
+                        public void onComplete(boolean isSuccess) {
+                            if(isSuccess) {
+                                // Now show on screen
+                                mItemList.add(0, item);
+                                mItemInputDialog.hide();
+                                mAdapter.notifyDataSetChanged();
+                                // ToDo: clear input fields
+                                Snackbar.make(mRecyclerView, "Your item has been posted!", Snackbar.LENGTH_LONG).show();
+                            } else {
+                                // ToDo: clear input fields
+                                Snackbar.make(mRecyclerView, "Error in adding item. Please try again!", Snackbar.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                } else {
+                    // ToDo: clear input fields
+                    Snackbar.make(mRecyclerView, "Error in adding item. Please try again!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
 
@@ -423,8 +449,7 @@ public class GroupItems extends AppCompatActivity {
         groupService.getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
             @Override
             public void onComplete(Group group) {
-                List<String> itemIds = group.getItems_purchased();
-                itemIds.addAll(group.getItems_to_purchase());
+                List<String> itemIds = group.getItems();
 
                 for(String itemId: itemIds) {
                     itemService.getItemByItemId(itemId, new ItemServiceCallbacks.GetItemByItemIdTaskCallback() {

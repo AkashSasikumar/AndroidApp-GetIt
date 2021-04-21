@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +50,8 @@ public class GroupService {
     public void createGroup(String groupName, GroupServiceCallbacks.CreateGroupTaskCallback callback) {
         Map<String, Object> newGroup = new HashMap<>();
         newGroup.put("group_name", groupName);
-        newGroup.put("items_to_purchase", Arrays.asList());
-        newGroup.put("items_purchased", Arrays.asList());
-        newGroup.put("users", Arrays.asList());
+        newGroup.put("items", Collections.emptyList());
+        newGroup.put("users", Collections.emptyList());
 
         groups.document()
                 .set(newGroup)
@@ -133,48 +133,64 @@ public class GroupService {
         });
     }
 
-    public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
-        try {
-            groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));
-            Log.d(ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY, "Success");
-            return true;
-        } catch (Error e) {
-            Log.d(ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY, "Failed");
-            return false;
-        }
+    public void addItemToGroup(String itemId, String groupName,
+                               GroupServiceCallbacks.AddItemToGroupTaskCallback callback){
+        getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
+            @Override
+            public void onComplete(Group group) {
+                try{
+                    // add item to group
+                    groups.document(group.getGroupId()).update("items", FieldValue.arrayUnion(itemId));
+                    callback.onComplete(true);
+                }catch (Error e){
+                    callback.onComplete(false);
+                }
+            }
+        });
     }
 
-    public boolean removeItemFrom_ToBePurchasedCategory(String groupId, String itemId) {
-        try {
-            groups.document(groupId).update("items_to_purchase", FieldValue.arrayRemove(itemId));
-            Log.d(REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY, "Success");
-            return true;
-        } catch (Error e) {
-            Log.d(REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY, "Failed");
-            return false;
-        }
-    }
-
-    public boolean addItemTo_AlreadyPurchasedCategory(String groupId, String itemId) {
-        try {
-            groups.document(groupId).update("items_purchased", FieldValue.arrayUnion(itemId));
-            Log.d(ADD_ITEMID_TO_PURCHASED_CATEGORY, "Success");
-            return true;
-        } catch (Error e) {
-            Log.d(ADD_ITEMID_TO_PURCHASED_CATEGORY, "Failed");
-            return false;
-        }
-    }
-
-    public boolean removeItemFrom_AlreadyPurchasedCategory(String groupId, String itemId) {
-        try {
-            groups.document(groupId).update("items_purchased", FieldValue.arrayRemove(itemId));
-            Log.d(REMOVE_ITEMID_FROM_PURCHASED_CATEGORY, "Success");
-            return true;
-        } catch (Error e) {
-            Log.d(REMOVE_ITEMID_FROM_PURCHASED_CATEGORY, "Failed");
-            return false;
-        }
-    }
+//    public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
+//        try {
+//            groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));
+//            Log.d(ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY, "Success");
+//            return true;
+//        } catch (Error e) {
+//            Log.d(ADD_ITEMID_TO_TOBE_PURCHASED_CATEGORY, "Failed");
+//            return false;
+//        }
+//    }
+//
+//    public boolean removeItemFrom_ToBePurchasedCategory(String groupId, String itemId) {
+//        try {
+//            groups.document(groupId).update("items_to_purchase", FieldValue.arrayRemove(itemId));
+//            Log.d(REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY, "Success");
+//            return true;
+//        } catch (Error e) {
+//            Log.d(REMOVE_ITEMID_FROM_TOBE_PURCHASED_CATEGORY, "Failed");
+//            return false;
+//        }
+//    }
+//
+//    public boolean addItemTo_AlreadyPurchasedCategory(String groupId, String itemId) {
+//        try {
+//            groups.document(groupId).update("items_purchased", FieldValue.arrayUnion(itemId));
+//            Log.d(ADD_ITEMID_TO_PURCHASED_CATEGORY, "Success");
+//            return true;
+//        } catch (Error e) {
+//            Log.d(ADD_ITEMID_TO_PURCHASED_CATEGORY, "Failed");
+//            return false;
+//        }
+//    }
+//
+//    public boolean removeItemFrom_AlreadyPurchasedCategory(String groupId, String itemId) {
+//        try {
+//            groups.document(groupId).update("items_purchased", FieldValue.arrayRemove(itemId));
+//            Log.d(REMOVE_ITEMID_FROM_PURCHASED_CATEGORY, "Success");
+//            return true;
+//        } catch (Error e) {
+//            Log.d(REMOVE_ITEMID_FROM_PURCHASED_CATEGORY, "Failed");
+//            return false;
+//        }
+//    }
 
 }

@@ -5,7 +5,7 @@ import edu.neu.madcourse.getit.models.Item;
 public class ItemServiceCallbacks {
 
     public interface CreateItemTaskCallback {
-        void onComplete(boolean isSuccess);
+        void onComplete(boolean isSuccess, String itemId);
     }
 
     public interface GetItemByItemIdTaskCallback {

@@ -20,7 +20,8 @@ public class Item {
     private User mUserGettingIt;
     private String mInstructions;
     // private int mImage;
-    private Bitmap mImageBitmap;
+//    private Bitmap mImageBitmap;
+    private String mImageBitmap;
 
     public Item(){
 
@@ -36,15 +37,17 @@ public class Item {
         mPostedDateTime = postedDateTime;
         mUserPosted = userPosted;
         mUserGettingIt = userGettingIt;
-        mImageBitmap = itemImageBitmap;
+//        mImageBitmap = itemImageBitmap;
+        mImageBitmap = itemImageBitmap.toString();
     }
 
     public Bitmap getImageBitmap() {
-        return mImageBitmap;
+//        return mImageBitmap;
+        return null;
     }
 
     public void setImageBitmap(Bitmap mImageBitmap) {
-        this.mImageBitmap = mImageBitmap;
+        this.mImageBitmap = mImageBitmap.toString();
     }
 
     public String getPreferredBrand() {
