@@ -2,9 +2,12 @@ package edu.neu.madcourse.getit.models;
 
 import android.graphics.Bitmap;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.Date;
 
 public class Item {
 
@@ -116,14 +119,30 @@ public class Item {
     public static Comparator<Item> itemDateRecentComparator = new Comparator<Item>() {
         @Override
         public int compare(Item o1, Item o2) {
-            return o2.getPostedDateTime().compareTo(o1.getPostedDateTime());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date date1 = simpleDateFormat.parse(o1.getPostedDateTime());
+                Date date2 = simpleDateFormat.parse(o2.getPostedDateTime());
+                return date2.compareTo(date1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return 0;
         }
     };
 
     public static Comparator<Item> itemDateOldestComparator = new Comparator<Item>() {
         @Override
         public int compare(Item o1, Item o2) {
-            return o1.getPostedDateTime().compareTo(o2.getPostedDateTime());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date date1 = simpleDateFormat.parse(o1.getPostedDateTime());
+                Date date2 = simpleDateFormat.parse(o2.getPostedDateTime());
+                return date1.compareTo(date2);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return 0;
         }
     };
 

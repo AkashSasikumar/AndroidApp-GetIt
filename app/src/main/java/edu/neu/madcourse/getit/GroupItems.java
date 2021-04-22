@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -283,7 +284,7 @@ public class GroupItems extends AppCompatActivity {
         String instructions = mInputInstructions.getText().toString().trim();
         BitmapDrawable drawable = (BitmapDrawable) mInputItemImage.getDrawable();
         Bitmap itemImage = drawable.getBitmap();
-        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String currentDateAndTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
         // Validate input fields
         if(TextUtils.isEmpty(itemName)){
@@ -296,7 +297,7 @@ public class GroupItems extends AppCompatActivity {
             return;
         }
 
-        Item item = new Item(itemName, itemQuantity, preferredStore, preferredBrand, currentDate,
+        Item item = new Item(itemName, itemQuantity, preferredStore, preferredBrand, currentDateAndTime,
                 mLoggedInUser, null, itemImage , instructions);
 //        mItemList.add(0, item);
 //        mItemInputDialog.hide();
