@@ -445,21 +445,6 @@ public class GroupItems extends AppCompatActivity {
     }
 
     private void populateItems(){
-//        ArrayList<Item> items = new ArrayList<>();
-//        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.image_placeholder);
-//        Bitmap itemImage = drawable.getBitmap();
-//        for (int i = 1; i <= 10; ++i){
-//            User userGettingIt = null;
-//            if(i % 2 == 0){
-//                userGettingIt = new User("Ashwin", "Sir", "ashwin@gmail.com");
-//            }
-//
-//            items.add(new Item( "Apples" + i, "2 lb", "Walmart", "Great Value", LocalDateTime.now(),
-//                    mLoggedInUser, userGettingIt, itemImage,
-//                    "Please get red delicious apples. Price should be around 5$."));
-//        }
-//        return items;
-
         groupService.getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
             @Override
             public void onComplete(Group group) {
@@ -469,6 +454,7 @@ public class GroupItems extends AppCompatActivity {
                         @Override
                         public void onComplete(Item item) {
                             mItemList.add(item);
+                            Collections.sort(mItemList, Item.itemDateRecentComparator);
                             mAdapter.notifyDataSetChanged();
                         }
                     });
