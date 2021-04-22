@@ -1,5 +1,8 @@
 package edu.neu.madcourse.getit.services;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +54,7 @@ public class ItemService {
         newItem.put("postedDateTime", item.getPostedDateTime());
         newItem.put("userPosted", item.getUserPosted());
         newItem.put("userGettingIt", item.getUserGettingIt());
-//        newItem.put("mImageBitmap", item.getImageBitmap());
-        newItem.put("imageBitmap", null);
+        newItem.put("imageBitmap", getEncodedStringOfBitmap(item.getImageBitmap()));
 
         items.document(newItemsDocId)
                 .set(newItem)
@@ -91,7 +94,9 @@ public class ItemService {
                         item.setUserPosted(new User((HashMap) item_map.get("userGettingIt")));
                     }
                     item.setPostedDateTime(item_map.get("postedDateTime").toString());
-                    // TODO: set item image bitmap as well
+                    if(item_map.get("imageBitmap") != null) {
+                        item.setImageBitmap(getDecodedBitmapFromString(item_map.get("imageBitmap").toString()));
+                    }
                 } else {
                     Log.d(GET_ITEM_BY_ITEM_ID, "Error getting document: ", task.getException() );
                 }
@@ -99,5 +104,20 @@ public class ItemService {
                 callback.onComplete(item);
             }
         });
+    }
+
+    private String getEncodedStringOfBitmap(Bitmap imageBitmap) {
+        // First compress this image and then encode it
+        int newHeight = (int) ( imageBitmap.getHeight() * (512.0 / imageBitmap.getWidth()) );
+        Bitmap scaledImageBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, newHeight, true);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        scaledImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+    }
+
+    private Bitmap getDecodedBitmapFromString(String imageEncoded) {
+        byte[] decodedByteArray = Base64.decode(imageEncoded, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
     }
 }
