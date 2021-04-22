@@ -47,11 +47,13 @@ import java.util.Locale;
 
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
+import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 import edu.neu.madcourse.getit.models.User;
 import edu.neu.madcourse.getit.services.GroupService;
 import edu.neu.madcourse.getit.services.ItemService;
+import edu.neu.madcourse.getit.services.UserService;
 
 public class GroupItems extends AppCompatActivity {
 
@@ -72,6 +74,7 @@ public class GroupItems extends AppCompatActivity {
     private String groupName;
     private GroupService groupService;
     private ItemService itemService;
+    private UserService userService;
 
     // Display item details dialog
     private AlertDialog mItemDetailsDialog;
@@ -97,11 +100,12 @@ public class GroupItems extends AppCompatActivity {
 
         setToolbarTitle();
         fAuth = FirebaseAuth.getInstance();
-        mLoggedInUser = getLoggedInUser();
         groupService = new GroupService();
         itemService = new ItemService();
+        userService = new UserService();
         mItemList = new ArrayList<>();
 
+        setLoggedInUser();
         // ToDo: add real logic inside populate items
         populateItems();
 
@@ -154,9 +158,14 @@ public class GroupItems extends AppCompatActivity {
         Snackbar.make(mRecyclerView, "User added!", Snackbar.LENGTH_LONG).show();
     }
 
-    private User getLoggedInUser(){
+    private void setLoggedInUser(){
         FirebaseUser firebaseUser = fAuth.getCurrentUser();
-        return new User(firebaseUser.getEmail(), "Test User");
+        userService.getUserNameFromEmail(firebaseUser.getEmail(), new UserServiceCallbacks.GetUserNameFromEmailCallback() {
+            @Override
+            public void onComplete(String userName) {
+                mLoggedInUser = new User(firebaseUser.getEmail(), userName);
+            }
+        });
     }
 
     private void setupRecyclerView(){

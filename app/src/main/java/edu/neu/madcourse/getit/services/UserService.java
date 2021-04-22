@@ -103,6 +103,24 @@ public class UserService {
         });
     }
 
+    public void getUserNameFromEmail(String userEmail, UserServiceCallbacks.GetUserNameFromEmailCallback callback) {
+        Query query = users.whereEqualTo("user_email", userEmail);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> item_map = document.getData();
+                        String userName = item_map.get("user_full_name").toString();
+                        callback.onComplete(userName);
+                    }
+                } else {
+                    callback.onComplete("null");
+                }
+            }
+        });
+    }
+
 
 //    public void addUserToGroup_old(String userName, String groupName,
 //                               UserServiceCallbacks.AddUserToGroupTaskCallback callback) {
