@@ -97,14 +97,13 @@ public class GroupItems extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_items);
-
-        setToolbarTitle();
+        groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
+        setToolbarTitle(groupName);
         fAuth = FirebaseAuth.getInstance();
         groupService = new GroupService();
         itemService = new ItemService();
         userService = new UserService();
         mItemList = new ArrayList<>();
-
         setLoggedInUser();
         // ToDo: add real logic inside populate items
         populateItems();
@@ -114,9 +113,8 @@ public class GroupItems extends AppCompatActivity {
         createItemInputDialog();
     }
 
-    private void setToolbarTitle(){
-        groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
-        getSupportActionBar().setTitle(groupName);
+    private void setToolbarTitle(String title){
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
