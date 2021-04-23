@@ -9,6 +9,7 @@ public class User {
 
     private String user_id;
     private String user_email, user_full_name;
+    private String firebase_token;
     private long user_score;
     private List<String> user_groups;
     private List<String> user_items_posted;
@@ -105,6 +106,14 @@ public class User {
 
     public void setUserId(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getFirebase_token() {
+        return firebase_token;
+    }
+
+    public void setFirebase_token(String firebase_token) {
+        this.firebase_token = firebase_token;
     }
 
     @Override
