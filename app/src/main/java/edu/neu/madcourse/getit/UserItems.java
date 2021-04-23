@@ -1,12 +1,16 @@
 package edu.neu.madcourse.getit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,7 +34,11 @@ public class UserItems extends AppCompatActivity {
 
 
     private static final String INTENT_LOGGED_USER_ID = "LOGGED_USER_ID";
-    private ArrayList<Item> mItemList = new ArrayList<>();
+    private static final String ITEMS_YOU_POSTED = "Posted by you";
+    private static final String ITEMS_OTHERS_GETTING_FOR_YOU = "Getting for you";
+
+
+    private List<Item> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private ItemAdaptor mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -48,6 +56,7 @@ public class UserItems extends AppCompatActivity {
 
     List<Item> mItemsGetting = new ArrayList<>();
     List<Item> mItemsPosted = new ArrayList<>();
+    private boolean displayItemsPosted = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +70,15 @@ public class UserItems extends AppCompatActivity {
         groupService = new GroupService();
         itemService = new ItemService();
 
+        setToolbarTitle(ITEMS_YOU_POSTED);
         setupRecyclerView();
         populateItemsForUser();
         createItemDetailsDialog();
 
+    }
+
+    private void setToolbarTitle(String title){
+        getSupportActionBar().setTitle(title);
     }
 
     private void setupRecyclerView(){
@@ -90,6 +104,44 @@ public class UserItems extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.user_items_menu, menu);
+        //MenuItem sortByName = menu.findItem(R.id.sort_by_name);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.display_user_items){
+            if(displayItemsPosted){
+                // current display is items posted, change it to items getting
+                setToolbarTitle(ITEMS_OTHERS_GETTING_FOR_YOU);
+                // set the menu title to the other
+                item.setTitle(ITEMS_YOU_POSTED);
+                mItemList.clear();
+                for (Item gettingItem : mItemsGetting){
+                    mItemList.add(gettingItem);
+                }
+                displayItemsPosted = false;
+            }else{
+                // current display is items getting, change it to items posted
+                setToolbarTitle(ITEMS_YOU_POSTED);
+                // set the menu title to the other
+                item.setTitle(ITEMS_OTHERS_GETTING_FOR_YOU);
+                mItemList.clear();
+                for (Item postedItem : mItemsPosted){
+                    mItemList.add(postedItem);
+                }
+                displayItemsPosted = true;
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+        return super.onOptionsItemSelected(item);
     }
 
     private void createItemDetailsDialog(){
@@ -155,8 +207,6 @@ public class UserItems extends AppCompatActivity {
                         @Override
                         public void onComplete(Item item) {
                             mItemsGetting.add(item);
-                            mItemList.add(item);
-                            mAdapter.notifyDataSetChanged();
                         }
                     });
                 }
@@ -166,6 +216,8 @@ public class UserItems extends AppCompatActivity {
                         @Override
                         public void onComplete(Item item) {
                             mItemsPosted.add(item);
+                            mItemList.add(item);
+                            mAdapter.notifyDataSetChanged();
                         }
                     });
                 }

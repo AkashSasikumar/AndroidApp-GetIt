@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.neu.madcourse.getit.models.Item;
 
@@ -26,7 +27,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         void onGetButtonClick(int position);
     }
 
-    private ArrayList<Item> mItemList;
+    private List<Item> mItemList;
     private OnItemClickListener mListener;
     private String mGreyColor = "#BDBDBD";
 
@@ -77,7 +78,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         }
     }
 
-    public  ItemAdaptor(ArrayList<Item> itemList){
+    public  ItemAdaptor(List<Item> itemList){
         mItemList = itemList;
     }
     @NonNull
