@@ -61,7 +61,10 @@ public class GroupItems extends AppCompatActivity {
     private final int GREEN_COLOR = Color.parseColor("#689F38");
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int GET_FROM_GALLERY = 3;
+
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
+    private static final String INTENT_GROUP_ID = "GROUP_ID";
+    private static final String INTENT_GROUP_CODE = "GROUP_CODE";
 
     private ArrayList<Item> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -72,6 +75,8 @@ public class GroupItems extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private User mLoggedInUser;
     private String groupName;
+    private String groupCode;
+    private String groupID;
     private GroupService groupService;
     private ItemService itemService;
     private UserService userService;
@@ -97,7 +102,12 @@ public class GroupItems extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_items);
+
+        // get data from intent
         groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
+        groupCode = getIntent().getStringExtra(INTENT_GROUP_CODE);
+        groupID = getIntent().getStringExtra(INTENT_GROUP_ID);
+
         setToolbarTitle(groupName);
         fAuth = FirebaseAuth.getInstance();
         groupService = new GroupService();
@@ -159,7 +169,9 @@ public class GroupItems extends AppCompatActivity {
     private void onSettingsClick(){
         Snackbar.make(mRecyclerView, "Settings clicked!", Snackbar.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), GroupSettings.class);
-        intent.putExtra(INTENT_GROUP_NAME, "groupName");
+        intent.putExtra(INTENT_GROUP_NAME, groupName);
+        intent.putExtra(INTENT_GROUP_ID, groupID);
+        intent.putExtra(INTENT_GROUP_CODE, groupCode);
         startActivity(intent);
     }
 

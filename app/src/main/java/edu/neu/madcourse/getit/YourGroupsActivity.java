@@ -45,6 +45,9 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     private String userID;
 
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
+    private static final String INTENT_GROUP_ID = "GROUP_ID";
+    private static final String INTENT_GROUP_CODE = "GROUP_CODE";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +71,15 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mGroupAdapter.setOnGroupClickListener(new GroupsRVAdapter.OnGroupClickListener() {
             @Override
             public void onGroupClick(int position) {
-                String groupName = groups.get(position).getGroupName();
-                Snackbar.make(groupsRV, "Clicked on group: "+ groupName, Snackbar.LENGTH_LONG).show();
+                GroupView clickedGroup = groups.get(position);
+                String groupName = clickedGroup.getGroupName();
+                String groupID = clickedGroup.getGroupID();
+                String groupCode = clickedGroup.getGroupCode();
+                // Snackbar.make(groupsRV, "Clicked on group: "+ groupName, Snackbar.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), GroupItems.class);
                 intent.putExtra(INTENT_GROUP_NAME, groupName);
+                intent.putExtra(INTENT_GROUP_ID, groupID);
+                intent.putExtra(INTENT_GROUP_CODE, groupCode);
                 startActivity(intent);
             }
         });
@@ -112,7 +120,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                     groupService.getGroupNameByGroupID(groupNames.get(i), new GroupServiceCallbacks.GetGroupNameFromGroupIDCallback() {
                         @Override
                         public void onComplete(Group group) {
-                            GroupView g = new GroupView(Long.toString(group.getGroup_code()), group.getGroup_name());
+                            GroupView g = new GroupView(Long.toString(group.getGroup_code()),
+                                    group.getGroup_name(), group.getGroupId());
                             groups.add(g);
                             mGroupAdapter.notifyDataSetChanged();
                         }
@@ -150,14 +159,14 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onComplete(Group group) {
                     if ( group!= null){
-                        groups.add(new GroupView( Long.toString(group.getGroup_code()) , group.getGroup_name()));
+                        groups.add(new GroupView( Long.toString(group.getGroup_code()) ,
+                                group.getGroup_name(), group.getGroupId()));
                         mGroupAdapter.notifyDataSetChanged();
                         Snackbar.make(v, "Joined group " + group.getGroup_name() + " successfully", Snackbar.LENGTH_LONG).show();
 
                     }else{
                         Snackbar.make(v, "Sorry, group with the given code does not exist!", Snackbar.LENGTH_LONG).show();
                     }
-
                 }
             });
             // add the user to the group and update the recycler view to reflect the new group
@@ -182,7 +191,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                             @Override
                             public void onComplete(boolean isSuccess) {
                                 if (isSuccess){
-                                    groups.add(new GroupView( Long.toString(group.getGroup_code()), groupName));
+                                    groups.add(new GroupView( Long.toString(group.getGroup_code()),
+                                            groupName, group.getGroupId()));
                                     mGroupAdapter.notifyDataSetChanged();
                                     Snackbar.make(v, "Group " + groupName + " created successfully!", Snackbar.LENGTH_LONG).show();
                                 }

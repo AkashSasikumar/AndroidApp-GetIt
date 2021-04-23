@@ -10,11 +10,11 @@
     tools:context=".GroupSettings">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_items"
+        android:id="@+id/add_member"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:contentDescription="Add items!"
+        android:contentDescription="Add member!"
         app:backgroundTint="#f3ad2e"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

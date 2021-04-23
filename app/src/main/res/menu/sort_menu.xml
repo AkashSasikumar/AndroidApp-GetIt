@@ -33,6 +33,6 @@
         </menu>
     </item>
     <item
-        android:title="Settings"
+        android:title="Group Settings"
         android:id="@+id/group_settings" />
 </menu>
