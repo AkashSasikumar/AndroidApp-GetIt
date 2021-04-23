@@ -35,6 +35,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     EditText mGroupName, mGroupCode;
     Button join_group_btn;
     Button create_group_btn;
+    Button view_my_items;
     List<GroupView> groups;
     UserService userService;
     GroupService groupService;
@@ -47,6 +48,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
     private static final String INTENT_GROUP_ID = "GROUP_ID";
     private static final String INTENT_GROUP_CODE = "GROUP_CODE";
+    private static final String INTENT_LOGGED_USER_ID = "LOGGED_USER_ID";
 
 
     @Override
@@ -58,8 +60,10 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mGroupCode = findViewById(R.id.group_code_field);
         join_group_btn = findViewById(R.id.join_group_btn);
         create_group_btn = findViewById(R.id.create_group_btn);
+        view_my_items = findViewById(R.id.view_my_items);
         join_group_btn.setOnClickListener(this);
         create_group_btn.setOnClickListener(this);
+        view_my_items.setOnClickListener(this);
 
         // recycler view
         groupsRV = findViewById(R.id.recyclerView);
@@ -203,6 +207,10 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                     }
                 }
             });
+        } else if(v.getId() == R.id.view_my_items){
+            Intent intent = new Intent(getApplicationContext(), UserItems.class);
+            intent.putExtra(INTENT_LOGGED_USER_ID, fAuth.getCurrentUser().getUid());
+            startActivity(intent);
         }
     }
 }

@@ -115,10 +115,9 @@ public class GroupItems extends AppCompatActivity {
         userService = new UserService();
         mItemList = new ArrayList<>();
         setLoggedInUser();
-        // ToDo: add real logic inside populate items
-        populateItems();
 
         setupRecyclerView();
+        populateItems();
         createItemDetailsDialog();
         createItemInputDialog();
     }
