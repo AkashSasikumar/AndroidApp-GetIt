@@ -144,16 +144,23 @@ public class GroupItems extends AppCompatActivity {
             case R.id.sort_by_user_getting:
                 Collections.sort(mItemList, Item.itemUserGettingComparator);
                 break;
-            case R.id.add_member:
-                addMemberToGroup();
+            case R.id.group_settings:
+                onSettingsClick();
                 break;
+
+//            case R.id.add_member:
+//                addMemberToGroup();
+//                break;
         }
         mAdapter.notifyDataSetChanged();
         return super.onOptionsItemSelected(item);
     }
 
-    private void addMemberToGroup(){
-        Snackbar.make(mRecyclerView, "User added!", Snackbar.LENGTH_LONG).show();
+    private void onSettingsClick(){
+        Snackbar.make(mRecyclerView, "Settings clicked!", Snackbar.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), GroupSettings.class);
+        intent.putExtra(INTENT_GROUP_NAME, "groupName");
+        startActivity(intent);
     }
 
     private void setLoggedInUser(){
