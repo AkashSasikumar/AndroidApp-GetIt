@@ -12,7 +12,7 @@ public class UserServiceCallbacks {
         void onComplete(User user);
     }
 
-    public interface GetUserNameFromEmailCallback {
-        void onComplete(String userName);
+    public interface GetUserFromEmailCallback {
+        void onComplete(User user);
     }
 }

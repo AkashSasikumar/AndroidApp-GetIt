@@ -108,7 +108,7 @@ public class GroupItems extends AppCompatActivity {
         groupCode = getIntent().getStringExtra(INTENT_GROUP_CODE);
         groupID = getIntent().getStringExtra(INTENT_GROUP_ID);
 
-        setToolbarTitle(groupName);
+        setToolbarTitle("Items (" + groupName + ")");
         fAuth = FirebaseAuth.getInstance();
         groupService = new GroupService();
         itemService = new ItemService();
@@ -176,10 +176,10 @@ public class GroupItems extends AppCompatActivity {
 
     private void setLoggedInUser(){
         FirebaseUser firebaseUser = fAuth.getCurrentUser();
-        userService.getUserNameFromEmail(firebaseUser.getEmail(), new UserServiceCallbacks.GetUserNameFromEmailCallback() {
+        userService.getUserFromEmail(firebaseUser.getEmail(), new UserServiceCallbacks.GetUserFromEmailCallback() {
             @Override
-            public void onComplete(String userName) {
-                mLoggedInUser = new User(firebaseUser.getEmail(), userName, firebaseUser.getUid());
+            public void onComplete(User user) {
+                mLoggedInUser = user;
             }
         });
     }

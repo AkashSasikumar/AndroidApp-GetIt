@@ -105,19 +105,32 @@ public class UserService {
         });
     }
 
-    public void getUserNameFromEmail(String userEmail, UserServiceCallbacks.GetUserNameFromEmailCallback callback) {
+    public void getUserFromEmail(String userEmail, UserServiceCallbacks.GetUserFromEmailCallback callback) {
         Query query = users.whereEqualTo("user_email", userEmail);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                User user = new User();
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Map<String, Object> item_map = document.getData();
-                        String userName = item_map.get("user_full_name").toString();
-                        callback.onComplete(userName);
+                    QuerySnapshot documentRef = task.getResult();
+                    if (!documentRef.isEmpty()){
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Map<String, Object> user_map = document.getData();
+                            user.setUserEmail(user_map.get("user_email").toString());
+                            user.setFullName( (String) user_map.get("user_full_name"));
+                            user.setScore( (long) user_map.get("user_score"));
+                            user.setGroups((ArrayList<String>) user_map.get("user_groups"));
+                            user.setUserItemsGetting((ArrayList<String>) user_map.get("user_items_getting"));
+                            user.setUserItemsPosted((ArrayList<String>) user_map.get("user_items_posted"));
+                            user.setFirebase_token((String) user_map.get("device_token"));
+                            user.setUserId((String) document.getId());
+                            callback.onComplete(user);
+                        }
+                    }else{
+                        callback.onComplete(null);
                     }
                 } else {
-                    callback.onComplete("null");
+                    callback.onComplete(null);
                 }
             }
         });

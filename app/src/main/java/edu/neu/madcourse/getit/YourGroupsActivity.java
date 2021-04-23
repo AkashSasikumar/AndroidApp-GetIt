@@ -191,7 +191,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 public void onComplete(Group group) {
                     if (group != null){
                         // add current user to the created group
-                        groupService.addUserToGroup(userID, groupName, new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
+                        groupService.addUserToGroupByGroupIdAndUserId(userID, group.getGroupId(), new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
                             @Override
                             public void onComplete(boolean isSuccess) {
                                 if (isSuccess){

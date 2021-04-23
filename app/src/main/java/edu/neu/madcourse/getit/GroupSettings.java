@@ -1,11 +1,16 @@
 package edu.neu.madcourse.getit;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -38,6 +43,12 @@ public class GroupSettings extends AppCompatActivity implements View.OnClickList
     private GroupService groupService;
     private UserService userService;
 
+    // Add user dialog
+    private AlertDialog mAddMemberDialog;
+    private View mAddMemberView;
+    private EditText mAddMemberEmail;
+    private Button mAddMemberBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +67,54 @@ public class GroupSettings extends AppCompatActivity implements View.OnClickList
         setToolbarTitle(groupName);
         populateUsersInTheGroup();
         setupRecyclerView();
+        createAddMemberDialog();
+    }
+
+    private void createAddMemberDialog() {
+        // set layout
+        AlertDialog.Builder addUserBuilder = new AlertDialog.Builder(this);
+        mAddMemberView = getLayoutInflater().inflate(R.layout.add_member_dialog, null);
+        addUserBuilder.setView(mAddMemberView);
+        mAddMemberDialog = addUserBuilder.create();
+
+        // get views
+        mAddMemberEmail = mAddMemberView.findViewById(R.id.add_member_email);
+        mAddMemberBtn = mAddMemberView.findViewById(R.id.add_member_btn);
+
+        mAddMemberBtn.setOnClickListener(v -> addMemberToGroup());
+    }
+
+    private void showAddMemberDialog() {
+        // show the input dialog
+        mAddMemberEmail.setText("");
+        mAddMemberDialog.show();
+    }
+
+    private void addMemberToGroup() {
+        String mEmail = mAddMemberEmail.getText().toString().trim();
+        // Validate input fields
+        if(TextUtils.isEmpty(mEmail)){
+            mAddMemberEmail.setError("Email Id is required");
+            return;
+        }
+
+
+        groupService.addUserToGroupByGroupIDAndEmail(mEmail, groupID, new GroupServiceCallbacks.AddUserToGroupByGroupIDAndEmailCallback() {
+            @Override
+            public void onComplete(User user) {
+                if (user != null){
+                    mAddMemberDialog.hide();
+                    mUsers.add(new UserCard(user.getFullName(), user.getUserEmail(), user.getScore()));
+                    mUserAdaptor.notifyDataSetChanged();
+                    Snackbar.make(mRecyclerView, mEmail + " added to group!", Snackbar.LENGTH_LONG).show();
+                }else{
+                    mAddMemberDialog.hide();
+                    Snackbar.make(mRecyclerView, mEmail + " does not exist!", Snackbar.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
     }
 
     private void setupRecyclerView(){
@@ -74,7 +133,7 @@ public class GroupSettings extends AppCompatActivity implements View.OnClickList
     }
 
     private void setToolbarTitle(String title){
-        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setTitle("Users (" +title+ ")");
     }
 
     private void populateUsersInTheGroup(){
@@ -94,13 +153,13 @@ public class GroupSettings extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
-
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.add_member){
-            Snackbar.make(mRecyclerView, "Take input from user", Snackbar.LENGTH_LONG).show();
+            showAddMemberDialog();
         }
     }
+
 }
