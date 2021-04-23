@@ -21,6 +21,7 @@ public class User {
     public User(String user_email) {
         this.user_email = user_email;
         this.user_full_name = "";
+        this.firebase_token = "";
         this.user_score = 0;
         this.user_groups = Collections.emptyList();
         this.user_items_posted = Collections.emptyList();
@@ -30,6 +31,7 @@ public class User {
     public User(String user_email, String user_full_name) {
         this.user_email = user_email;
         this.user_full_name = user_full_name;
+        this.firebase_token = "";
         this.user_score = 0;
         this.user_groups = Collections.emptyList();
         this.user_items_posted = Collections.emptyList();
@@ -50,6 +52,7 @@ public class User {
         this.user_groups = user_groups;
         this.user_items_posted =user_items_posted;
         this.user_items_getting= user_items_getting;
+        this.firebase_token = "";
     }
 
     public String getFullName() {

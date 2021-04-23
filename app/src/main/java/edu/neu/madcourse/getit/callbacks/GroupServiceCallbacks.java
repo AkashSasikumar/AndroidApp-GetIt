@@ -27,4 +27,8 @@ public class GroupServiceCallbacks {
     public interface GetGroupNameFromGroupIDCallback{
         void onComplete(Group group);
     }
+
+    public interface  GetGroupByGroupCodeCallback {
+        void onComplete(Group group);
+    }
 }

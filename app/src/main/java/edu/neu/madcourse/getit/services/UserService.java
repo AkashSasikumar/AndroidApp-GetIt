@@ -51,6 +51,7 @@ public class UserService {
         Map<String, Object> user = new HashMap<>();
         user.put("user_email", userEmail);
         user.put("user_full_name", userFullName);
+        user.put("device_token", "");
         user.put("user_score", 0);
         user.put("user_groups", Collections.emptyList());
         user.put("user_items_posted", Collections.emptyList());
@@ -75,7 +76,7 @@ public class UserService {
                 });
     }
 
-    public void getUserByUsername(String userID, UserServiceCallbacks.GetUserByUserNameTaskCallback callback) {
+    public void getUserByUserId(String userID, UserServiceCallbacks.GetUserByUserNameTaskCallback callback) {
         //Query query = users.whereEqualTo("user_name", userName);
         // no need to query, getting user by id
         DocumentReference docRef = users.document(userID);
@@ -93,6 +94,7 @@ public class UserService {
                         user.setGroups((ArrayList<String>) user_map.get("user_groups"));
                         user.setUserItemsGetting((ArrayList<String>) user_map.get("user_items_getting"));
                         user.setUserItemsPosted((ArrayList<String>) user_map.get("user_items_posted"));
+                        user.setFirebase_token((String) user_map.get("device_token"));
                         user.setUserId(userID);
                     }
                 }else{
@@ -119,6 +121,10 @@ public class UserService {
                 }
             }
         });
+    }
+
+    public void updateUserDeviceToken(String userDocId, String token) {
+        users.document(userDocId).update("device_token", token);
     }
 
 
@@ -159,6 +165,8 @@ public class UserService {
 //            }
 //        });
 //    }
+
+
 
     //TODO: Implement removeUserFromGroup method
 

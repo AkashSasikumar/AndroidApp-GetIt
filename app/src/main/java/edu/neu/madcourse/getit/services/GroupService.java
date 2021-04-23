@@ -222,6 +222,28 @@ public class GroupService {
             }
         });
     }
+
+    public void getGroupByGroupCode(String groupCode, GroupServiceCallbacks.GetGroupByGroupCodeCallback callback) {
+        Query query = groups.whereEqualTo("group_code", groupCode);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Group group = null;
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
+                        group = (Group) document.toObject(Group.class);
+                        group.setGroupId(document.getId());
+                        callback.onComplete(group);
+                    }
+                } else {
+                    Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
+                }
+            }
+        });
+    }
+
+
 //    public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
 //        try {
 //            groups.document(groupId).update("items_to_purchase", FieldValue.arrayUnion(itemId));
