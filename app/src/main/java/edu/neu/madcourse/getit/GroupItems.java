@@ -179,7 +179,7 @@ public class GroupItems extends AppCompatActivity {
         userService.getUserNameFromEmail(firebaseUser.getEmail(), new UserServiceCallbacks.GetUserNameFromEmailCallback() {
             @Override
             public void onComplete(String userName) {
-                mLoggedInUser = new User(firebaseUser.getEmail(), userName);
+                mLoggedInUser = new User(firebaseUser.getEmail(), userName, firebaseUser.getUid());
             }
         });
     }
@@ -205,7 +205,7 @@ public class GroupItems extends AppCompatActivity {
 
             @Override
             public void onGetButtonClick(int position) {
-               getItem(position);
+                getItem(position);
             }
         });
     }
@@ -234,13 +234,26 @@ public class GroupItems extends AppCompatActivity {
         //ToDo: get selected item and add current user
         // update view should show you are getting it
         Item currentItem = mItemList.get(position);
-        currentItem.setUserGettingIt(mLoggedInUser);
-        mItemList.remove(position);
-        mItemList.add(position, currentItem);
-        mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
-        mdButtonGetIt.setBackgroundColor(GREY_COLOR);
-        mdButtonGetIt.setClickable(false);
-        mAdapter.notifyDataSetChanged();
+
+        // update database
+        itemService.addUserGettingTheItem(currentItem.getItemID(), mLoggedInUser, new ItemServiceCallbacks.addUserGettingTheItemTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess) {
+                if(isSuccess){
+                    currentItem.setUserGettingIt(mLoggedInUser);
+                    mItemList.remove(position);
+                    mItemList.add(position, currentItem);
+                    mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
+                    mdButtonGetIt.setBackgroundColor(GREY_COLOR);
+                    mdButtonGetIt.setClickable(false);
+                    mAdapter.notifyDataSetChanged();
+                    Snackbar.make(mRecyclerView, "Item has been added to list of items you need to get!", Snackbar.LENGTH_LONG).show();
+                }else{
+                    Snackbar.make(mRecyclerView, "Oops! Something went wrong. Please try again!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     private void displayItemDetails(int position){
@@ -329,7 +342,7 @@ public class GroupItems extends AppCompatActivity {
 //        mAdapter.notifyDataSetChanged();
 
         // Add to database first and then show success
-        itemService.createItem(item, new ItemServiceCallbacks.CreateItemTaskCallback() {
+        itemService.createItem(item, mLoggedInUser, new ItemServiceCallbacks.CreateItemTaskCallback() {
             @Override
             public void onComplete(boolean isSuccess, String itemId) {
                 if(isSuccess) {

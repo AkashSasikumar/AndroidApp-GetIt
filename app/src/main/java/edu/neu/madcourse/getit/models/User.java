@@ -28,9 +28,10 @@ public class User {
         this.user_items_getting = Collections.emptyList();
     }
 
-    public User(String user_email, String user_full_name) {
+    public User(String user_email, String user_full_name, String user_id) {
         this.user_email = user_email;
         this.user_full_name = user_full_name;
+        this.user_id = user_id;
         this.firebase_token = "";
         this.user_score = 0;
         this.user_groups = Collections.emptyList();

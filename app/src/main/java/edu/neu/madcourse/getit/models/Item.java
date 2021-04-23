@@ -11,6 +11,8 @@ import java.util.Date;
 
 public class Item {
 
+
+    private String itemID;
     private String name;
     private String quantity;
     private String preferredStore;
@@ -110,6 +112,14 @@ public class Item {
 
     public void setUserGettingIt(User mUserGettingIt) {
         this.userGettingIt = mUserGettingIt;
+    }
+
+    public String getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
     }
 
 

@@ -6,6 +6,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -13,8 +14,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -22,7 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
+import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 import edu.neu.madcourse.getit.models.User;
 
@@ -30,6 +37,7 @@ public class ItemService {
 
     private static final String CREATE_ITEM_STATUS = "CREATE_ITEM_STATUS";
     private static final String GET_ITEM_BY_ITEM_ID = "GET_ITEM_BY_ITEM_ID";
+    private static final String INCREMENT_USER_SCORE = "INCREMENT_USER_SCORE";
 
     FirebaseFirestore db;
     CollectionReference users;
@@ -43,7 +51,7 @@ public class ItemService {
         items = db.collection("items");
     }
 
-    public void createItem(Item item, ItemServiceCallbacks.CreateItemTaskCallback callback) {
+    public void createItem(Item item, User loggedInUser, ItemServiceCallbacks.CreateItemTaskCallback callback) {
         String newItemsDocId = items.document().getId();
         Map<String, Object> newItem = new HashMap<>();
         newItem.put("name", item.getName());
@@ -61,6 +69,10 @@ public class ItemService {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        // add the item under users list of item posted
+                        users.document(loggedInUser.getUserId()).update("user_items_posted",
+                                FieldValue.arrayUnion(newItemsDocId));
+
                         Log.d(CREATE_ITEM_STATUS, "Success");
                         callback.onComplete(true, newItemsDocId);
                     }
@@ -82,11 +94,13 @@ public class ItemService {
                 Item item = new Item();
                 if(documentSnapshot != null) {
                     Map<String, Object> item_map = documentSnapshot.getData();
+                    item.setItemID(itemId);
                     item.setName(item_map.get("name").toString());
                     item.setQuantity(item_map.get("quantity").toString());
                     item.setInstructions(item_map.get("instructions").toString());
                     item.setPreferredBrand(item_map.get("preferredBrand").toString());
                     item.setPreferredStore(item_map.get("preferredStore").toString());
+
                     if(item_map.get("userPosted") != null) {
                         item.setUserPosted(new User((HashMap) item_map.get("userPosted")));
                     }
@@ -104,6 +118,43 @@ public class ItemService {
                 callback.onComplete(item);
             }
         });
+    }
+
+    public void addUserGettingTheItem(String itemID, User userGetting,
+                                      ItemServiceCallbacks.addUserGettingTheItemTaskCallback callback){
+
+        // update items database
+        items.document(itemID).update("userGettingIt",userGetting );
+
+        // add item to users list of items getting
+        users.document(userGetting.getUserId()).update("user_items_getting", FieldValue.arrayUnion(itemID));
+
+        // update score of the user getting the item
+        final DocumentReference userRef = users.document(userGetting.getUserId());
+        db.runTransaction(new Transaction.Function<Void>() {
+
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(userRef);
+                transaction.update(userRef, "user_score", FieldValue.increment(1));
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(INCREMENT_USER_SCORE, "Incremented score of the user!");
+                callback.onComplete(true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(INCREMENT_USER_SCORE, "Could not increment the score of the user!");
+                // returning success even if score was not updated
+                callback.onComplete(true);
+            }
+        });
+
     }
 
     private String getEncodedStringOfBitmap(Bitmap imageBitmap) {

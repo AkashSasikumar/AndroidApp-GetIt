@@ -63,6 +63,7 @@ public class UserItems extends AppCompatActivity {
 
         setupRecyclerView();
         populateItemsForUser();
+        createItemDetailsDialog();
 
     }
 
