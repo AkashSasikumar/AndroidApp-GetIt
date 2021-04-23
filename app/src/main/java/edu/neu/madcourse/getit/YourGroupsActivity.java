@@ -65,6 +65,16 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mGroupAdapter = new GroupsRVAdapter(groups);
         groupsRV.setAdapter(mGroupAdapter);
         groupsRV.setLayoutManager(new LinearLayoutManager(YourGroupsActivity.this));
+        mGroupAdapter.setOnGroupClickListener(new GroupsRVAdapter.OnGroupClickListener() {
+            @Override
+            public void onGroupClick(int position) {
+                String groupName = groups.get(position).getGroupName();
+                Snackbar.make(groupsRV, "Clicked on group: "+ groupName, Snackbar.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), GroupItems.class);
+                intent.putExtra(INTENT_GROUP_NAME, groupName);
+                startActivity(intent);
+            }
+        });
 
         userService = new UserService();
         groupService = new GroupService();
@@ -148,9 +158,9 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             // add the user to the group and update the recycler view to reflect the new group
 
             // ToDo: remove test code
-            Intent intent = new Intent(getApplicationContext(), GroupItems.class);
-            intent.putExtra(INTENT_GROUP_NAME, "test-group-1");
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), GroupItems.class);
+//            intent.putExtra(INTENT_GROUP_NAME, "test-group-1");
+//            startActivity(intent);
 
         }
         else if(v.getId() == R.id.create_group_btn){
