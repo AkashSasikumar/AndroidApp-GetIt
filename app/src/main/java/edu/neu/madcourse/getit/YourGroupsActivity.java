@@ -139,7 +139,12 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 return;
             }
 
+
+
+
             fcmService.sendNewGroupMemberNotification(groupCode);
+
+
 
             groupService.addUserToGroupByGroupCode(userID, groupCode, new GroupServiceCallbacks.AddUserByGroupCodeTaskCallback() {
                 @Override

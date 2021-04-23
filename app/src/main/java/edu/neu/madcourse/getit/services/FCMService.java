@@ -181,7 +181,7 @@ public class FCMService extends FirebaseMessagingService {
                 @Override
                 public void run() {
                     Log.e(TAG, "run: " + resp);
-                    Toast.makeText(getApplicationContext(),resp,Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(),resp,Toast.LENGTH_LONG).show();
                 }
             });
         } catch (JSONException | IOException e) {
@@ -198,15 +198,18 @@ public class FCMService extends FirebaseMessagingService {
         groupService.getGroupByGroupCode(groupCode, new GroupServiceCallbacks.GetGroupByGroupCodeCallback() {
             @Override
             public void onComplete(Group group) {
-                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++1111");
                 for(String userId : group.getUsers()) {
-                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++2222");
                     userService.getUserByUserId(userId, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
                         @Override
                         public void onComplete(User user) {
-                            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++ User token: " + user.getFirebase_token());
                             String token = user.getFirebase_token();
-                            sendMessageToDevice(token);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sendMessageToDevice(token);
+                                }
+                            }).start();
+
                         }
                     });
                 }

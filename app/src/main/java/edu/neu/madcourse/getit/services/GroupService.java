@@ -224,7 +224,17 @@ public class GroupService {
     }
 
     public void getGroupByGroupCode(String groupCode, GroupServiceCallbacks.GetGroupByGroupCodeCallback callback) {
-        Query query = groups.whereEqualTo("group_code", groupCode);
+        long group_code = 0;
+
+        try{
+            group_code = Long.parseLong(groupCode);
+        }catch (Exception e){
+            Log.d("GET_GROUP_BY_GROUP_CODE", "Error");
+            callback.onComplete(null);
+            return;
+        }
+
+        Query query = groups.whereEqualTo("group_code", group_code);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
