@@ -253,7 +253,7 @@ public class GroupItems extends AppCompatActivity {
 //                    mdButtonGetIt.setClickable(false);
                     mAdapter.notifyDataSetChanged();
                     Snackbar.make(mRecyclerView, "Item has been added to list of items you need to get!", Snackbar.LENGTH_LONG).show();
-                    fcmService.sendUserGettingItemNotification(currentItem.getName(), mLoggedInUser.getUserId(), currentItem.getUserGettingIt().getFullName(), new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
+                    fcmService.sendUserGettingItemNotification(currentItem.getName(), currentItem.getUserPostedID(), mLoggedInUser.getFullName(), new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
                         @Override
                         public void onComplete() {
                             Log.d(SEND_NOTIFICATION_GETING_ITEM, "Success ");
