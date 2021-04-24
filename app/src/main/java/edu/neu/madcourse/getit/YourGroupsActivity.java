@@ -316,14 +316,14 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
      */
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+                Manifest.permission.ACCESS_FINE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermissions() {
         boolean shouldProvideRationale =
                 ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+                        Manifest.permission.ACCESS_FINE_LOCATION);
 
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
@@ -335,9 +335,14 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                         public void onClick(View view) {
 
                             // Request permission
+                            int PERMISSION_ALL = 1;
+                            String [] PERMISSIONS = {
+                                    //Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    //Manifest.permission.ACCESS_COARSE_LOCATION
+                            };
                             ActivityCompat.requestPermissions(YourGroupsActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                                    PERMISSIONS, REQUEST_PERMISSIONS_REQUEST_CODE );
 
                             // Build intent that displays the App settings screen.
 //                            Intent intent = new Intent();
@@ -368,7 +373,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".
             ActivityCompat.requestPermissions(YourGroupsActivity.this,
-                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
