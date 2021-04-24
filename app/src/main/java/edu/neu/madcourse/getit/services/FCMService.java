@@ -30,6 +30,7 @@ import java.util.Scanner;
 import edu.neu.madcourse.getit.GroupView;
 import edu.neu.madcourse.getit.R;
 import edu.neu.madcourse.getit.TestActivity;
+import edu.neu.madcourse.getit.callbacks.FCMServiceCallBacks;
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
@@ -117,13 +118,13 @@ public class FCMService extends FirebaseMessagingService {
      * Pushes a notification to a given device-- in particular, this device,
      * because that's what the instanceID token is defined to be.
      */
-    private void sendMessageToDevice(String targetToken) {
+    private void sendMessageToDevice(String targetToken, String notificationText) {
         JSONObject jPayload = new JSONObject();
         JSONObject jNotification = new JSONObject();
         JSONObject jdata = new JSONObject();
         try {
-            jNotification.put("title", "Message Title");
-            jNotification.put("body", "Message body ");
+            jNotification.put("title", "GetIt!!");
+            jNotification.put("body", notificationText);
             jNotification.put("sound", "default");
             jNotification.put("badge", "1");
             /*
@@ -194,27 +195,35 @@ public class FCMService extends FirebaseMessagingService {
         return s.hasNext() ? s.next().replace(",", ",\n") : "";
     }
 
-    public void sendNewGroupMemberNotification(String groupCode) {
+    public void sendNewGroupMemberNotification(String groupCode, String newGroupMemberName, FCMServiceCallBacks.sendNewGroupMemberNotificationCallback callback) {
         groupService.getGroupByGroupCode(groupCode, new GroupServiceCallbacks.GetGroupByGroupCodeCallback() {
             @Override
             public void onComplete(Group group) {
+                String notificationText = newGroupMemberName + " has joined your group " + group.getGroup_name();
                 for(String userId : group.getUsers()) {
                     userService.getUserByUserId(userId, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
                         @Override
                         public void onComplete(User user) {
                             String token = user.getFirebase_token();
+                            System.out.println("token: ++++++++++++++++++++++++++++++++++++ : " + token);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    sendMessageToDevice(token);
+                                    sendMessageToDevice(token, notificationText);
                                 }
                             }).start();
 
                         }
                     });
                 }
+
+                callback.onComplete();
             }
         });
+    }
+
+    public void sendNewItemNotification(String groupId, String itemId, String newGroupMemberName) {
+
     }
 
 }

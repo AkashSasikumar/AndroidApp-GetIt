@@ -22,6 +22,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.getit.callbacks.FCMServiceCallBacks;
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
@@ -43,6 +44,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     RecyclerView groupsRV;
     private FirebaseAuth fAuth;
     private String userID;
+    private String userName;
 
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
 
@@ -96,7 +98,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                         String token = task.getResult();
 
                         // Log and toast
-                        Log.d(FETCHING_FCM_REGISTRATION_TOKEN_STATUS, "success " + token);
+                        Log.d(FETCHING_FCM_REGISTRATION_TOKEN_STATUS, "success for user:  " + fAuth.getCurrentUser().getUid() + " token: " + token);
 
                         userService.updateUserDeviceToken(fAuth.getCurrentUser().getUid() , token);
                     }
@@ -106,6 +108,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         userService.getUserByUserId(userID, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
             @Override
             public void onComplete(User user) {
+                userName = user.getFullName();
                 List<String> groupNames = user.getGroups();
                 for (int i = 0; i < groupNames.size(); i++) {
 
@@ -142,24 +145,27 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
 
 
-            fcmService.sendNewGroupMemberNotification(groupCode);
-
-
-
-            groupService.addUserToGroupByGroupCode(userID, groupCode, new GroupServiceCallbacks.AddUserByGroupCodeTaskCallback() {
+            fcmService.sendNewGroupMemberNotification(groupCode, userName, new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
                 @Override
-                public void onComplete(Group group) {
-                    if ( group!= null){
-                        groups.add(new GroupView( Long.toString(group.getGroup_code()) , group.getGroup_name()));
-                        mGroupAdapter.notifyDataSetChanged();
-                        Snackbar.make(v, "Joined group " + group.getGroup_name() + " successfully", Snackbar.LENGTH_LONG).show();
+                public void onComplete() {
+                    groupService.addUserToGroupByGroupCode(userID, groupCode, new GroupServiceCallbacks.AddUserByGroupCodeTaskCallback() {
+                        @Override
+                        public void onComplete(Group group) {
+                            if ( group!= null){
+                                groups.add(new GroupView( Long.toString(group.getGroup_code()) , group.getGroup_name()));
+                                mGroupAdapter.notifyDataSetChanged();
+                                Snackbar.make(v, "Joined group " + group.getGroup_name() + " successfully", Snackbar.LENGTH_LONG).show();
 
-                    }else{
-                        Snackbar.make(v, "Sorry, group with the given code does not exist!", Snackbar.LENGTH_LONG).show();
-                    }
+                            }else{
+                                Snackbar.make(v, "Sorry, group with the given code does not exist!", Snackbar.LENGTH_LONG).show();
+                            }
 
+                        }
+                    });
                 }
             });
+
+
             // add the user to the group and update the recycler view to reflect the new group
 
             // ToDo: remove test code
