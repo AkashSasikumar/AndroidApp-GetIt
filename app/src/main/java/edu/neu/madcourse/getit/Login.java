@@ -55,9 +55,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // hide keyboard
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                return false;
+                try{
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    return false;
+                }catch (Exception e){
+                    return false;
+                }
+
             }
         });
 
@@ -96,7 +101,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        Snackbar.make(v, "User logged in successfully!", Snackbar.LENGTH_LONG).show();
+                        // Snackbar.make(v, "User logged in successfully!", Snackbar.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(),YourGroupsActivity.class));
                     }else{
                         mProgressBar.setVisibility(View.INVISIBLE);

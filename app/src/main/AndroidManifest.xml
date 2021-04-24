@@ -15,17 +15,21 @@
         android:roundIcon="@mipmap/ic_launcher_grocery_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GetIt">
-        <activity android:name=".UserItems"></activity>
-        <activity android:name=".GroupSettings" /> <!-- <activity android:name=".TestActivity"> -->
+        <activity android:name=".UserItems"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".GroupSettings"
+            android:screenOrientation="portrait"/> <!-- <activity android:name=".TestActivity"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".GroupItems" />
+        <activity android:name=".GroupItems"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Login"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,9 +38,12 @@
         </activity>
         <activity
             android:name=".Register"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".YourGroupsActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".YourGroupsActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="preloaded_fonts"
