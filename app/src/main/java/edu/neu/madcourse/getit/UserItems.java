@@ -35,7 +35,7 @@ public class UserItems extends AppCompatActivity {
 
     private static final String INTENT_LOGGED_USER_ID = "LOGGED_USER_ID";
     private static final String ITEMS_YOU_POSTED = "Posted by you";
-    private static final String ITEMS_OTHERS_GETTING_FOR_YOU = "Getting for you";
+    private static final String ITEMS_OTHERS_GETTING_FOR_YOU = "Getting for others";
 
 
     private List<Item> mItemList = new ArrayList<>();
@@ -221,7 +221,6 @@ public class UserItems extends AppCompatActivity {
                         }
                     });
                 }
-
             }
         });
     }

@@ -147,6 +147,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
         String groupCode = mGroupCode.getText().toString().trim();
         String groupName = mGroupName.getText().toString().trim();
+        mGroupCode.setText("");
+        mGroupName.setText("");
 
         if (v.getId() == R.id.join_group_btn) {
 
