@@ -187,24 +187,25 @@ public class FCMService extends FirebaseMessagingService {
         groupService.getGroupByGroupCode(groupCode, new GroupServiceCallbacks.GetGroupByGroupCodeCallback() {
             @Override
             public void onComplete(Group group) {
-                String notificationText = newGroupMemberName + " has joined your group " + group.getGroup_name();
-                for(String userId : group.getUsers()) {
-                    userService.getUserByUserId(userId, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
-                        @Override
-                        public void onComplete(User user) {
-                            String token = user.getFirebase_token();
-                            System.out.println("token: ++++++++++++++++++++++++++++++++++++ : " + token);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    sendMessageToDevice(token, notificationText);
-                                }
-                            }).start();
+                if (group != null){
+                    String notificationText = newGroupMemberName + " has joined your group " + group.getGroup_name();
+                    for(String userId : group.getUsers()) {
+                        userService.getUserByUserId(userId, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+                            @Override
+                            public void onComplete(User user) {
+                                String token = user.getFirebase_token();
+                                System.out.println("token: ++++++++++++++++++++++++++++++++++++ : " + token);
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sendMessageToDevice(token, notificationText);
+                                    }
+                                }).start();
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
-
                 callback.onComplete();
             }
         });

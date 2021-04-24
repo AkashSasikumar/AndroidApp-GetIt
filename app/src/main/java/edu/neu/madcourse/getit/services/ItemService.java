@@ -143,7 +143,7 @@ public class ItemService {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(userRef);
-                transaction.update(userRef, "user_score", FieldValue.increment(1));
+                transaction.update(userRef, "user_score", FieldValue.increment(10));
                 return null;
             }
         }).addOnSuccessListener(new OnSuccessListener<Void>() {

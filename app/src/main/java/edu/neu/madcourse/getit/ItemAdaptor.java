@@ -105,10 +105,12 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         if (currentItem.getUserGettingIt() != null){
             holder.mGetIt.setBackgroundColor(Color.parseColor(mGreyColor));
             holder.mGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
+            holder.mGetIt.setClickable(false);
         }else{
             holder.mGetIt.setBackgroundColor(Color.parseColor(mGreenColor));
-            holder.mGetIt.setText("I'll get' it!");
+            holder.mGetIt.setText("I'll get it!");
         }
+
     }
 
     @Override

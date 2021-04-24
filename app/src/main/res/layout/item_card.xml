@@ -33,6 +33,7 @@
             android:layout_marginStart="16dp"
             android:fontFamily="@font/aclonica"
             android:text="Apples"
+            android:textColor="#424242"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/item_image_card"

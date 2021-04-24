@@ -223,27 +223,33 @@ public class GroupService {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 Group group = null;
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
-                        group = (Group) document.toObject(Group.class);
-                        group.setGroupId(document.getId());
+                    QuerySnapshot documentRef = task.getResult();
+                    if (!documentRef.isEmpty()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
+                            group = (Group) document.toObject(Group.class);
+                            group.setGroupId(document.getId());
 
-                        try{
-                            // add user to group
-                            groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
-                            Log.d(ADD_USER_TO_GROUP, "Success");
+                            try {
+                                // add user to group
+                                groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
+                                Log.d(ADD_USER_TO_GROUP, "Success");
 
-                            // add group id to user's group list
-                            users.document(userID).update("user_groups", FieldValue.arrayUnion(group.getGroupId()));
+                                // add group id to user's group list
+                                users.document(userID).update("user_groups", FieldValue.arrayUnion(group.getGroupId()));
 
-                            callback.onComplete(group);
-                        }catch (Error e){
-                            Log.d(ADD_USER_TO_GROUP, "Error");
-                            callback.onComplete(null);
+                                callback.onComplete(group);
+                            } catch (Error e) {
+                                Log.d(ADD_USER_TO_GROUP, "Error");
+                                callback.onComplete(null);
+                            }
                         }
+                    }else{
+                        Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting group from code: ", task.getException());
+                        callback.onComplete(null);
                     }
                 } else {
-                    Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting group from ode: ", task.getException());
+                    Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting group from code: ", task.getException());
                     callback.onComplete(null);
                 }
             }
@@ -284,14 +290,21 @@ public class GroupService {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 Group group = null;
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
-                        group = (Group) document.toObject(Group.class);
-                        group.setGroupId(document.getId());
-                        callback.onComplete(group);
+                    QuerySnapshot documentRef = task.getResult();
+                    if (!documentRef.isEmpty()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
+                            group = (Group) document.toObject(Group.class);
+                            group.setGroupId(document.getId());
+                            callback.onComplete(group);
+                        }
+                    }else{
+                        Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting group from code: ", task.getException());
+                        callback.onComplete(null);
                     }
                 } else {
                     Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
+                    callback.onComplete(null);
                 }
             }
         });

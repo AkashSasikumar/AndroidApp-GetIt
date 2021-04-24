@@ -159,7 +159,7 @@ public class UserItems extends AppCompatActivity {
         mdPreferredBrand = (TextView)  mItemDetailsView.findViewById(R.id.item_brand_display);
         mdPostedBy =(TextView)  mItemDetailsView.findViewById(R.id.item_posted_by_display);
         mdPostedOn = (TextView) mItemDetailsView.findViewById(R.id.item_posted_on_display);
-        mdButtonGetIt = (Button) mItemDetailsView.findViewById(R.id.get_item_display);
+        //mdButtonGetIt = (Button) mItemDetailsView.findViewById(R.id.get_item_display);
 //        // set listeners
 //        mdButtonGetIt.setOnClickListener(v->getItem());
     }
