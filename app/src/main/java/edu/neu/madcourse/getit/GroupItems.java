@@ -336,7 +336,7 @@ public class GroupItems extends AppCompatActivity {
         }
 
         Item item = new Item(itemName, itemQuantity, preferredStore, preferredBrand, currentDateAndTime,
-                mLoggedInUser, null, itemImage , instructions);
+                mLoggedInUser, null, itemImage , instructions, groupID);
 //        mItemList.add(0, item);
 //        mItemInputDialog.hide();
 //        mAdapter.notifyDataSetChanged();

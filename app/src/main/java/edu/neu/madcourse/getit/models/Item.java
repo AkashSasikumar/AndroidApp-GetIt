@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -25,13 +23,15 @@ public class Item {
     private String instructions;
     // private int mImage;
     private Bitmap imageBitmap;
+    private String postedInGroupID;
+    private String userPostedID;
 
-    public Item(){
 
-    }
+    private String userGettingID;
+
 
     public Item(String name, String quantity, String preferredStore, String preferredBrand, String postedDateTime,
-                User userPosted, User userGettingIt, Bitmap itemImageBitmap, String instructions){
+                User userPosted, User userGettingIt, Bitmap itemImageBitmap, String instructions, String postedInGroupID){
         this.name = name;
         this.instructions = instructions;
         this.preferredStore = preferredStore;
@@ -41,6 +41,42 @@ public class Item {
         this.userPosted = userPosted;
         this.userGettingIt = userGettingIt;
         this.imageBitmap = itemImageBitmap;
+        this.postedInGroupID = postedInGroupID;
+        if (userPosted != null){
+            this.userPostedID = userPosted.getUserId();
+        }
+        if (userGettingIt != null){
+            this.userGettingID = userGettingIt.getUserId();
+        }
+    }
+
+    public Item(){
+
+    }
+
+
+    public String getUserGettingID() {
+        return userGettingID;
+    }
+
+    public void setUserGettingID(String userGettingID) {
+        this.userGettingID = userGettingID;
+    }
+
+    public String getUserPostedID() {
+        return userPostedID;
+    }
+
+    public void setUserPostedID(String userPostedID) {
+        this.userPostedID = userPostedID;
+    }
+
+    public String getPostedInGroupID() {
+        return postedInGroupID;
+    }
+
+    public void setPostedInGroupID(String postedInGroupID) {
+        this.postedInGroupID = postedInGroupID;
     }
 
     public Bitmap getImageBitmap() {

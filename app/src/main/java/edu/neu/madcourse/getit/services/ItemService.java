@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,14 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
-import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 import edu.neu.madcourse.getit.models.User;
 
@@ -63,6 +58,9 @@ public class ItemService {
         newItem.put("userPosted", item.getUserPosted());
         newItem.put("userGettingIt", item.getUserGettingIt());
         newItem.put("imageBitmap", getEncodedStringOfBitmap(item.getImageBitmap()));
+        newItem.put("userPostedID", item.getUserPostedID());
+        newItem.put("userGettingID", item.getUserGettingID());
+        newItem.put("postedInGroupID", item.getPostedInGroupID());
 
         items.document(newItemsDocId)
                 .set(newItem)
@@ -100,6 +98,13 @@ public class ItemService {
                     item.setInstructions(item_map.get("instructions").toString());
                     item.setPreferredBrand(item_map.get("preferredBrand").toString());
                     item.setPreferredStore(item_map.get("preferredStore").toString());
+                    item.setPostedDateTime(item_map.get("postedDateTime").toString());
+                    item.setUserPostedID(item_map.get("userPostedID").toString());
+                    item.setPostedInGroupID(item_map.get("postedInGroupID").toString());
+
+                    if(item_map.get("userGettingID") != null){
+                        item.setUserGettingID(item_map.get("userGettingID").toString());
+                    }
 
                     if(item_map.get("userPosted") != null) {
                         item.setUserPosted(new User((HashMap) item_map.get("userPosted")));
@@ -125,6 +130,7 @@ public class ItemService {
 
         // update items database
         items.document(itemID).update("userGettingIt",userGetting );
+        items.document(itemID).update("userGettingID", userGetting.getUserId());
 
         // add item to users list of items getting
         users.document(userGetting.getUserId()).update("user_items_getting", FieldValue.arrayUnion(itemID));
