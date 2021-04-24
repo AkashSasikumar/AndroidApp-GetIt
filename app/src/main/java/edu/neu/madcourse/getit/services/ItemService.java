@@ -110,7 +110,7 @@ public class ItemService {
                         item.setUserPosted(new User((HashMap) item_map.get("userPosted")));
                     }
                     if(item_map.get("userGettingIt") != null) {
-                        item.setUserPosted(new User((HashMap) item_map.get("userGettingIt")));
+                        item.setUserGettingIt(new User((HashMap) item_map.get("userGettingIt")));
                     }
                     item.setPostedDateTime(item_map.get("postedDateTime").toString());
                     if(item_map.get("imageBitmap") != null) {
