@@ -5,6 +5,7 @@
     <string name="group_name">Group Name</string>
     <string name="group_code">Group Code</string>
     <string name="join_group_btn">JOIN GROUP</string>
+    <string name="logout_confirm">Do you want to logout?</string>
     <string name="LatitudeAndLongitude">Latitude: %1$s\nLongitude: %2$s</string>
     <string name="NoLocationAccess">This app does not have location access.\nPlease give location access.</string>
 
@@ -45,5 +46,4 @@
     <string name="permission_denied_explanation">Permission was denied. Location based notifications will be disabled :(
         </string>
     <string name="settings">Settings</string>
-
 </resources>
