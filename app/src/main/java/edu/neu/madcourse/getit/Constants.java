@@ -3,11 +3,6 @@ package edu.neu.madcourse.getit;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
-
-/**
- * Constants used in this sample.
- */
-
 final class Constants {
 
     private Constants() {

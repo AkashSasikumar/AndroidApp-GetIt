@@ -30,9 +30,9 @@
     </string>
 
     <!-- Transition type strings -->
-    <string name="geofence_transition_entered">Near a grocery store. Want to buy groceries?</string>
-    <string name="geofence_transition_exited">Near a grocery store. Want to buy groceries?</string>
-    <string name="geofence_transition_dwell">Near a grocery store. Want to buy groceries?</string>
+    <string name="geofence_transition_entered">Entered a grocery store zone. Want to buy groceries?</string>
+    <string name="geofence_transition_exited">Exited a grocery store zone. Want to buy groceries?</string>
+    <string name="geofence_transition_dwell">Dwelling in a grocery store zone. Want to buy groceries?</string>
 
     <string name="unknown_geofence_transition">Unknown Transition</string>
 

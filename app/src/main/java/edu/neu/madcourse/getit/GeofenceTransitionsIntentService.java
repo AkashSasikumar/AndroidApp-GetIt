@@ -103,7 +103,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
             triggeringGeofencesIdsList.add(geofence.getRequestId());
         }
         String triggeringGeofencesIdsString = TextUtils.join(", ", triggeringGeofencesIdsList);
-
         return geofenceTransitionString + ": " + triggeringGeofencesIdsString;
     }
 
@@ -142,7 +141,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
                         R.drawable.ic_launcher_foreground))
                 .setColor(Color.RED)
                 .setContentTitle(notificationDetails)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentText(getString(R.string.geofence_transition_notification_text))
                 .setContentIntent(notificationPendingIntent);
         Log.i(TAG, "set the content of the notification");
