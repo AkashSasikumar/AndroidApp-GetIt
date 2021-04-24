@@ -69,7 +69,11 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     private EditText mJoinGroupCode;
     private Button mJoinGroupDialogBtn;
 
-
+    // Logout dialog
+    private AlertDialog logoutConfirmDialog;
+    private View logoutConfirmView;
+    private Button logoutConfirmYesButton;
+    private Button logoutConfirmNoButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +113,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         });
 
         createCreateGroupDialog();
+        createLogoutConfirmDialog();
         createJoinGroupDialog();
 
         userService = new UserService();
@@ -298,4 +303,31 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mJoinGroupDialog.show();
     }
 
+    private void createLogoutConfirmDialog() {
+        AlertDialog.Builder logoutConfirmBuilder = new AlertDialog.Builder(this);
+        logoutConfirmView = getLayoutInflater().inflate(R.layout.logout_confirm_layout, null);
+        logoutConfirmBuilder.setView(logoutConfirmView);
+        logoutConfirmDialog = logoutConfirmBuilder.create();
+
+        // get views
+        logoutConfirmYesButton = logoutConfirmView.findViewById(R.id.logout_confirm_yes);
+        logoutConfirmNoButton = logoutConfirmView.findViewById(R.id.logout_confirm_no);
+
+        logoutConfirmYesButton.setOnClickListener(v -> logoutConfirmButtonYesOnClick());
+        logoutConfirmNoButton.setOnClickListener(v -> logoutConfirmButtonNoOnClick());
+    }
+
+    private void logoutConfirmButtonYesOnClick() {
+        Intent intent = new Intent(getApplicationContext(), Login.class);
+        startActivity(intent);
+    }
+
+    private void logoutConfirmButtonNoOnClick() {
+        logoutConfirmDialog.hide();
+    }
+
+    @Override
+    public void onBackPressed() {
+        logoutConfirmDialog.show();
+    }
 }

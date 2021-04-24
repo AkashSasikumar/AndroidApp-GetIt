@@ -5,5 +5,6 @@
     <string name="group_name">Group Name</string>
     <string name="group_code">Group Code</string>
     <string name="join_group_btn">JOIN GROUP</string>
+    <string name="logout_confirm">Do you want to logout?</string>
 
 </resources>
