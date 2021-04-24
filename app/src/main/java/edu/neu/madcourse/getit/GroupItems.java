@@ -61,7 +61,10 @@ public class GroupItems extends AppCompatActivity {
     private final int GREEN_COLOR = Color.parseColor("#689F38");
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int GET_FROM_GALLERY = 3;
+
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
+    private static final String INTENT_GROUP_ID = "GROUP_ID";
+    private static final String INTENT_GROUP_CODE = "GROUP_CODE";
 
     private ArrayList<Item> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -72,6 +75,8 @@ public class GroupItems extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private User mLoggedInUser;
     private String groupName;
+    private String groupCode;
+    private String groupID;
     private GroupService groupService;
     private ItemService itemService;
     private UserService userService;
@@ -97,18 +102,22 @@ public class GroupItems extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_items);
+
+        // get data from intent
         groupName = getIntent().getStringExtra(INTENT_GROUP_NAME);
-        setToolbarTitle(groupName);
+        groupCode = getIntent().getStringExtra(INTENT_GROUP_CODE);
+        groupID = getIntent().getStringExtra(INTENT_GROUP_ID);
+
+        setToolbarTitle("Items (" + groupName + ")");
         fAuth = FirebaseAuth.getInstance();
         groupService = new GroupService();
         itemService = new ItemService();
         userService = new UserService();
         mItemList = new ArrayList<>();
         setLoggedInUser();
-        // ToDo: add real logic inside populate items
-        populateItems();
 
         setupRecyclerView();
+        populateItems();
         createItemDetailsDialog();
         createItemInputDialog();
     }
@@ -144,24 +153,33 @@ public class GroupItems extends AppCompatActivity {
             case R.id.sort_by_user_getting:
                 Collections.sort(mItemList, Item.itemUserGettingComparator);
                 break;
-            case R.id.add_member:
-                addMemberToGroup();
+            case R.id.group_settings:
+                onSettingsClick();
                 break;
+
+//            case R.id.add_member:
+//                addMemberToGroup();
+//                break;
         }
         mAdapter.notifyDataSetChanged();
         return super.onOptionsItemSelected(item);
     }
 
-    private void addMemberToGroup(){
-        Snackbar.make(mRecyclerView, "User added!", Snackbar.LENGTH_LONG).show();
+    private void onSettingsClick(){
+        Snackbar.make(mRecyclerView, "Settings clicked!", Snackbar.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), GroupSettings.class);
+        intent.putExtra(INTENT_GROUP_NAME, groupName);
+        intent.putExtra(INTENT_GROUP_ID, groupID);
+        intent.putExtra(INTENT_GROUP_CODE, groupCode);
+        startActivity(intent);
     }
 
     private void setLoggedInUser(){
         FirebaseUser firebaseUser = fAuth.getCurrentUser();
-        userService.getUserNameFromEmail(firebaseUser.getEmail(), new UserServiceCallbacks.GetUserNameFromEmailCallback() {
+        userService.getUserFromEmail(firebaseUser.getEmail(), new UserServiceCallbacks.GetUserFromEmailCallback() {
             @Override
-            public void onComplete(String userName) {
-                mLoggedInUser = new User(firebaseUser.getEmail(), userName);
+            public void onComplete(User user) {
+                mLoggedInUser = user;
             }
         });
     }
@@ -187,7 +205,7 @@ public class GroupItems extends AppCompatActivity {
 
             @Override
             public void onGetButtonClick(int position) {
-               getItem(position);
+                getItem(position);
             }
         });
     }
@@ -216,13 +234,26 @@ public class GroupItems extends AppCompatActivity {
         //ToDo: get selected item and add current user
         // update view should show you are getting it
         Item currentItem = mItemList.get(position);
-        currentItem.setUserGettingIt(mLoggedInUser);
-        mItemList.remove(position);
-        mItemList.add(position, currentItem);
-        mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
-        mdButtonGetIt.setBackgroundColor(GREY_COLOR);
-        mdButtonGetIt.setClickable(false);
-        mAdapter.notifyDataSetChanged();
+
+        // update database
+        itemService.addUserGettingTheItem(currentItem.getItemID(), mLoggedInUser, new ItemServiceCallbacks.addUserGettingTheItemTaskCallback() {
+            @Override
+            public void onComplete(boolean isSuccess) {
+                if(isSuccess){
+                    currentItem.setUserGettingIt(mLoggedInUser);
+                    mItemList.remove(position);
+                    mItemList.add(position, currentItem);
+                    mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
+                    mdButtonGetIt.setBackgroundColor(GREY_COLOR);
+                    mdButtonGetIt.setClickable(false);
+                    mAdapter.notifyDataSetChanged();
+                    Snackbar.make(mRecyclerView, "Item has been added to list of items you need to get!", Snackbar.LENGTH_LONG).show();
+                }else{
+                    Snackbar.make(mRecyclerView, "Oops! Something went wrong. Please try again!", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     private void displayItemDetails(int position){
@@ -311,7 +342,7 @@ public class GroupItems extends AppCompatActivity {
 //        mAdapter.notifyDataSetChanged();
 
         // Add to database first and then show success
-        itemService.createItem(item, new ItemServiceCallbacks.CreateItemTaskCallback() {
+        itemService.createItem(item, mLoggedInUser, new ItemServiceCallbacks.CreateItemTaskCallback() {
             @Override
             public void onComplete(boolean isSuccess, String itemId) {
                 if(isSuccess) {

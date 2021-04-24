@@ -11,4 +11,8 @@ public class ItemServiceCallbacks {
     public interface GetItemByItemIdTaskCallback {
         void onComplete(Item item);
     }
+
+    public interface addUserGettingTheItemTaskCallback{
+        void onComplete(boolean isSuccess);
+    }
 }

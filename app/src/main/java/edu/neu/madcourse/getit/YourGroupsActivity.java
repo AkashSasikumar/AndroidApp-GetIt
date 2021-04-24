@@ -36,6 +36,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     EditText mGroupName, mGroupCode;
     Button join_group_btn;
     Button create_group_btn;
+    Button view_my_items;
     List<GroupView> groups;
     UserService userService;
     GroupService groupService;
@@ -47,6 +48,10 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     private String userName;
 
     private static final String INTENT_GROUP_NAME = "GROUP_NAME";
+    private static final String INTENT_GROUP_ID = "GROUP_ID";
+    private static final String INTENT_GROUP_CODE = "GROUP_CODE";
+    private static final String INTENT_LOGGED_USER_ID = "LOGGED_USER_ID";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +62,10 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mGroupCode = findViewById(R.id.group_code_field);
         join_group_btn = findViewById(R.id.join_group_btn);
         create_group_btn = findViewById(R.id.create_group_btn);
+        view_my_items = findViewById(R.id.view_my_items);
         join_group_btn.setOnClickListener(this);
         create_group_btn.setOnClickListener(this);
+        view_my_items.setOnClickListener(this);
 
         // recycler view
         groupsRV = findViewById(R.id.recyclerView);
@@ -70,10 +77,15 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
         mGroupAdapter.setOnGroupClickListener(new GroupsRVAdapter.OnGroupClickListener() {
             @Override
             public void onGroupClick(int position) {
-                String groupName = groups.get(position).getGroupName();
-                Snackbar.make(groupsRV, "Clicked on group: "+ groupName, Snackbar.LENGTH_LONG).show();
+                GroupView clickedGroup = groups.get(position);
+                String groupName = clickedGroup.getGroupName();
+                String groupID = clickedGroup.getGroupID();
+                String groupCode = clickedGroup.getGroupCode();
+                // Snackbar.make(groupsRV, "Clicked on group: "+ groupName, Snackbar.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), GroupItems.class);
                 intent.putExtra(INTENT_GROUP_NAME, groupName);
+                intent.putExtra(INTENT_GROUP_ID, groupID);
+                intent.putExtra(INTENT_GROUP_CODE, groupCode);
                 startActivity(intent);
             }
         });
@@ -115,7 +127,8 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                     groupService.getGroupNameByGroupID(groupNames.get(i), new GroupServiceCallbacks.GetGroupNameFromGroupIDCallback() {
                         @Override
                         public void onComplete(Group group) {
-                            GroupView g = new GroupView(Long.toString(group.getGroup_code()), group.getGroup_name());
+                            GroupView g = new GroupView(Long.toString(group.getGroup_code()),
+                                    group.getGroup_name(), group.getGroupId());
                             groups.add(g);
                             mGroupAdapter.notifyDataSetChanged();
                         }
@@ -144,15 +157,14 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
 
 
 
-
             fcmService.sendNewGroupMemberNotification(groupCode, userName, new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
                 @Override
                 public void onComplete() {
                     groupService.addUserToGroupByGroupCode(userID, groupCode, new GroupServiceCallbacks.AddUserByGroupCodeTaskCallback() {
-                        @Override
                         public void onComplete(Group group) {
                             if ( group!= null){
-                                groups.add(new GroupView( Long.toString(group.getGroup_code()) , group.getGroup_name()));
+                                groups.add(new GroupView( Long.toString(group.getGroup_code()) ,
+                                        group.getGroup_name(), group.getGroupId()));
                                 mGroupAdapter.notifyDataSetChanged();
                                 Snackbar.make(v, "Joined group " + group.getGroup_name() + " successfully", Snackbar.LENGTH_LONG).show();
 
@@ -184,11 +196,12 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 public void onComplete(Group group) {
                     if (group != null){
                         // add current user to the created group
-                        groupService.addUserToGroup(userID, groupName, new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
+                        groupService.addUserToGroupByGroupIdAndUserId(userID, group.getGroupId(), new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
                             @Override
                             public void onComplete(boolean isSuccess) {
                                 if (isSuccess){
-                                    groups.add(new GroupView( Long.toString(group.getGroup_code()), groupName));
+                                    groups.add(new GroupView( Long.toString(group.getGroup_code()),
+                                            groupName, group.getGroupId()));
                                     mGroupAdapter.notifyDataSetChanged();
                                     Snackbar.make(v, "Group " + groupName + " created successfully!", Snackbar.LENGTH_LONG).show();
                                 }
@@ -199,6 +212,10 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                     }
                 }
             });
+        } else if(v.getId() == R.id.view_my_items){
+            Intent intent = new Intent(getApplicationContext(), UserItems.class);
+            intent.putExtra(INTENT_LOGGED_USER_ID, fAuth.getCurrentUser().getUid());
+            startActivity(intent);
         }
     }
 }

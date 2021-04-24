@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/add_member"
-        android:title="Add member"
-        app:showAsAction="always"
-        android:icon="@drawable/add_member"
-        />
+<!--    <item-->
+<!--        android:id="@+id/add_member"-->
+<!--        android:title="Add member"-->
+<!--        app:showAsAction="always"-->
+<!--        android:icon="@drawable/add_member"-->
+<!--        />-->
 
     <item
         android:id="@+id/sort"
@@ -32,4 +32,7 @@
                 android:title="Item name" />
         </menu>
     </item>
+    <item
+        android:title="Manage Group"
+        android:id="@+id/group_settings" />
 </menu>

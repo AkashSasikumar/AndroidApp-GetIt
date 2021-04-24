@@ -1,6 +1,7 @@
 package edu.neu.madcourse.getit.callbacks;
 
 import edu.neu.madcourse.getit.models.Group;
+import edu.neu.madcourse.getit.models.User;
 
 public class GroupServiceCallbacks {
 
@@ -31,4 +32,9 @@ public class GroupServiceCallbacks {
     public interface  GetGroupByGroupCodeCallback {
         void onComplete(Group group);
     }
+
+    public interface  AddUserToGroupByGroupIDAndEmailCallback {
+        void onComplete(User group);
+    }
+
 }

@@ -3,7 +3,9 @@
     package="edu.neu.madcourse.getit">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
 
     <application
@@ -13,16 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_grocery_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GetIt">
-
-<!--        <activity android:name=".TestActivity">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
-        <activity android:name=".GroupItems">
-        </activity>
+        <activity android:name=".UserItems"></activity>
+        <activity android:name=".GroupSettings" /> <!-- <activity android:name=".TestActivity"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity android:name=".GroupItems" />
         <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar">
@@ -32,7 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Register"
             android:theme="@style/AppTheme.NoActionBar" />

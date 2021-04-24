@@ -24,6 +24,7 @@ import java.util.Map;
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
+import edu.neu.madcourse.getit.models.User;
 
 public class GroupService {
 
@@ -59,20 +60,20 @@ public class GroupService {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 long groupCode = 0;
                 if (task.isSuccessful()){
+                    String newGroupID = groups.document().getId();
                     DocumentSnapshot countRef = task.getResult();
                     if(countRef.exists()){
                         groupCode = (long) countRef.getData().get("next_group_code");
                         // update the next_group_code even if group creation fails
                         count.document(COUNT_KEY).update("next_group_code", groupCode + 1);
-
-                        Group group = new Group("DUMMY", groupCode, groupName, Arrays.asList(), Arrays.asList());
+                        Group group = new Group(newGroupID, groupCode, groupName, Arrays.asList(), Arrays.asList());
                         Map<String, Object> newGroup = new HashMap<>();
                         newGroup.put("group_name", groupName);
                         newGroup.put("items", Arrays.asList());
                         newGroup.put("users", Arrays.asList());
                         newGroup.put("group_code", groupCode);
 
-                        groups.document()
+                        groups.document(newGroupID)
                                 .set(newGroup)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -94,7 +95,6 @@ public class GroupService {
                 }
             }
         });
-
 
     }
 
@@ -128,6 +128,7 @@ public class GroupService {
                     DocumentSnapshot groupRef = task.getResult();
                     if(groupRef.exists()){
                         Group group = groupRef.toObject(Group.class);
+                        group.setGroupId(groupRef.getId());
                         //String groupName = (String) groupRef.getData().get("group_name");
                         callback.onComplete(group);
                     }
@@ -139,26 +140,69 @@ public class GroupService {
         });
     }
 
-    public void addUserToGroup(String userID, String groupName,
+    public void addUserToGroupByGroupIdAndUserId(String userID, String groupID,
                                   GroupServiceCallbacks.AddUserToGroupTaskCallback callback){
-        getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
+
+        try{
+            // add user to group
+            groups.document(groupID).update("users", FieldValue.arrayUnion(userID));
+            Log.d(ADD_USER_TO_GROUP, "Success");
+
+            // add group id to user's group list
+            users.document(userID).update("user_groups", FieldValue.arrayUnion(groupID));
+
+            callback.onComplete(true);
+        }catch (Error e){
+            Log.d(ADD_USER_TO_GROUP, "Error");
+            callback.onComplete(false);
+        }
+
+    }
+
+    public void addUserToGroupByGroupIDAndEmail(String userEmailId, String groupId,
+                               GroupServiceCallbacks.AddUserToGroupByGroupIDAndEmailCallback callback){
+
+        // check if the user exists in the database
+        UserService userService = new UserService();
+        userService.getUserFromEmail(userEmailId, new UserServiceCallbacks.GetUserFromEmailCallback() {
             @Override
-            public void onComplete(Group group) {
-                try{
-                    // add user to group
-                    groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
-                    Log.d(ADD_USER_TO_GROUP, "Success");
-
-                    // add group id to user's group list
-                    users.document(userID).update("user_groups", FieldValue.arrayUnion(group.getGroupId()));
-
-                    callback.onComplete(true);
-                }catch (Error e){
+            public void onComplete(User user) {
+                if (user != null){
+                    //ToDo: check if user already exists in the group.
+                    addUserToGroupByGroupIdAndUserId(user.getUserId(), groupId, new GroupServiceCallbacks.AddUserToGroupTaskCallback() {
+                        @Override
+                        public void onComplete(boolean isSuccess) {
+                            // update users group list
+                            users.document(user.getUserId()).update("user_groups", FieldValue.arrayUnion(groupId));
+                            callback.onComplete(user);
+                        }
+                    });
+                }else{
                     Log.d(ADD_USER_TO_GROUP, "Error");
-                    callback.onComplete(false);
+                    callback.onComplete(null);
                 }
             }
         });
+
+
+//        getGroupByGroupName(groupName, new GroupServiceCallbacks.GetGroupByGroupNameTaskCallback() {
+//            @Override
+//            public void onComplete(Group group) {
+//                try{
+//                    // add user to group
+//                    groups.document(group.getGroupId()).update("users", FieldValue.arrayUnion(userID));
+//                    Log.d(ADD_USER_TO_GROUP, "Success");
+//
+//                    // add group id to user's group list
+//                    users.document(userID).update("user_groups", FieldValue.arrayUnion(group.getGroupId()));
+//
+//                    callback.onComplete(true);
+//                }catch (Error e){
+//                    Log.d(ADD_USER_TO_GROUP, "Error");
+//                    callback.onComplete(false);
+//                }
+//            }
+//        });
     }
 
     public void addUserToGroupByGroupCode(String userID, String groupCode,
