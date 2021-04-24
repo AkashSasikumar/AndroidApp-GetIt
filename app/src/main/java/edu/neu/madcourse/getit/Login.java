@@ -75,9 +75,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }else if (v.getId() == R.id.login){
 
             // hide keyboard
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
+            try {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+            catch (Exception e){
+                // DO NOTHING
+            }
             String email = mEmail.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
 
