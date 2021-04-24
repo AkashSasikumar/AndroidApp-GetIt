@@ -310,36 +310,59 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
      */
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermissions() {
         boolean shouldProvideRationale =
                 ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION);
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION);
 
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.");
-            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+            showSnackbar(R.string.permission_rationale, R.string.settings,
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             // Request permission
                             ActivityCompat.requestPermissions(YourGroupsActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                                     REQUEST_PERMISSIONS_REQUEST_CODE);
+
+                            // Build intent that displays the App settings screen.
+//                            Intent intent = new Intent();
+//                            intent.setAction(
+//                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                            Uri uri = Uri.fromParts("package",
+//                                    BuildConfig.APPLICATION_ID, null);
+//                            intent.setData(uri);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
                         }
                     });
+
+
+//            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+//                    new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            // Request permission
+//                            ActivityCompat.requestPermissions(YourGroupsActivity.this,
+//                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+//                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//                        }
+//                    });
         } else {
             Log.i(TAG, "Requesting permission");
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".
             ActivityCompat.requestPermissions(YourGroupsActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
@@ -433,21 +456,33 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 // again" prompts). Therefore, a user interface affordance is typically implemented
                 // when permissions are denied. Otherwise, your app could appear unresponsive to
                 // touches or interactions which have required permissions.
-                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+
+                showSnackbar(R.string.permission_denied_explanation, android.R.string.ok,
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                // Build intent that displays the App settings screen.
-                                Intent intent = new Intent();
-                                intent.setAction(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        BuildConfig.APPLICATION_ID, null);
-                                intent.setData(uri);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                // Request permission
+//                                ActivityCompat.requestPermissions(YourGroupsActivity.this,
+//                                        new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+//                                        REQUEST_PERMISSIONS_REQUEST_CODE);
                             }
                         });
+
+//                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                // Build intent that displays the App settings screen.
+//                                Intent intent = new Intent();
+//                                intent.setAction(
+//                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                                Uri uri = Uri.fromParts("package",
+//                                        BuildConfig.APPLICATION_ID, null);
+//                                intent.setData(uri);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                startActivity(intent);
+//                            }
+//                        });
                 mPendingGeofenceTask = YourGroupsActivity.PendingGeofenceTask.NONE;
             }
         }

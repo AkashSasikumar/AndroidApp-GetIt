@@ -109,6 +109,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         }else{
             holder.mGetIt.setBackgroundColor(Color.parseColor(mGreenColor));
             holder.mGetIt.setText("I'll get it!");
+            holder.mGetIt.setClickable(true);
         }
 
     }
