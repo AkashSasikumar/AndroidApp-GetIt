@@ -231,7 +231,7 @@ public class GroupItems extends AppCompatActivity {
         mdPreferredBrand = (TextView)  mItemDetailsView.findViewById(R.id.item_brand_display);
         mdPostedBy =(TextView)  mItemDetailsView.findViewById(R.id.item_posted_by_display);
         mdPostedOn = (TextView) mItemDetailsView.findViewById(R.id.item_posted_on_display);
-        mdButtonGetIt = (Button) mItemDetailsView.findViewById(R.id.get_item_display);
+        //mdButtonGetIt = (Button) mItemDetailsView.findViewById(R.id.get_item_display);
 //        // set listeners
 //        mdButtonGetIt.setOnClickListener(v->getItem());
     }
@@ -282,13 +282,13 @@ public class GroupItems extends AppCompatActivity {
         mdPostedBy.setText(currentItem.getUserPosted().getFullName() + " (" + currentItem.getUserPosted().getUserEmail() + ")" );
         mdPostedOn.setText(currentItem.getPostedDateTime());
 
-        if (currentItem.getUserGettingIt() != null){
-            mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
-            mdButtonGetIt.setBackgroundColor(GREY_COLOR);
-        }else{
-            mdButtonGetIt.setText("I'll get it!");
-            mdButtonGetIt.setBackgroundColor(GREEN_COLOR);
-        }
+//        if (currentItem.getUserGettingIt() != null){
+//            mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
+//            mdButtonGetIt.setBackgroundColor(GREY_COLOR);
+//        }else{
+//            mdButtonGetIt.setText("I'll get it!");
+//            mdButtonGetIt.setBackgroundColor(GREEN_COLOR);
+//        }
         mItemDetailsDialog.show();
     }
 

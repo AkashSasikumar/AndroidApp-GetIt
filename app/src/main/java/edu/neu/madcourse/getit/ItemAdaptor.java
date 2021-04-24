@@ -30,6 +30,7 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
     private List<Item> mItemList;
     private OnItemClickListener mListener;
     private String mGreyColor = "#BDBDBD";
+    private String mGreenColor = "#689F38";
 
     public void setOnItemClickListener(OnItemClickListener listener){
         mListener = listener;
@@ -104,7 +105,12 @@ public class ItemAdaptor extends RecyclerView.Adapter<ItemAdaptor.ItemViewHolder
         if (currentItem.getUserGettingIt() != null){
             holder.mGetIt.setBackgroundColor(Color.parseColor(mGreyColor));
             holder.mGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
+            holder.mGetIt.setClickable(false);
+        }else{
+            holder.mGetIt.setBackgroundColor(Color.parseColor(mGreenColor));
+            holder.mGetIt.setText("I'll get it!");
         }
+
     }
 
     @Override

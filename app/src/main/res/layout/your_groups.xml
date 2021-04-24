@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/your_groups_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/grocery_doodle"
@@ -13,16 +14,17 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/round_border_orange"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_default="wrap"
-        app:layout_constraintHeight_max="250dp"
+        app:layout_constraintHeight_default="spread"
+        app:layout_constraintHeight_max="300dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:background="@drawable/round_border_orange"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
@@ -32,6 +34,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/your_groups_title"
+        android:fontFamily="@font/aclonica"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,20 +50,6 @@
     <!--        app:layout_constraintEnd_toEndOf="@+id/group_name_label"-->
     <!--        app:layout_constraintStart_toStartOf="@+id/group_name_label" />-->
 
-    <EditText
-        android:id="@+id/group_name_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="@string/group_name"
-        android:inputType="text"
-        android:maxLength="15"
-        app:layout_constraintBottom_toBottomOf="@+id/create_group_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/create_group_btn"
-        app:layout_constraintTop_toTopOf="@id/create_group_btn" />
-
     <!--    <TextView-->
     <!--        android:id="@+id/group_name_label"-->
     <!--        android:layout_width="wrap_content"-->
@@ -72,31 +61,18 @@
     <!--        app:layout_constraintHorizontal_bias="0.5"-->
     <!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <EditText
-        android:id="@+id/group_code_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="@string/group_code"
-        android:inputType="number"
-        android:maxLength="4"
-        app:layout_constraintBottom_toBottomOf="@id/join_group_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/join_group_btn"
-        app:layout_constraintTop_toTopOf="@+id/join_group_btn" />
-
     <Button
         android:id="@+id/join_group_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_edittext"
+        android:ems="12"
         android:text="@string/join_group_btn"
-        app:layout_constraintBaseline_toBaselineOf="@id/group_code_field"
-        app:layout_constraintEnd_toStartOf="@id/group_code_field"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintBottom_toTopOf="@+id/view_my_items"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_group_btn" />
@@ -105,19 +81,16 @@
         android:id="@+id/create_group_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
+        android:background="@drawable/rounded_edittext"
+        android:ems="12"
         android:text="Create Group"
-        app:layout_constraintBottom_toTopOf="@id/join_group_btn"
-        app:layout_constraintEnd_toStartOf="@id/group_name_field"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintHorizontal_chainStyle="packed"
+        android:fontFamily="@font/aclonica"
+        app:layout_constraintBottom_toTopOf="@+id/join_group_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-        app:layout_constraintVertical_bias="0.066" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
     <Button
         android:id="@+id/view_my_items"
@@ -126,14 +99,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/aclonica"
+        android:background="@drawable/rounded_edittext"
+        android:ems="12"
         android:text="View My Items"
-        app:layout_constraintTop_toBottomOf="@id/join_group_btn"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/join_group_btn"
         app:layout_constraintVertical_bias="0.066" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -200,7 +200,6 @@ public class FCMService extends FirebaseMessagingService {
                         }
                     });
                 }
-
                 callback.onComplete();
             }
         });

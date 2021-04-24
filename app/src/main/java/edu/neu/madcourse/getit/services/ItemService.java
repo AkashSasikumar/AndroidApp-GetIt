@@ -110,7 +110,7 @@ public class ItemService {
                         item.setUserPosted(new User((HashMap) item_map.get("userPosted")));
                     }
                     if(item_map.get("userGettingIt") != null) {
-                        item.setUserPosted(new User((HashMap) item_map.get("userGettingIt")));
+                        item.setUserGettingIt(new User((HashMap) item_map.get("userGettingIt")));
                     }
                     item.setPostedDateTime(item_map.get("postedDateTime").toString());
                     if(item_map.get("imageBitmap") != null) {
@@ -143,7 +143,7 @@ public class ItemService {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(userRef);
-                transaction.update(userRef, "user_score", FieldValue.increment(1));
+                transaction.update(userRef, "user_score", FieldValue.increment(10));
                 return null;
             }
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
