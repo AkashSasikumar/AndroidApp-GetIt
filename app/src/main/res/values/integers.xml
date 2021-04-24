@@ -1,0 +1,5 @@
+<resources>
+    <integer name="location_request_code">1</integer>
+    <integer name="location_update_min_time">60000</integer>
+    <integer name="location_update_min_dist">0</integer>
+</resources>
