@@ -27,6 +27,7 @@ import java.util.Scanner;
 
 import edu.neu.madcourse.getit.R;
 import edu.neu.madcourse.getit.TestActivity;
+import edu.neu.madcourse.getit.YourGroupsActivity;
 import edu.neu.madcourse.getit.callbacks.FCMServiceCallBacks;
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
@@ -34,14 +35,14 @@ import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.User;
 
 public class FCMService extends FirebaseMessagingService {
-    private static final String REFRESHED_TOKEN = " Received refresh token for device ->";
+    private static final String REFRESHED_TOKEN = "Received refresh token for device ->";
 
     private static final String TAG = FCMService.class.getSimpleName();
     private static final String SERVER_KEY = "key=AAAAWJBb2Jo:APA91bEiEqCeJUbSXd0lKQPyTgys3qtrP-7ZBdqLr_PkMHH54mjxsum9nFi-P-S771_TuiRmv_puv5dx3Zz_1tBTXUWv5-ubQD0RCXlbdevSJJuemNjePu5Mi95TGUej0MRWIu3YnuzO";
 
-    private static final String CHANNEL_ID  = "CHANNEL_ID";
-    private static final String CHANNEL_NAME  = "CHANNEL_NAME";
-    private static final String CHANNEL_DESCRIPTION  = "CHANNEL_DESCRIPTION";
+    private static final String CHANNEL_ID  = "GETIT_CHANNEL_ID";
+    private static final String CHANNEL_NAME  = "GETIT";
+    private static final String CHANNEL_DESCRIPTION  = "GETIT NOTIFICATION CHANNEL";
 
     GroupService groupService = new GroupService();
 
@@ -68,7 +69,7 @@ public class FCMService extends FirebaseMessagingService {
 
     private void showNotification(RemoteMessage remoteMessage) {
 
-        Intent intent = new Intent(this, TestActivity.class);
+        Intent intent = new Intent(this, YourGroupsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -112,31 +113,10 @@ public class FCMService extends FirebaseMessagingService {
             jNotification.put("body", notificationText);
             jNotification.put("sound", "default");
             jNotification.put("badge", "1");
-            /*
-            // We can add more details into the notification if we want.
-            // We happen to be ignoring them for this demo.
-            jNotification.put("click_action", "OPEN_ACTIVITY_1");
-            */
+
             jdata.put("title","data title");
             jdata.put("content","data content");
-
-            /***
-             * The Notification object is now populated.
-             * Next, build the Payload that we send to the server.
-             */
-
-            // If sending to a single client
             jPayload.put("to", targetToken); // CLIENT_REGISTRATION_TOKEN);
-
-            /*
-            // If sending to multiple clients (must be more than 1 and less than 1000)
-            JSONArray ja = new JSONArray();
-            ja.put(CLIENT_REGISTRATION_TOKEN);
-            // Add Other client tokens
-            ja.put(FirebaseInstanceId.getInstance().getToken());
-            jPayload.put("registration_ids", ja);
-            */
-
             jPayload.put("priority", "high");
             jPayload.put("notification", jNotification);
             jPayload.put("data",jdata);
@@ -167,7 +147,6 @@ public class FCMService extends FirebaseMessagingService {
                 @Override
                 public void run() {
                     Log.e(TAG, "run: " + resp);
-//                    Toast.makeText(getApplicationContext(),resp,Toast.LENGTH_LONG).show();
                 }
             });
         } catch (JSONException | IOException e) {

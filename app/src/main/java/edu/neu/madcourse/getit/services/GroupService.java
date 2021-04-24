@@ -310,6 +310,44 @@ public class GroupService {
         });
     }
 
+    public void getHighestScoreUser(String groupCode, GroupServiceCallbacks.GetGroupByGroupCodeCallback callback) {
+        long group_code = 0;
+
+        try{
+            group_code = Long.parseLong(groupCode);
+        }catch (Exception e){
+            Log.d("GET_GROUP_BY_GROUP_CODE", "Error");
+            callback.onComplete(null);
+            return;
+        }
+
+        Query query = groups.whereEqualTo("group_code", group_code);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Group group = null;
+                if (task.isSuccessful()) {
+                    QuerySnapshot documentRef = task.getResult();
+                    if (!documentRef.isEmpty()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(GET_GROUP_BY_GROUP_NAME, document.getId() + " => " + document.getData());
+                            group = (Group) document.toObject(Group.class);
+                            group.setGroupId(document.getId());
+
+                            callback.onComplete(group);
+                        }
+                    }else{
+                        Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting group from code: ", task.getException());
+                        callback.onComplete(null);
+                    }
+                } else {
+                    Log.d(GET_GROUP_BY_GROUP_NAME, "Error getting document: ", task.getException());
+                    callback.onComplete(null);
+                }
+            }
+        });
+    }
+
 
 //    public boolean addItemTo_ToBePurchasedCategory(String groupId, String itemId) {
 //        try {
