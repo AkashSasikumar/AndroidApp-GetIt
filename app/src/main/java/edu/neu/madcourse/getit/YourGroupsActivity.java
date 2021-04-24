@@ -136,11 +136,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
-
-
-
     }
-
 
     @Override
     public void onClick(View v) {
@@ -155,7 +151,12 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 return;
             }
 
-
+            for(GroupView group : groups) {
+                if(group.getGroupCode().equals(groupCode)) {
+                    Snackbar.make(v, "You are already a member of " + group.getGroupName(), Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+            }
 
             fcmService.sendNewGroupMemberNotification(groupCode, userName, new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
                 @Override
@@ -171,7 +172,6 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                             }else{
                                 Snackbar.make(v, "Sorry, group with the given code does not exist!", Snackbar.LENGTH_LONG).show();
                             }
-
                         }
                     });
                 }

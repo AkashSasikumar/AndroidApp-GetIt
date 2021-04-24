@@ -40,7 +40,6 @@ public class FCMService extends FirebaseMessagingService {
     private static final String REFRESHED_TOKEN = " Received refresh token for device ->";
 
     private static final String TAG = FCMService.class.getSimpleName();
-
     private static final String SERVER_KEY = "key=AAAAWJBb2Jo:APA91bEiEqCeJUbSXd0lKQPyTgys3qtrP-7ZBdqLr_PkMHH54mjxsum9nFi-P-S771_TuiRmv_puv5dx3Zz_1tBTXUWv5-ubQD0RCXlbdevSJJuemNjePu5Mi95TGUej0MRWIu3YnuzO";
 
     private static final String CHANNEL_ID  = "CHANNEL_ID";
@@ -64,15 +63,6 @@ public class FCMService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // [START_EXCLUDE]
-        // There are two types of messages data messages and notification messages. Data messages are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
-        // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
-        // [END_EXCLUDE]
         if (remoteMessage.getNotification() != null) {
             showNotification(remoteMessage);
         }
@@ -98,21 +88,19 @@ public class FCMService extends FirebaseMessagingService {
             notificationChannel.setDescription(CHANNEL_DESCRIPTION);
             notificationManager.createNotificationChannel(notificationChannel);
             builder = new NotificationCompat.Builder(this,CHANNEL_ID);
-
         }
         else {
             builder = new NotificationCompat.Builder(this);
         }
         notification = builder.setContentTitle(remoteMessage.getNotification().getTitle())
                 .setContentText(remoteMessage.getNotification().getBody())
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_grocery_round)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .build();
         notificationManager.notify(0,notification);
 
     }
-
 
     /**
      * Pushes a notification to a given device-- in particular, this device,
