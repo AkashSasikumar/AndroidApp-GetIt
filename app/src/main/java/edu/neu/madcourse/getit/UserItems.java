@@ -3,11 +3,9 @@ package edu.neu.madcourse.getit;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,13 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
-import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 import edu.neu.madcourse.getit.models.User;
 import edu.neu.madcourse.getit.services.GroupService;
@@ -195,7 +190,7 @@ public class UserItems extends AppCompatActivity {
 //            mItemList.add(item);
 //            mAdapter.notifyDataSetChanged();
 //        }
-        userService.getUserByUserId(mUserID, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+        userService.getUserByUserId(mUserID, new UserServiceCallbacks.GetUserByUserIdTaskCallback() {
             @Override
             public void onComplete(User user) {
                 List<String> itemsGetting = user.getUserItemsGetting();

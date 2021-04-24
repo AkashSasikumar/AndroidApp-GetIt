@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,18 +46,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import edu.neu.madcourse.getit.callbacks.FCMServiceCallBacks;
 import edu.neu.madcourse.getit.callbacks.GroupServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.ItemServiceCallbacks;
 import edu.neu.madcourse.getit.callbacks.UserServiceCallbacks;
 import edu.neu.madcourse.getit.models.Group;
 import edu.neu.madcourse.getit.models.Item;
 import edu.neu.madcourse.getit.models.User;
+import edu.neu.madcourse.getit.services.FCMService;
 import edu.neu.madcourse.getit.services.GroupService;
 import edu.neu.madcourse.getit.services.ItemService;
 import edu.neu.madcourse.getit.services.UserService;
 
 public class GroupItems extends AppCompatActivity {
 
+    private static final String SEND_NOTIFICATION_GETING_ITEM = "SEND_NOTIFICATION_GETING_ITEM ";
     private final int GREY_COLOR = Color.parseColor("#BDBDBD");
     private final int GREEN_COLOR = Color.parseColor("#689F38");
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -80,6 +84,7 @@ public class GroupItems extends AppCompatActivity {
     private GroupService groupService;
     private ItemService itemService;
     private UserService userService;
+    private FCMService fcmService;
 
     // Display item details dialog
     private AlertDialog mItemDetailsDialog;
@@ -113,6 +118,7 @@ public class GroupItems extends AppCompatActivity {
         groupService = new GroupService();
         itemService = new ItemService();
         userService = new UserService();
+        fcmService = new FCMService();
         mItemList = new ArrayList<>();
         setLoggedInUser();
 
@@ -240,6 +246,7 @@ public class GroupItems extends AppCompatActivity {
             @Override
             public void onComplete(boolean isSuccess) {
                 if(isSuccess){
+
                     currentItem.setUserGettingIt(mLoggedInUser);
                     mItemList.remove(position);
                     mItemList.add(position, currentItem);
@@ -248,6 +255,12 @@ public class GroupItems extends AppCompatActivity {
                     mdButtonGetIt.setClickable(false);
                     mAdapter.notifyDataSetChanged();
                     Snackbar.make(mRecyclerView, "Item has been added to list of items you need to get!", Snackbar.LENGTH_LONG).show();
+                    fcmService.sendUserGettingItemNotification(currentItem.getName(), mLoggedInUser.getUserId(), currentItem.getUserGettingIt().getFullName(), new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
+                        @Override
+                        public void onComplete() {
+                            Log.d(SEND_NOTIFICATION_GETING_ITEM, "Success ");
+                        }
+                    });
                 }else{
                     Snackbar.make(mRecyclerView, "Oops! Something went wrong. Please try again!", Snackbar.LENGTH_LONG).show();
                 }
@@ -342,7 +355,7 @@ public class GroupItems extends AppCompatActivity {
 //        mAdapter.notifyDataSetChanged();
 
         // Add to database first and then show success
-        itemService.createItem(item, mLoggedInUser, new ItemServiceCallbacks.CreateItemTaskCallback() {
+        itemService. createItem(item, mLoggedInUser, new ItemServiceCallbacks.CreateItemTaskCallback() {
             @Override
             public void onComplete(boolean isSuccess, String itemId) {
                 if(isSuccess) {

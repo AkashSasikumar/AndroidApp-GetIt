@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -24,10 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.Scanner;
 
-import edu.neu.madcourse.getit.GroupView;
 import edu.neu.madcourse.getit.R;
 import edu.neu.madcourse.getit.TestActivity;
 import edu.neu.madcourse.getit.callbacks.FCMServiceCallBacks;
@@ -189,11 +186,10 @@ public class FCMService extends FirebaseMessagingService {
             public void onComplete(Group group) {
                 String notificationText = newGroupMemberName + " has joined your group " + group.getGroup_name();
                 for(String userId : group.getUsers()) {
-                    userService.getUserByUserId(userId, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+                    userService.getUserByUserId(userId, new UserServiceCallbacks.GetUserByUserIdTaskCallback() {
                         @Override
                         public void onComplete(User user) {
                             String token = user.getFirebase_token();
-                            System.out.println("token: ++++++++++++++++++++++++++++++++++++ : " + token);
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -210,8 +206,19 @@ public class FCMService extends FirebaseMessagingService {
         });
     }
 
-    public void sendNewItemNotification(String groupId, String itemId, String newGroupMemberName) {
-
+    public void sendUserGettingItemNotification(String itemName, String userRequestedId, String userGettingItName, FCMServiceCallBacks.sendNewGroupMemberNotificationCallback callback) {
+        userService.getUserByUserId(userRequestedId, new UserServiceCallbacks.GetUserByUserIdTaskCallback() {
+            @Override
+            public void onComplete(User user) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String notificationText = userGettingItName + " is getting " + itemName;
+                        sendMessageToDevice(user.getFirebase_token(), notificationText);
+                    }
+                }).start();
+                callback.onComplete();
+            }
+        });
     }
-
 }

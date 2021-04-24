@@ -8,7 +8,7 @@ public class UserServiceCallbacks {
         void onComplete(boolean isSuccess);
     }
 
-    public interface GetUserByUserNameTaskCallback {
+    public interface GetUserByUserIdTaskCallback {
         void onComplete(User user);
     }
 

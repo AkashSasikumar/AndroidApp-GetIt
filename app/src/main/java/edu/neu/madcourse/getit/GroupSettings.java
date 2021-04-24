@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -143,7 +142,7 @@ public class GroupSettings extends AppCompatActivity implements View.OnClickList
             public void onComplete(Group group) {
                 List<String> users =  group.getUsers();
                 for (String user : users){
-                    userService.getUserByUserId(user, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+                    userService.getUserByUserId(user, new UserServiceCallbacks.GetUserByUserIdTaskCallback() {
                         @Override
                         public void onComplete(User user) {
                             mUsers.add(new UserCard(user.getFullName(), user.getUserEmail(), user.getScore()));

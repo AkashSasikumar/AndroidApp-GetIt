@@ -110,7 +110,7 @@ public class TestActivity extends AppCompatActivity {
 
     private void testGetUserByUserName(String userName, TextView textView) {
         userService.getUserByUserId(userName,
-                (UserServiceCallbacks.GetUserByUserNameTaskCallback) user -> {
+                (UserServiceCallbacks.GetUserByUserIdTaskCallback) user -> {
                     String msg = user.toString();
                     textView.setText(msg);
                 });

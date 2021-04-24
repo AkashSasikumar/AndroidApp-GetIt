@@ -117,7 +117,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
                 });
 
         // get the user info from firebase
-        userService.getUserByUserId(userID, new UserServiceCallbacks.GetUserByUserNameTaskCallback() {
+        userService.getUserByUserId(userID, new UserServiceCallbacks.GetUserByUserIdTaskCallback() {
             @Override
             public void onComplete(User user) {
                 userName = user.getFullName();
