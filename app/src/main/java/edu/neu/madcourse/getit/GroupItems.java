@@ -91,8 +91,6 @@ public class GroupItems extends AppCompatActivity {
     private View mItemDetailsView;
     private ImageView mdImage;
     private TextView mdName, mdInstructions, mdQuantity, mdPreferredStore, mdPreferredBrand, mdPostedBy, mdPostedOn;
-    private Button mdButtonGetIt;
-
 
     // Add item dialog
     private AlertDialog mItemInputDialog;
@@ -250,9 +248,9 @@ public class GroupItems extends AppCompatActivity {
                     currentItem.setUserGettingIt(mLoggedInUser);
                     mItemList.remove(position);
                     mItemList.add(position, currentItem);
-                    mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
-                    mdButtonGetIt.setBackgroundColor(GREY_COLOR);
-                    mdButtonGetIt.setClickable(false);
+//                    mdButtonGetIt.setText(currentItem.getUserGettingIt().getFullName() + " is already getting it!");
+//                    mdButtonGetIt.setBackgroundColor(GREY_COLOR);
+//                    mdButtonGetIt.setClickable(false);
                     mAdapter.notifyDataSetChanged();
                     Snackbar.make(mRecyclerView, "Item has been added to list of items you need to get!", Snackbar.LENGTH_LONG).show();
                     fcmService.sendUserGettingItemNotification(currentItem.getName(), mLoggedInUser.getUserId(), currentItem.getUserGettingIt().getFullName(), new FCMServiceCallBacks.sendNewGroupMemberNotificationCallback() {
@@ -365,6 +363,7 @@ public class GroupItems extends AppCompatActivity {
                         public void onComplete(boolean isSuccess) {
                             if(isSuccess) {
                                 // Now show on screen
+                                item.setItemID(itemId);
                                 mItemList.add(0, item);
                                 mItemInputDialog.hide();
                                 mAdapter.notifyDataSetChanged();
