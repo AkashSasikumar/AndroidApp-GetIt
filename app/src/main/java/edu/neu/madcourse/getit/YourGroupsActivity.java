@@ -710,6 +710,7 @@ public class YourGroupsActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void logoutConfirmButtonYesOnClick() {
+        fAuth.signOut();
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }
